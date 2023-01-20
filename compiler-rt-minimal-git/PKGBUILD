@@ -55,6 +55,9 @@ prepare() {
 }
 
 build(){
+export CFLAGS+=" ${CPPFLAGS}"
+export CXXFLAGS+=" ${CPPFLAGS}"
+
   cd ${srcdir}/llvm-project/compiler-rt
 
   rm -rf build
