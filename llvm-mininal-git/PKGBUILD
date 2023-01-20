@@ -48,9 +48,6 @@ pkgver(){
   echo "$_pkgver"
 }
 
-prepare(){
-}
-
 build(){
 export CFLAGS+=" ${CPPFLAGS}"
 export CXXFLAGS+=" ${CPPFLAGS}"
