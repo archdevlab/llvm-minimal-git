@@ -72,7 +72,8 @@ export CXXFLAGS+=" ${CPPFLAGS}"
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_SKIP_RPATH=ON
     -DCOMPILER_RT_INSTALL_PATH=/usr/lib/clang/$_pkgver
-    COMPILER_RT_INCLUDE_TESTS
+    -DLLVM_BUILD_TESTS=OFF
+    -DCOMPILER_RT_INCLUDE_TESTS=OFF
   )
   cmake .. "${cmake_args[@]}"
   ninja $NINJAFLAGS
