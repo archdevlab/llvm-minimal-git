@@ -68,11 +68,11 @@ After a succeful build of the toolchain you'll need to recompile mesa package, b
 
 Prebuild package are available at https://repo.blacksky3.com/x86_64/llvm-minimal-git
 
-You can add these repos to your pacman.conf
+You can add this repo to your pacman.conf
 
-    [llvm-minimal-git]
-    SigLevel = Optional TrustAll
-    Server = https://repo.blacksky3.com/$arch/$repo
+[llvm-minimal-git]
+SigLevel = Optional TrustAll
+Server = https://repo.blacksky3.com/$arch/$repo
 
     sudo pacman -S llvm16-mininal-git llvm-libs-minimal-git lib32-llvm-miniaml-git lib32-llvm-libs-minimal-git clang-minimal-git lib32-clang-minimal-git compiler-rt-minimal-git libclc-minimal-git spirv-llvm-translator-minimal-git
 
