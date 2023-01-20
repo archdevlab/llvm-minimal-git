@@ -8,6 +8,10 @@
 
 LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no test) (Less build time) Also included in this repo spirv-headers, spirv-tools and mesa (mesa,lib32-mesa)
 
+### SPIRV-Headers and SPIRV-Tools
+
+This repo contain spirv-headers-git and spirv-tools-git package. Why so? Because SPIRV-LLVM-Translator depends on it.
+
 ### 20/01/20233
 
 mesa-git and lib32-mesa-git are not in minimal format yet. Please wait before adressing an issue
@@ -46,7 +50,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Please wait before ad
 
 # Build
 
-    git clone https://github.com/blacksky3/llvm-git.git
+    git clone https://github.com/blacksky3/llvm-minimal-git.git
     cd llvm-git
     ./build.sh
 
