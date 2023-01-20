@@ -21,6 +21,10 @@ cd spirv-tools-git && makepkg -si --noconfirm && cd ${source}
 
 cd llvm-minimal-git && makepkg -si --noconfirm && cd ${source}
 
+cd comipler-rt-minimal-git && makepkg -si --noconfirm && cd ${source}
+
+cd clang-minimal-git && makepkg -si --noconfirm && cd ${source}
+
 cd libclc-minimal-git && makepkg -si --noconfirm && cd ${source}
 
 cd lib32-llvm-minimal-git && makepkg -si --noconfirm && cd ${source}
