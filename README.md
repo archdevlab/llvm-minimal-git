@@ -10,13 +10,19 @@ LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no t
 
 - 16.0.0
 
-- commit: e8a163dc03e6913360beb305620104ba129c081c
+- commit: 3e4a6f57412c63bab3f386a2c8a044a88657bac1
 
 ## SPIRV-LLVM-Translator
 
 - 16.0.0
 
-- commit : 75d16c218eb05725887d9fc48a5a488e6d9100e7
+- commit : 3ff87c3d67b82074f31db1fd6df1677ef7a317b0
+
+## SPIRV-Headers
+
+- 1.5.4.raytracing.fixed
+
+- commit : aa331ab0ffcb3a67021caa1a0c1c9017712f2f31
 
 # Build
 
