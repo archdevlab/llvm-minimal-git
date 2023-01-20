@@ -18,7 +18,7 @@ Why mesa packages are not in a separate repo. Technical reason, just easier for 
 
 #### 20/01/20233
 
-mesa-git and lib32-mesa-git are not in minimal format yet. Please wait before adressing an issue
+mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal fortmat, maybe.
 
 # Version
 
