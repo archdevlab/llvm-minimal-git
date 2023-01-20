@@ -1,0 +1,149 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Credits: Evangelos Foutras <evangelos@foutrelis.com>
+#Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
+
+pkgname=clang16-git
+pkgdesc='C language family frontend for LLVM (git version)'
+url='https://clang.llvm.org/'
+pkgver=16.0.0
+pkgrel=1
+commit=e8a163dc03e6913360beb305620104ba129c081c
+arch=(x86_64)
+license=('custom:Apache 2.0 with LLVM Exception')
+depends=(llvm-libs gcc compiler-rt)
+makedepends=(llvm cmake ninja python-sphinx python-recommonmark git patch)
+optdepends=('openmp: OpenMP support in clang with -fopenmp'
+            'python: for scan-view and git-clang-format'
+            'llvm: referenced by some clang headers')
+conflicts=(clang-analyzer clang-tools-extra clang)
+replaces=(clang-analyzer clang-tools-extra)
+provides=(clang-analyzer clang-tools-extra clang)
+source=(git+https://github.com/llvm/llvm-project.git#commit=$commit)
+
+# Utilizing LLVM_DISTRIBUTION_COMPONENTS to avoid
+# installing static libraries; inspired by Gentoo
+_get_distribution_components(){
+  local target
+  ninja -t targets | grep -Po 'install-\K.*(?=-stripped:)' | while read -r target; do
+    case $target in
+      clang-libraries|distribution)
+        continue
+        ;;
+      clang-tidy-headers)
+        continue
+        ;;
+      clang|clangd|clang-*)
+        ;;
+      clang*|findAllSymbols)
+        continue
+        ;;
+    esac
+    echo $target
+  done
+}
+
+pkgver(){
+  cd ${srcdir}/llvm-project/llvm
+
+  # This will almost match the output of `llvm-config --version` when the
+  # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
+  # dash being replaced with underscore because of Pacman requirements.
+  local _pkgver=$(awk -F 'MAJOR |MINOR |PATCH |)' \
+  'BEGIN { ORS="." ; i=0 } \
+  /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \
+  END { print "\n" }' \
+  CMakeLists.txt).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
+  echo "$_pkgver"
+}
+
+prepare(){
+  cd ${srcdir}/llvm-project/clang
+
+  cp -r ${srcdir}/llvm-project/clang-tools-extra ${srcdir}/llvm-project/clang/tools/extra
+
+  # Attempt to convert script to Python 3
+  2to3 -wn --no-diffs \
+    ${srcdir}/llvm-project/clang/tools/extra/clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
+}
+
+build(){
+  cd ${srcdir}/llvm-project/clang
+
+  rm -rf build
+
+  mkdir build
+
+  cd build
+
+  local cmake_args=(
+    -G Ninja
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_DOCDIR=share/doc
+    -DCMAKE_SKIP_RPATH=ON
+    -DCLANG_DEFAULT_PIE_ON_LINUX=ON
+    -DCLANG_LINK_CLANG_DYLIB=ON
+    -DENABLE_LINKER_BUILD_ID=ON
+    -DLLVM_BUILD_DOCS=ON
+    -DLLVM_BUILD_TESTS=ON
+    -DLLVM_ENABLE_RTTI=ON
+    -DLLVM_ENABLE_SPHINX=ON
+    -DLLVM_EXTERNAL_LIT=/usr/bin/lit
+    -DLLVM_INCLUDE_DOCS=ON
+    -DLLVM_LINK_LLVM_DYLIB=ON
+    -DLLVM_MAIN_SRC_DIR="$srcdir/llvm-project/llvm"
+    -DSPHINX_WARNINGS_AS_ERRORS=OFF
+  )
+
+  cmake .. "${cmake_args[@]}"
+  local distribution_components=$(_get_distribution_components | paste -sd\;)
+  test -n "$distribution_components"
+  cmake_args+=(-DLLVM_DISTRIBUTION_COMPONENTS="$distribution_components")
+
+  cmake .. "${cmake_args[@]}"
+  ninja
+}
+
+_python_optimize(){
+  python -m compileall "$@"
+  python -O -m compileall "$@"
+  python -OO -m compileall "$@"
+}
+
+package(){
+  DESTDIR="$pkgdir" ninja -C ${srcdir}/llvm-project/clang/build/ install-distribution
+
+  install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$srcdir/llvm-project/clang/CodeOwners.rst" "$pkgdir/usr/share/licenses/$pkgname/CodeOwners.rst"
+  install -Dm644 "$srcdir/llvm-project/clang-tools-extra/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/LICENSE"
+  install -Dm644 "$srcdir/llvm-project/clang-tools-extra/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/CODE_OWNERS"
+
+  # Remove documentation sources
+  rm -r "$pkgdir"/usr/share/doc/clang/html/{_sources,.buildinfo}
+  rm -r "$pkgdir"/usr/share/doc/clang-tools/html/{_sources,.buildinfo}
+
+  # Move scanbuild-py into site-packages and install Python bindings
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  install -d "$pkgdir/$site_packages"
+  mv "$pkgdir"/usr/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
+  cp -a ${srcdir}/llvm-project/clang/bindings/python/clang "$pkgdir/$site_packages/"
+
+  # Move analyzer scripts out of /usr/libexec
+  mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
+  rmdir "$pkgdir/usr/libexec"
+  sed -i 's|libexec|lib/clang|' \
+    "$pkgdir/usr/bin/scan-build" \
+    "$pkgdir/$site_packages/libscanbuild/analyze.py"
+
+  # Compile Python scripts
+  _python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
+}
+
+sha256sums=('SKIP')
