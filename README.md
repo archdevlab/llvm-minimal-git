@@ -8,6 +8,10 @@
 
 LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no test) (Less build time) Also included in this repo spirv-headers, spirv-tools and mesa (mesa,lib32-mesa)
 
+### 20/01/20233
+
+mesa-git and lib32-mesa-git are not in minimal format yet. Please wait before adressing an issue
+
 # Version
 
 ## LLVM
