@@ -26,7 +26,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 16.0.0
 
-- commit: 3e4a6f57412c63bab3f386a2c8a044a88657bac1
+- commit: 49d47c4d2f280d15d1de94c53b72b6ab3c127b35
 
 ## SPIRV-LLVM-Translator
 
@@ -64,7 +64,7 @@ After a succeful build of the toolchain you'll need to recompile mesa package, b
 
     cd mesa-git
     makepkg -si
-    
+
     cd lib32-mesa-git
     makepkg -si
 
