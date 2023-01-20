@@ -16,7 +16,7 @@ pkgname=(vulkan-mesa-layers-llvm16-git opencl-mesa-llvm16-git vulkan-intel-llvm1
          mesa-llvm16-git)
 pkgver=23.0.0_devel
 pkgrel=1
-commit=8c0531cf912fc3f8edbc73c679602e169c9ad3f2
+commit=247c06d41997538e877619326d046f84887a48ab
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
