@@ -10,43 +10,32 @@
 #!/usr/bin/bash
 
 source=$(pwd)
-llvmversion=16
 
 echo "${source}"
 
 # build
 
-cd llvm${llvmversion}/llvm-git && makepkg -si --noconfirm && cd ${source}
+cd spirv-headers-git && makepkg -si --noconfirm && cd ${source}
 
-cd llvm${llvmversion}/lld-git && makepkg -si --noconfirm && cd ${source}
+cd spirv-tools-git && makepkg -si --noconfirm && cd ${source}
 
-cd llvm${llvmversion}/polly-git && makepkg -si --noconfirm && cd ${source}
+cd llvm-minimal-git && makepkg -si --noconfirm && cd ${source}
 
-cd llvm${llvmversion}/compiler-rt-git && makepkg -si --noconfirm && cd ${source}
+cd libclc-minimal-git && makepkg -si --noconfirm && cd ${source}
 
-cd llvm${llvmversion}/clang-git && makepkg -si --noconfirm && cd ${source}
+cd lib32-llvm-minimal-git && makepkg -si --noconfirm && cd ${source}
 
-cd llvm${llvmversion}/lldb-git && makepkg -si --noconfirm && cd ${source}
+cd mesa-git && makepkg -si --noconfirm && cd ${source}
 
-cd llvm${llvmversion}/spirv-llvm-translator-git --noconfirm && makepkg -si && cd ${source}
-
-cd llvm${llvmversion}/libclc-git && makepkg -si --noconfirm && cd ${source}
-
-cd llvm${llvmversion}/libc++-git && makepkg -si --noconfirm && cd ${source}
-
-cd llvm${llvmversion}/openmp-git && makepkg -si --noconfirm && cd ${source}
-
-cd llvm${llvmversion}/lib32-llvm-git && makepkg -si --noconfirm && cd ${source}
-
-cd llvm${llvmversion}/lib32-clang-git && makepkg -si --noconfirm && cd ${source}
+cd lib32-mesa-git && makepkg -si --noconfirm && cd ${source}
 
 # make a copy of every pkg in package/ dir
 
 mkdir package
 
-cp -v llvm${llvmversion}/*/*.pkg.tar.zst package/
+cp -v */*.pkg.tar.zst package/
 
 # clean build dir
 
-rm -rf llvm${llvmversion}/*/src/
-rm -rf llvm${llvmversion}/*/pkg/
+rm -rf */src/
+rm -rf */pkg/
