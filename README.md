@@ -30,6 +30,12 @@ LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no t
 
 -commit : cdc4e528f3dbe7e38fa3438544918757b098235c
 
+## Mesa
+
+- 23.1.0
+
+- commit : 247c06d41997538e877619326d046f84887a48ab
+
 # Build
 
     git clone https://github.com/blacksky3/llvm-git.git
