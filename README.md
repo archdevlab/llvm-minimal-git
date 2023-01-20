@@ -54,13 +54,15 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Please wait before ad
 
 After a succeful build of the toolchain you'll need to recompile mesa package, because mesa and llvm are closely tied together. Everytime llvm changes/updates, mesa needs to be rebuilt.
 
-You can rebuild mesa and lib32-mesa with this repo: https://github.com/blacksky3/mesa-git.git
-
-This mesa package provide mesa and lib32-mesa. (git version)
+    cd mesa-git
+    makepkg -si
+    
+    cd lib32-mesa-git
+    makepkg -si
 
 # Prebuild package
 
-Prebuild package are available at https://repo.blacksky3.com/x86_64/{llvm16}
+Prebuild package are available at https://repo.blacksky3.com/x86_64/llvm-minimal-git
 
 You can add these repos to your pacman.conf
 
