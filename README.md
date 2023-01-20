@@ -10,7 +10,7 @@ LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no t
 
 ### SPIRV-Headers and SPIRV-Tools
 
-This repo contain spirv-headers-git and spirv-tools-git package. Why so? Because SPIRV-LLVM-Translator depends on it.
+This repo contain spirv-headers-git and spirv-tools-git package. Why so? Because SPIRV-LLVM-Translator depends on it. Easier to have it in this repo and compile them at the same time of compiling LLVM.
 
 ### Mesa
 
