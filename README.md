@@ -12,7 +12,11 @@ LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no t
 
 This repo contain spirv-headers-git and spirv-tools-git package. Why so? Because SPIRV-LLVM-Translator depends on it.
 
-### 20/01/20233
+### Mesa
+
+Why mesa packages are not in a separate repo. Technical reason, just easier for me to have it in this repo. If you want to just compile Mesa packages and not interested about LLVM and SPIRV package you can do ahead, no problem
+
+#### 20/01/20233
 
 mesa-git and lib32-mesa-git are not in minimal format yet. Please wait before adressing an issue
 
