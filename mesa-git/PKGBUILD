@@ -10,10 +10,9 @@
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 #Credits: Reza Jahanbakhshi <reza.jahanbakhshi at gmail dot com
 
-pkgbase=mesa-llvm16-git
-pkgname=(vulkan-mesa-layers-llvm16-git opencl-mesa-llvm16-git vulkan-intel-llvm16-git vulkan-radeon-llvm16-git vulkan-swrast-llvm16-git
-         vulkan-virtio-llvm16-git libva-mesa-driver-llvm16-git mesa-vdpau-llvm16-git vulkan-intel-hasvk-llvm16-git vulkan-imagination-llvm16-git
-         mesa-llvm16-git)
+pkgbase=mesa-git
+pkgname=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git 
+         mesa-vdpau-git vulkan-intel-hasvk-git vulkan-imagination-git mesa-git)
 pkgver=23.0.0_devel
 pkgrel=1
 commit=247c06d41997538e877619326d046f84887a48ab
@@ -140,7 +139,7 @@ _install(){
   done
 }
 
-package_vulkan-mesa-layers-llvm16-git(){
+package_vulkan-mesa-layers-git(){
   pkgdesc="Mesa's Vulkan layers (git release)"
   depends=(libdrm libxcb wayland python)
   conflicts=(vulkan-mesa-layer vulkan-mesa-layers)
@@ -155,7 +154,7 @@ package_vulkan-mesa-layers-llvm16-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-package_opencl-mesa-llvm16-git(){
+package_opencl-mesa-git(){
   pkgdesc='OpenCL support for AMD/ATI Radeon mesa drivers (git release)'
   depends=(libdrm libclc clang expat spirv-llvm-translator)
   optdepends=('opencl-headers: headers necessary for OpenCL development')
@@ -169,7 +168,7 @@ package_opencl-mesa-llvm16-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-package_vulkan-intel-llvm16-git(){
+package_vulkan-intel-git(){
   pkgdesc="Intel's Vulkan mesa driver (git release)"
   depends=(wayland libx11 libxshmfence libdrm zstd systemd-libs)
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -182,7 +181,7 @@ package_vulkan-intel-llvm16-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-package_vulkan-radeon-llvm16-git(){
+package_vulkan-radeon-git(){
   pkgdesc="Radeon's Vulkan mesa driver (git release)"
   depends=(wayland libx11 libxshmfence libelf libdrm llvm-libs systemd-libs)
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -196,7 +195,7 @@ package_vulkan-radeon-llvm16-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-package_vulkan-swrast-llvm16-git(){
+package_vulkan-swrast-git(){
   pkgdesc='Vulkan software rasteriser driver (git release)'
   depends=(wayland libx11 libxshmfence libdrm zstd llvm-libs systemd-libs libunwind)
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -210,7 +209,7 @@ package_vulkan-swrast-llvm16-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-package_vulkan-virtio-llvm16-git(){
+package_vulkan-virtio-git(){
   pkgdesc='Virtio-GPU protocol for Vulkan command serialization (Venus) (git release)'
   depends=(wayland libx11 libxshmfence libdrm zstd systemd-libs)
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -224,7 +223,7 @@ package_vulkan-virtio-llvm16-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-package_libva-mesa-driver-llvm16-git(){
+package_libva-mesa-driver-git(){
   pkgdesc='VA-API implementation for gallium (git release)'
   depends=(libdrm libx11 llvm-libs expat libelf libxshmfence)
   depends+=(libexpat.so)
@@ -236,7 +235,7 @@ package_libva-mesa-driver-llvm16-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-package_mesa-vdpau-llvm16-git(){
+package_mesa-vdpau-git(){
   pkgdesc='Mesa VDPAU drivers (git release)'
   depends=(libdrm libx11 llvm-libs expat libelf libxshmfence)
   depends+=(libexpat.so)
@@ -248,7 +247,7 @@ package_mesa-vdpau-llvm16-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-package_vulkan-intel-hasvk-llvm16-git(){
+package_vulkan-intel-hasvk-git(){
   pkgdesc="Intel's Vulkan mesa driver for Older Gen7/Gen8 Graphics (git release)"
   depends=(wayland libx11 libxshmfence libdrm zstd systemd-libs)
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -260,7 +259,7 @@ package_vulkan-intel-hasvk-llvm16-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-package_vulkan-imagination-llvm16-git(){
+package_vulkan-imagination-git(){
   pkgdesc='Imagination Rogue PowerVR Vulkan driver (git release)'
   depends=(libx11 libxshmfence libdrm libelf zstd llvm-libs systemd-libs libunwind)
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -278,7 +277,7 @@ package_vulkan-imagination-llvm16-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-package_mesa-llvm16-git(){
+package_mesa-git(){
   pkgdesc='An open-source implementation of the OpenGL specification (git release)'
   depends=(libdrm wayland libxxf86vm libxdamage libxshmfence libelf
            libomxil-bellagio libunwind llvm-libs lm_sensors libglvnd
