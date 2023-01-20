@@ -14,7 +14,6 @@ pkgname=(llvm-minimal-git llvm-libs-minimal-git spirv-llvm-translator-minimal-gi
 url='https://llvm.org/'
 pkgver=16.0.0
 pkgrel=1
-_pkgver=16.0.0
 llvmcommit=3e4a6f57412c63bab3f386a2c8a044a88657bac1
 spirvcommit=3ff87c3d67b82074f31db1fd6df1677ef7a317b0
 arch=(x86_64)
