@@ -70,11 +70,11 @@ Prebuild package are available at https://repo.blacksky3.com/x86_64/llvm-minimal
 
 You can add this repo to your pacman.conf
 
-[llvm-minimal-git]
-SigLevel = Optional TrustAll
-Server = https://repo.blacksky3.com/$arch/$repo
+    [llvm-minimal-git]
+    SigLevel = Optional TrustAll
+    Server = https://repo.blacksky3.com/$arch/$repo
 
-    sudo pacman -S llvm16-mininal-git llvm-libs-minimal-git lib32-llvm-miniaml-git lib32-llvm-libs-minimal-git clang-minimal-git lib32-clang-minimal-git compiler-rt-minimal-git libclc-minimal-git spirv-llvm-translator-minimal-git
+    sudo pacman -S llvm16-mininal-git llvm-libs-minimal-git lib32-llvm-miniaml-git lib32-llvm-libs-minimal-git clang-minimal-git lib32-clang-minimal-git compiler-rt-minimal-git libclc-minimal-git spirv-llvm-translator-minimal-git spirv-headers-git spirv-tools-git
 
     Optional, but you can install mesa-llvm16-git and lib32-mesa-llvm16-git that are compiled against llvm-git packages from this repo
 
