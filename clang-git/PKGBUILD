@@ -14,7 +14,7 @@ pkgdesc='C language family frontend for LLVM (git version)'
 url='https://clang.llvm.org/'
 pkgver=16.0.0
 pkgrel=1
-commit=e8a163dc03e6913360beb305620104ba129c081c
+commit=3e4a6f57412c63bab3f386a2c8a044a88657bac1
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 depends=(llvm-libs gcc compiler-rt)
@@ -26,6 +26,15 @@ conflicts=(clang-analyzer clang-tools-extra clang)
 replaces=(clang-analyzer clang-tools-extra)
 provides=(clang-analyzer clang-tools-extra clang)
 source=(git+https://github.com/llvm/llvm-project.git#commit=$commit)
+
+# Both ninja & LIT by default use all available cores. this can lead to heavy stress on systems making them unresponsive.
+# It can also happen that the kernel oom killer interferes and kills important tasks.
+# A reasonable value for them to avoid these issues appears to be 75% of available cores.
+# NINJAFLAGS and LITFLAGS are env vars that can be used to achieve this. They should be set on command line or in files read by your shell on login (like .bashrc ) .
+# example for systems with 24 cores
+# NINJAFLAGS="-j 18 -l 18"
+# LITFLAGS="-j 18"
+# NOTE: It's your responbility to validate the value of NINJAFLAGS and LITFLAGS. If unsure, don't set it.
 
 # Utilizing LLVM_DISTRIBUTION_COMPONENTS to avoid
 # installing static libraries; inspired by Gentoo
@@ -74,6 +83,9 @@ prepare(){
 }
 
 build(){
+export CFLAGS+=" ${CPPFLAGS}"
+export CXXFLAGS+=" ${CPPFLAGS}"
+
   cd ${srcdir}/llvm-project/clang
 
   rm -rf build
@@ -84,6 +96,7 @@ build(){
 
   local cmake_args=(
     -G Ninja
+    # Base config
     -DCMAKE_BUILD_TYPE=Release
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_INSTALL_DOCDIR=share/doc
@@ -91,15 +104,25 @@ build(){
     -DCLANG_DEFAULT_PIE_ON_LINUX=ON
     -DCLANG_LINK_CLANG_DYLIB=ON
     -DENABLE_LINKER_BUILD_ID=ON
-    -DLLVM_BUILD_DOCS=ON
-    -DLLVM_BUILD_TESTS=ON
     -DLLVM_ENABLE_RTTI=ON
-    -DLLVM_ENABLE_SPHINX=ON
     -DLLVM_EXTERNAL_LIT=/usr/bin/lit
-    -DLLVM_INCLUDE_DOCS=ON
     -DLLVM_LINK_LLVM_DYLIB=ON
     -DLLVM_MAIN_SRC_DIR="$srcdir/llvm-project/llvm"
     -DSPHINX_WARNINGS_AS_ERRORS=OFF
+
+    # Remove docs
+    -DLLVM_BUILD_DOCS=OFF
+    -DLLVM_INCLUDE_DOCS=OFF
+    -DLLVM_ENABLE_SPHINX=OFF
+    -DLLVM_ENABLE_DOXYGEN=OFF
+    -DCLANG_INCLUDE_DOCS=OFF
+    -DCLANG_TOOLS_EXTRA_INCLUDE_DOCS=OFF
+
+    # Remove test
+    -DLLVM_BUILD_TESTS=OFF
+    -DCLANG_INCLUDE_TESTS=OFF
+    -DLLVM_SPIRV_INCLUDE_TESTS=OFF
+    -DCLANGD_TIDY_CHECKS=OFF
   )
 
   cmake .. "${cmake_args[@]}"
@@ -108,7 +131,7 @@ build(){
   cmake_args+=(-DLLVM_DISTRIBUTION_COMPONENTS="$distribution_components")
 
   cmake .. "${cmake_args[@]}"
-  ninja
+  ninja $NINJAFLAGS
 }
 
 _python_optimize(){
@@ -118,16 +141,12 @@ _python_optimize(){
 }
 
 package(){
-  DESTDIR="$pkgdir" ninja -C ${srcdir}/llvm-project/clang/build/ install-distribution
+  DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/clang/build/ install-distribution
 
   install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project/clang/CodeOwners.rst" "$pkgdir/usr/share/licenses/$pkgname/CodeOwners.rst"
   install -Dm644 "$srcdir/llvm-project/clang-tools-extra/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/LICENSE"
   install -Dm644 "$srcdir/llvm-project/clang-tools-extra/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/CODE_OWNERS"
-
-  # Remove documentation sources
-  rm -r "$pkgdir"/usr/share/doc/clang/html/{_sources,.buildinfo}
-  rm -r "$pkgdir"/usr/share/doc/clang-tools/html/{_sources,.buildinfo}
 
   # Move scanbuild-py into site-packages and install Python bindings
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
