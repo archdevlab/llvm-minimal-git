@@ -24,6 +24,12 @@ LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no t
 
 - commit : aa331ab0ffcb3a67021caa1a0c1c9017712f2f31
 
+## SPIRV-Tools
+
+- 2023.1
+
+-commit : cdc4e528f3dbe7e38fa3438544918757b098235c
+
 # Build
 
     git clone https://github.com/blacksky3/llvm-git.git
