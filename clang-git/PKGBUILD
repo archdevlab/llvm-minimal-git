@@ -9,7 +9,7 @@
 #Credits: Evangelos Foutras <evangelos@foutrelis.com>
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
-pkgname=clang16-git
+pkgname=clang-minimal-git
 pkgdesc='C language family frontend for LLVM (git version)'
 url='https://clang.llvm.org/'
 pkgver=16.0.0
