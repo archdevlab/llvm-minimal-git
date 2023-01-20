@@ -2,21 +2,17 @@
 
 # llvm-minimal-git
 
-LLVM toolchain packages for Archlinux. (git version)
+LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no test) (Less build time)
 
 # Version
 
 ## LLVM
-
-### LLVM16
 
 - 16.0.0
 
 - commit: e8a163dc03e6913360beb305620104ba129c081c
 
 ## SPIRV-LLVM-Translator
-
-### SPIRV-LLVM-Translator16
 
 - 16.0.0
 
