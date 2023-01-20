@@ -34,6 +34,28 @@ source=(git+https://github.com/llvm/llvm-project.git#commit=$llvmcommit
 # LITFLAGS="-j 18"
 # NOTE: It's your responbility to validate the value of NINJAFLAGS and LITFLAGS. If unsure, don't set it.
 
+# Utilizing LLVM_DISTRIBUTION_COMPONENTS to avoid
+# installing static libraries; inspired by Gentoo
+_get_distribution_components(){
+  local target
+  ninja -t targets | grep -Po 'install-\K.*(?=-stripped:)' | while read -r target; do
+    case $target in
+      clang-libraries|distribution)
+        continue
+        ;;
+      clang-tidy-headers)
+        continue
+        ;;
+      clang|clangd|clang-*)
+        ;;
+      clang*|findAllSymbols)
+        continue
+        ;;
+    esac
+    echo $target
+  done
+}
+
 pkgver(){
   cd ${srcdir}/llvm-project/llvm
 
@@ -46,6 +68,12 @@ pkgver(){
   END { print "\n" }' \
   CMakeLists.txt).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
   echo "$_pkgver"
+}
+
+prepare(){
+  # Attempt to convert script to Python 3
+  2to3 -wn --no-diffs \
+    ${srcdir}/llvm-project/clang-tools-extra/clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
 }
 
 build(){
@@ -78,6 +106,7 @@ export CXXFLAGS+=" ${CPPFLAGS}"
     -DLLVM_INSTALL_UTILS=ON
     -DLLVM_BUILD_LLVM_DYLIB=ON
     -DLLVM_LINK_LLVM_DYLIB=ON
+    -DCLANG_LINK_CLANG_DYLIB=ON
     -DLLVM_DYLIB_COMPONENTS="all"
     -DLLVM_USE_PERF=ON
     -DSPHINX_WARNINGS_AS_ERRORS=OFF
@@ -85,7 +114,8 @@ export CXXFLAGS+=" ${CPPFLAGS}"
     # Extra project
     #-DLLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
     #-DCLANG_ENABLE_CLANGD=ON
-    #-DCOMPILER_RT_INSTALL_PATH=/usr/lib/clang/$_pkgver
+    -DLLVM_ENABLE_PROJECTS="compiler-rt;clang"
+    -DCOMPILER_RT_INSTALL_PATH=/usr/lib/clang/$_pkgver
 
     # Spirv LLVM Translator
     -DLLVM_EXTERNAL_PROJECTS="SPIRV-LLVM-Translator"
@@ -98,12 +128,21 @@ export CXXFLAGS+=" ${CPPFLAGS}"
     -DLLVM_ENABLE_OCAMLDOC=OFF
     -DLLVM_ENABLE_SPHINX=OFF
     -DLLVM_ENABLE_DOXYGEN=OFF
+    -DCLANG_INCLUDE_DOCS=OFF
+    -DCLANG_TOOLS_EXTRA_INCLUDE_DOCS=OFF
 
     # Remove test
     -DLLVM_BUILD_TESTS=OFF
+    -DCLANG_INCLUDE_TESTS=OFF
     -DLLVM_SPIRV_INCLUDE_TESTS=OFF
+    -DCLANGD_TIDY_CHECKS=OFF
   )
 
+  cmake .. "${cmake_args[@]}"
+  local distribution_components=$(_get_distribution_components | paste -sd\;)
+  test -n "$distribution_components"
+  cmake_args+=(-DLLVM_DISTRIBUTION_COMPONENTS="$distribution_components")
+  
   cmake .. "${cmake_args[@]}"
   ninja $NINJAFLAGS
 }
