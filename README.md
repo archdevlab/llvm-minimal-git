@@ -83,7 +83,7 @@ You can add these repos to your pacman.conf
 
 # Reinstall normal LLVM Toolchain
 
-    sudo pacman -S llvm llvm-libs lib32-llvm lib32-llvm-libs clang lib32-clang lld lldb openmp polly compiler-rt libclc libc++ libc++abi libc++experimental spirv-llvm-translator
+    sudo pacman -S llvm llvm-libs lib32-llvm lib32-llvm-libs clang lib32-clang compiler-rt libclc spirv-llvm-translator
 
 # Donation
 
