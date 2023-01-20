@@ -1,0 +1,55 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Credits: Felix Yan <felixonmars@archlinux.org>
+#Credits: Bruno Pagani <archange@archlinux.org>
+
+pkgname=spirv-headers-git
+pkgdesc='SPIR-V Headers (git version)'
+pkgver=1.5.4
+pkgrel=1
+commit=aa331ab0ffcb3a67021caa1a0c1c9017712f2f31
+arch=(x86_64)
+url='https://github.com/KhronosGroup/SPIRV-Headers.git'
+license=(MIT)
+makedepends=(make cmake git gcc gcc-libs ninja)
+conflicts=(spirv-headers)
+provides=(spirv-headers spirv-headers-git)
+source=(git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit=$commit)
+md5sums=(SKIP)
+
+pkgver(){
+  cd ${srcdir}/SPIRV-Headers
+
+  git describe --long --tags --exclude sdk-* | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build(){
+  cd ${srcdir}/SPIRV-Headers
+
+  rm -rf build
+
+  cmake -H. -G Ninja -Bbuild \
+  -DCMAKE_C_FLAGS=-m64 \
+  -DCMAKE_CXX_FLAGS=-m64 \
+  -DCMAKE_INSTALL_PREFIX=/usr \
+  -DSPIRV_HEADERS_SKIP_EXAMPLES=ON \
+  -DSPIRV_HEADERS_SKIP_INSTALL=OFF \
+  -DSPIRV_HEADERS_ENABLE_INSTALL=ON \
+  -DUSE_CCACHE=OFF
+
+  ninja -C build
+}
+
+package(){
+  DESTDIR="$pkgdir" ninja -C ${srcdir}/SPIRV-Headers/build/ install
+
+  # install licence
+  install -dm755 "${pkgdir}"/usr/share/licenses/${pkgname}
+  install -m644 "${srcdir}"/SPIRV-Headers/LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/
+}

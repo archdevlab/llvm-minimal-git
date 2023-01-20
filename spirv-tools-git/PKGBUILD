@@ -1,0 +1,99 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Credits: Laurent Carlier <lordheavym@gmail.com>
+
+pkgname=spirv-tools-git
+pkgdesc='API and commands for processing SPIR-V modules. (git version)'
+pkgver=2023.1
+pkgrel=1
+commit=cdc4e528f3dbe7e38fa3438544918757b098235c
+arch=(x86_64)
+url='https://github.com/KhronosGroup/SPIRV-Tools.git'
+license=(Apache-2.0)
+makedepends=(make cmake git python ninja gcc gcc-libs spirv-headers)
+depends=(gcc-libs)
+conflicts=(spirv-tools)
+provides=(spirv-tools spirv-tools-git)
+source=(git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit=$commit)
+md5sums=(SKIP)
+
+pkgver(){
+  cd ${srcdir}/SPIRV-Tools
+
+  # cutting off 'foo-' prefix that presents in the git tag
+  git describe --long --tags --exclude sdk-* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+# prepare(){
+#   cd ${srcdir}/SPIRV-Tools
+#   rm -rf external/{spirv-headers,effcee,re2,googletest,protobuf}
+#   git clone https://github.com/KhronosGroup/SPIRV-Headers.git external/spirv-headers
+#   git clone https://github.com/google/effcee.git external/effcee
+#   git clone https://github.com/google/re2.git external/re2
+#   #git clone https://github.com/google/googletest.git external/googletest
+#   #git clone https://github.com/protocolbuffers/protobuf.git external/protobuf
+# }
+
+build(){
+  cd ${srcdir}/SPIRV-Tools
+
+  rm -rf build_64-{static,shared}
+
+  # build shared lib
+
+  # to enable SPIRV_BUILD_FUZZER=ON uncomment protobuf in prepare
+
+  #cmake -H. -G Ninja -Bbuild_64-static \
+  #-DCMAKE_C_FLAGS=-m64 \
+  #-DCMAKE_CXX_FLAGS=-m64 \
+  #-DCMAKE_INSTALL_PREFIX=/usr \
+  #-DCMAKE_INSTALL_LIBDIR=lib \
+  #-DCMAKE_BUILD_TYPE=Release \
+  #-DSPIRV_WERROR=Off \
+  #-DSPIRV_TOOLS_BUILD_STATIC=ON \
+  #-DSPIRV_ALLOW_TIMERS=ON \
+  #-DSPIRV_COLOR_TERMINAL=ON \
+  #-DSPIRV_LOG_DEBUG=OFF \
+  #-DSPIRV_SKIP_EXECUTABLES=OFF \
+  #-DSPIRV_SKIP_TESTS=OFF \
+  #-DENABLE_SPIRV_TOOLS_INSTALL=ON \
+  #-DUSE_CCACHE=OFF
+  #-DSPIRV_BUILD_FUZZER=ON
+
+  cmake -H. -G Ninja -Bbuild_64-shared \
+  -DCMAKE_C_FLAGS=-m64 \
+  -DCMAKE_CXX_FLAGS=-m64 \
+  -DCMAKE_INSTALL_PREFIX=/usr \
+  -DCMAKE_INSTALL_LIBDIR=lib \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DSPIRV_WERROR=Off \
+  -DSPIRV_TOOLS_BUILD_STATIC=OFF \
+  -DBUILD_SHARED_LIBS=ON \
+  -DSPIRV_ALLOW_TIMERS=ON \
+  -DSPIRV_COLOR_TERMINAL=ON \
+  -DSPIRV_LOG_DEBUG=OFF \
+  -DSPIRV_SKIP_EXECUTABLES=OFF \
+  -DSPIRV_SKIP_TESTS=OFF \
+  -DENABLE_SPIRV_TOOLS_INSTALL=ON \
+  -DUSE_CCACHE=OFF \
+  -DSPIRV-Headers_SOURCE_DIR=/usr
+  #-DSPIRV_BUILD_FUZZER=ON
+
+  #ninja -C build_64-static
+  ninja -C build_64-shared
+}
+
+package_spirv-tools-git(){
+  #DESTDIR="$pkgdir" ninja -C SPIRV-Tools/build_64-static/ install
+  DESTDIR="$pkgdir" ninja -C ${srcdir}/SPIRV-Tools/build_64-shared/ install
+
+  # install licence
+  install -dm755 "${pkgdir}"/usr/share/licenses/${pkgname}
+  install -m644 "${srcdir}"/SPIRV-Tools/LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/
+}

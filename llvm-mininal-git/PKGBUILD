@@ -1,0 +1,212 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Credits: Evangelos Foutras <evangelos@foutrelis.com>
+#Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
+
+pkgbase=llvm-minimal-git
+pkgname=(llvm-minimal-git llvm-libs-minimal-git spirv-llvm-translator-minimal-git)
+url='https://llvm.org/'
+pkgver=16.0.0
+pkgrel=1
+_pkgver=16.0.0
+llvmcommit=3e4a6f57412c63bab3f386a2c8a044a88657bac1
+spirvcommit=3ff87c3d67b82074f31db1fd6df1677ef7a317b0
+arch=(x86_64)
+license=('custom:Apache 2.0 with LLVM Exception')
+makedepends=(cmake ninja zlib zstd libffi libedit ncurses libxml2 python-setuptools python-psutil python-sphinx python-recommonmark
+             git spirv-headers-git spirv-tools-git git patch)
+options=(staticlibs !lto) # Getting thousands of test failures with LTO
+source=(git+https://github.com/llvm/llvm-project.git#commit=$llvmcommit
+        git+https://github.com/KhronosGroup/SPIRV-LLVM-Translator.git#commit=$spirvcommit
+        llvm-config.h)
+
+# Utilizing LLVM_DISTRIBUTION_COMPONENTS to avoid
+# installing static libraries; inspired by Gentoo
+_get_distribution_components(){
+  local target
+  ninja -t targets | grep -Po 'install-\K.*(?=-stripped:)' | while read -r target; do
+    case $target in
+      clang-libraries|distribution)
+        continue
+        ;;
+      clang-tidy-headers)
+        continue
+        ;;
+      clang|clangd|clang-*)
+        ;;
+      clang*|findAllSymbols)
+        continue
+        ;;
+    esac
+    echo $target
+  done
+}
+
+pkgver(){
+  cd ${srcdir}/llvm-project/llvm
+
+  # This will almost match the output of `llvm-config --version` when the
+  # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
+  # dash being replaced with underscore because of Pacman requirements.
+  local _pkgver=$(awk -F 'MAJOR |MINOR |PATCH |)' \
+  'BEGIN { ORS="." ; i=0 } \
+  /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \
+  END { print "\n" }' \
+  CMakeLists.txt).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
+  echo "$_pkgver"
+}
+
+prepare(){
+  # Attempt to convert script to Python 3
+  2to3 -wn --no-diffs \
+    ${srcdir}/llvm-project/clang-tools-extra/clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
+}
+
+build(){
+  cd ${srcdir}/llvm-project/llvm
+
+  rm -rf build
+
+  mkdir build
+
+  cd build
+
+  local cmake_args=(
+    -G Ninja
+    # Base config
+    -DCMAKE_BUILD_TYPE=Release
+    #-DCMAKE_INSTALL_DOCDIR=share/doc
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_SKIP_RPATH=ON
+    -DLLVM_BINUTILS_INCDIR=/usr/include
+    -DLLVM_ENABLE_BINDINGS=OFF
+    -DLLVM_ENABLE_FFI=ON
+    -DLLVM_ENABLE_RTTI=ON
+    -DLLVM_HOST_TRIPLE=$CHOST
+    -DLLVM_TARGETS_TO_BUILD="AMDGPU;X86"
+    -DLLVM_INCLUDE_BENCHMARKS=OFF
+    -DLLVM_INCLUDE_EXAMPLES=OFF
+    -DLLVM_INSTALL_UTILS=ON
+    -DLLVM_BUILD_LLVM_DYLIB=ON
+    -DLLVM_LINK_LLVM_DYLIB=ON
+    -DCLANG_LINK_CLANG_DYLIB=ON
+    -DLLVM_DYLIB_COMPONENTS="all"
+    -DLLVM_USE_PERF=ON
+    -DSPHINX_WARNINGS_AS_ERRORS=OFF
+
+    # Extra project
+    -DLLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
+    -DCLANG_ENABLE_CLANGD=ON #Mod
+    -DCOMPILER_RT_INSTALL_PATH=/usr/lib/clang/$_pkgver
+
+    # Spirv LLVM Translator
+    -DLLVM_EXTERNAL_PROJECTS="SPIRV-LLVM-Translator"
+    -DLLVM_EXTERNAL_SPIRV_LLVM_TRANSLATOR_SOURCE_DIR="$srcdir"/SPIRV-LLVM-Translator
+    -DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=/usr/include/spirv/
+
+    # Remove docs
+    -DLLVM_BUILD_DOCS=OFF
+    -DLLVM_INCLUDE_DOCS=OFF
+    -DLLVM_ENABLE_OCAMLDOC=OFF
+    -DLLVM_ENABLE_SPHINX=OFF
+    -DLLVM_ENABLE_DOXYGEN=OFF
+    -DCLANG_INCLUDE_DOCS=OFF
+    -DCLANG_TOOLS_EXTRA_INCLUDE_DOCS=OFF
+
+    # Remove test
+    -DLLVM_BUILD_TESTS=OFF
+    -DCLANG_INCLUDE_TESTS=OFF
+    -DLLVM_SPIRV_INCLUDE_TESTS=OFF
+    -DCLANGD_TIDY_CHECKS=OFF
+  )
+  cmake .. "${cmake_args[@]}"
+  local distribution_components=$(_get_distribution_components | paste -sd\;)
+  test -n "$distribution_components"
+  cmake_args+=(-DLLVM_DISTRIBUTION_COMPONENTS="$distribution_components")
+
+  cmake .. "${cmake_args[@]}"
+  ninja -j18
+}
+
+package_llvm-minimal-git(){
+  pkgdesc='Compiler infrastructure (git version)'
+  depends=(llvm-libs-minimal-git perl)
+  conflicts=(llvm)
+  provides=(llvm)
+
+  cd llvm-project/llvm/build
+
+  DESTDIR="$pkgdir" ninja install
+
+  # Include lit for running lit-based tests in other projects
+  pushd ../utils/lit
+  python3 setup.py install --root="$pkgdir" -O1
+  popd
+
+  # The runtime libraries go into llvm-libs
+  mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
+  mv -f "$pkgdir"/usr/lib/LLVMgold.so "$srcdir"
+
+  if [[ $CARCH == x86_64 ]]; then
+    # Needed for multilib (https://bugs.archlinux.org/task/29951)
+    # Header stub is taken from Fedora
+    mv "$pkgdir/usr/include/llvm/Config/llvm-config"{,-64}.h
+    cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
+  fi
+
+  # Remove documentation sources
+  #rm -r "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
+
+  install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
+  install -Dm644 "$srcdir/llvm-project/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CODE_OWNERS"
+
+  # spirv-llvm-translator files go to a separate package
+  mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
+  mv "$pkgdir"/usr/bin/llvm-spirv "$srcdir"/spirv/usr/bin
+  mv "$pkgdir"/usr/include/LLVMSPIRVLib/* "$srcdir"/spirv/usr/include/LLVMSPIRVLib/
+  mv "$pkgdir"/usr/lib/libLLVMSPIRVLib.a "$srcdir"/spirv/usr/lib
+  mv "$pkgdir"/usr/lib/pkgconfig/LLVMSPIRVLib.pc "$srcdir"/spirv/usr/lib/pkgconfig
+}
+
+package_llvm-libs-minimal-git(){
+  pkgdesc='LLVM runtime libraries (git version)'
+  depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2)
+  conflicts=(llvm-libs)
+  provides=(llvm-libs)
+
+  install -d "$pkgdir/usr/lib"
+  cp -P \
+    "$srcdir"/lib{LLVM,LTO,Remarks}*.so* \
+    "$srcdir"/LLVMgold.so \
+    "$pkgdir/usr/lib/"
+
+  # Symlink LLVMgold.so from /usr/lib/bfd-plugins
+  # https://bugs.archlinux.org/task/28479
+  install -d "$pkgdir/usr/lib/bfd-plugins"
+  ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
+
+  install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
+  install -Dm644 "$srcdir/llvm-project/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CODE_OWNERS"
+}
+
+package_spirv-llvm-translator-minimal-git(){
+  pkgdesc='Tool and a library for bi-directional translation between SPIR-V and LLVM IR (git version)'
+  depends=(llvm-libs16-git spirv-tools-git)
+  conflicts=(spirv-llvm-translator)
+  provides=(spirv-llvm-translator)
+
+  cp --preserve --recursive "$srcdir"/spirv/* "$pkgdir"/
+  install -Dm644 ${srcdir}/SPIRV-LLVM-Translator/LICENSE.TXT -t "${pkgdir}"/usr/share/licenses/${pkgname}/
+}
+
+sha256sums=('SKIP'
+            'SKIP'
+            '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')

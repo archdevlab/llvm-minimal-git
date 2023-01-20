@@ -1,0 +1,59 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Credits: Laurent Carlier <lordheavym@gmail.com>
+
+pkgname=libclc-minimal-git
+pkgdesc='Library requirements of the OpenCL C programming language (git version)'
+url='https://libclc.llvm.org/'
+pkgver=16.0.0
+pkgrel=1
+commit=3e4a6f57412c63bab3f386a2c8a044a88657bac1
+arch=(x86_64)
+license=(MIT)
+makedepends=(clang llvm cmake ninja python spirv-llvm-translator git)
+conflicts=(libclc)
+provides=(libclc)
+source=(git+https://github.com/llvm/llvm-project.git#commit=$commit)
+
+pkgver(){
+  cd ${srcdir}/llvm-project/llvm
+
+  # This will almost match the output of `llvm-config --version` when the
+  # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
+  # dash being replaced with underscore because of Pacman requirements.
+  local _pkgver=$(awk -F 'MAJOR |MINOR |PATCH |)' \
+  'BEGIN { ORS="." ; i=0 } \
+  /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \
+  END { print "\n" }' \
+  CMakeLists.txt).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
+  echo "$_pkgver"
+}
+
+build(){
+  cd ${srcdir}/llvm-project/libclc
+
+  rm -rf build
+
+  # Temp fix remove spirv-mesa3d- and spirv64-mesa3d-
+  cmake -H. -G Ninja -Bbuild \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/usr
+  #-DLIBCLC_TARGETS_TO_BUILD="amdgcn--;amdgcn--amdhsa;clspv--;r600--;nvptx--;nvptx64--;nvptx--nvidiacl;nvptx64--nvidiacl"
+
+  ninja -C build
+}
+
+package(){
+  DESTDIR="$pkgdir" ninja -C ${srcdir}/llvm-project/libclc/build/ install
+
+  install -Dm644 ${srcdir}/llvm-project/libclc/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 ${srcdir}/llvm-project/libclc/CREDITS.TXT "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
+}
+
+sha256sums=('SKIP')
