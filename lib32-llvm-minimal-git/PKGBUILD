@@ -14,7 +14,6 @@ pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git)
 url='https://llvm.org/'
 pkgver=16.0.0.r449221.g49d47c4d2f28
 pkgrel=1
-_pkgver=16.0.0
 commit=49d47c4d2f280d15d1de94c53b72b6ab3c127b35
 arch=(i686 x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -87,11 +86,13 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
     -G Ninja
     -DCMAKE_CXX_FLAGS:STRING=-m32
     -DCMAKE_C_FLAGS:STRING=-m32
-    -DLLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
-    -DCOMPILER_RT_INSTALL_PATH=/usr/lib/clang/$_pkgver
     -DCMAKE_BUILD_TYPE=Release
     -DCMAKE_INSTALL_PREFIX=/usr
     -DLLVM_LIBDIR_SUFFIX=32
+    -DLLVM_BINUTILS_INCDIR=/usr/include
+    -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi)
+    -DLLVM_VERSION_SUFFIX=""
+    -DLLVM_APPEND_VC_REV=ON
     -DLLVM_TARGET_ARCH:STRING=i686
     -DLLVM_HOST_TRIPLE=$CHOST
     -DLLVM_DEFAULT_TARGET_TRIPLE="i686-pc-linux-gnu"
@@ -108,10 +109,9 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
     -DLLVM_ENABLE_SPHINX=OFF
     -DLLVM_ENABLE_OCAMLDOC=OFF
     -DLLVM_ENABLE_DOXYGEN=OFF
-    -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi)
-    -DLLVM_BINUTILS_INCDIR=/usr/include
-    -DLLVM_VERSION_SUFFIX=""
     -DLLVM_ENABLE_BINDINGS=OFF
+    -DLLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
+    -DCOMPILER_RT_INSTALL_PATH=/usr/lib/clang/$_pkgver
     -DLLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
     -Wno-dev
   )
@@ -127,12 +127,13 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
 package_lib32-llvm-minimal-git(){
   pkgdesc='Collection of modular and reusable compiler and toolchain technologies (32-bit) (git version)'
-  depends=(lib32-llvm-libs llvm)
-  conflicts=(lib32-llvm)
-  provides=(lib32-llvm)
+  depends=(lib32-llvm-libs-minimal-git llvm-minimal-git)
+  conflicts=(lib32-llvm lib32-clang lib32-compiler-rt)
+  provides=(lib32-llvm lib32-clang lib32-compiler-rt lib32-clang-analyzer lib32-clang-tools-extra)
+  conflicts=(lib32-clang-analyzer lib32-clang-tools-extra clang)
 
   DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/llvm/build install
-  #DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/llvm/build install-distribution
+  DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/llvm/build install-distribution
 
   # The runtime library goes into lib32-llvm-libs
   mv "$pkgdir"/usr/lib32/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
@@ -144,7 +145,7 @@ package_lib32-llvm-minimal-git(){
   mv "$pkgdir/usr/bin/llvm-config" "$pkgdir/usr/lib32/llvm-config"
   mv "$pkgdir/usr/include/llvm/Config/llvm-config.h" "$pkgdir/usr/lib32/llvm-config-32.h"
 
-  rm -rf "$pkgdir"/usr/{bin,include,lib,libexec,share/{doc,man,llvm,opt-viewer}}
+  rm -rf "$pkgdir"/usr/{bin,include,lib,libexec,share/{doc,man,llvm,opt-viewer,clang,scan-build,scan-view}}
 
   # Needed for multilib (https://bugs.archlinux.org/task/29951)
   # Header stub is taken from Fedora
