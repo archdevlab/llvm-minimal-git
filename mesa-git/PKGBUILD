@@ -126,7 +126,6 @@ build(){
   #meson configure build_64/
 
   ninja $NINJAFLAGS -C build_64/
-
   meson compile -C build_64/
 
   # fake installation to be seperated into packages
