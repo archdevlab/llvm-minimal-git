@@ -83,9 +83,9 @@ export CXXFLAGS+=" ${CPPFLAGS}"
 
   cd ${srcdir}/llvm-project/llvm
 
-  rm -rf build
+  #rm -rf build
 
-  mkdir build
+  #mkdir build
 
   cd build
 
@@ -147,7 +147,8 @@ package_llvm-minimal-git(){
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
   conflicts=(llvm compiler-rt clang)
-  provides=(llvm compiler-rt clang)
+  provides=(llvm compiler-rt clang clang-analyzer clang-tools-extra)
+  replaces=(clang-analyzer clang-tools-extra)
 
   cd llvm-project/llvm/build
 
@@ -170,6 +171,9 @@ package_llvm-minimal-git(){
     cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
   fi
 
+  # Install Python bindings (llvm-git aur)
+  #cp -a ${srcdir}/llvm-project/llvm/bindings/python/llvm  "$pkgdir"/usr/lib/python$_py/site-packages/
+
   # Move scanbuild-py into site-packages and install Python bindings
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   install -d "$pkgdir/$site_packages"
@@ -184,10 +188,10 @@ package_llvm-minimal-git(){
   sed -i 's|libexec|lib/clang|' \
     "$pkgdir/usr/bin/scan-build" \
     "$pkgdir/$site_packages/libscanbuild/analyze.py"
-    
+
   # Compile Python scripts
   _python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
-  
+
   # (taken from llvm-git aur)
   #optimize other python files except 2 problem cases
   #_python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
