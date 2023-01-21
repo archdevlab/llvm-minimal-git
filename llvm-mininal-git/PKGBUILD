@@ -182,6 +182,9 @@ package_llvm-minimal-git(){
   sed -i 's|libexec|lib/clang|' \
     "$pkgdir/usr/bin/scan-build" \
     "$pkgdir/$site_packages/libscanbuild/analyze.py"
+    
+  # Compile Python scripts
+  _python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
 
   # spirv-llvm-translator files go to a separate package
   mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
