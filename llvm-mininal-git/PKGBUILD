@@ -12,7 +12,7 @@
 pkgbase=llvm-minimal-git
 pkgname=(llvm-minimal-git llvm-libs-minimal-git spirv-llvm-translator-minimal-git)
 url='https://llvm.org/'
-pkgver=16.0.0
+pkgver=16.0.0.r449221.g49d47c4d2f28
 pkgrel=1
 _pkgver=16.0.0
 llvmcommit=49d47c4d2f280d15d1de94c53b72b6ab3c127b35
@@ -31,7 +31,7 @@ source=(git+https://github.com/llvm/llvm-project.git#commit=$llvmcommit
 # A reasonable value for them to avoid these issues appears to be 75% of available cores.
 # NINJAFLAGS and LITFLAGS are env vars that can be used to achieve this. They should be set on command line or in files read by your shell on login (like .bashrc ) .
 # example for systems with 24 cores
-# NINJAFLAGS="-j 18 -l 18"
+NINJAFLAGS="-j 20 -l 20"
 # LITFLAGS="-j 18"
 # NOTE: It's your responbility to validate the value of NINJAFLAGS and LITFLAGS. If unsure, don't set it.
 
@@ -83,80 +83,76 @@ export CXXFLAGS+=" ${CPPFLAGS}"
 
   cd ${srcdir}/llvm-project/llvm
 
-  rm -rf build
+  #rm -rf build
 
-  mkdir build
+  #mkdir build
 
   cd build
 
   local cmake_args=(
     -G Ninja
-    # Base config
     -DCMAKE_BUILD_TYPE=Release
-    -DCMAKE_INSTALL_DOCDIR=share/doc
     -DCMAKE_INSTALL_PREFIX=/usr
-    -DCMAKE_SKIP_RPATH=ON
     -DLLVM_BINUTILS_INCDIR=/usr/include
-    -DLLVM_ENABLE_BINDINGS=OFF
-    -DLLVM_ENABLE_FFI=ON
-    -DLLVM_ENABLE_RTTI=ON
+    -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi)
+    -DLLVM_VERSION_SUFFIX=""
+    -DLLVM_APPEND_VC_REV=ON
     -DLLVM_HOST_TRIPLE=$CHOST
     -DLLVM_TARGETS_TO_BUILD="AMDGPU;X86"
-    -DLLVM_INCLUDE_BENCHMARKS=OFF
-    -DLLVM_INCLUDE_EXAMPLES=OFF
-    -DLLVM_INSTALL_UTILS=ON
     -DLLVM_BUILD_LLVM_DYLIB=ON
     -DLLVM_LINK_LLVM_DYLIB=ON
     -DCLANG_LINK_CLANG_DYLIB=ON
     -DLLVM_DYLIB_COMPONENTS="all"
+    -DLLVM_INSTALL_UTILS=ON
+    -DLLVM_ENABLE_RTTI=ON
+    -DLLVM_ENABLE_FFI=ON
     -DLLVM_USE_PERF=ON
-    -DSPHINX_WARNINGS_AS_ERRORS=OFF
-
-    # Extra project
-    #-DLLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
-    #-DCLANG_ENABLE_CLANGD=ON
-    -DLLVM_ENABLE_PROJECTS="compiler-rt;clang"
-    -DCOMPILER_RT_INSTALL_PATH=/usr/lib/clang/$_pkgver
-
-    # Spirv LLVM Translator
-    -DLLVM_EXTERNAL_PROJECTS="SPIRV-LLVM-Translator"
-    -DLLVM_EXTERNAL_SPIRV_LLVM_TRANSLATOR_SOURCE_DIR="$srcdir"/SPIRV-LLVM-Translator
-    -DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=/usr/include/spirv/
-
-    # Remove docs
+    -DLLVM_INCLUDE_BENCHMARKS=OFF
+    -DLLVM_INCLUDE_EXAMPLES=OFF
     -DLLVM_BUILD_DOCS=OFF
     -DLLVM_INCLUDE_DOCS=OFF
     -DLLVM_ENABLE_OCAMLDOC=OFF
     -DLLVM_ENABLE_SPHINX=OFF
     -DLLVM_ENABLE_DOXYGEN=OFF
-    -DCLANG_INCLUDE_DOCS=OFF
-    -DCLANG_TOOLS_EXTRA_INCLUDE_DOCS=OFF
-
-    # Remove test
-    -DLLVM_BUILD_TESTS=OFF
-    -DCLANG_INCLUDE_TESTS=OFF
+    -DLLVM_ENABLE_BINDINGS=OFF
+    -DLLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
+    -DCOMPILER_RT_INSTALL_PATH=/usr/lib/clang/$_pkgver
+    -DLLVM_ENABLE_DUMP=ON
+    -DLLVM_EXTERNAL_PROJECTS="SPIRV-LLVM-Translator"
+    -DLLVM_EXTERNAL_SPIRV_LLVM_TRANSLATOR_SOURCE_DIR="$srcdir"/SPIRV-LLVM-Translator
+    -DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=/usr/include/spirv/
     -DLLVM_SPIRV_INCLUDE_TESTS=OFF
-    -DCLANGD_TIDY_CHECKS=OFF
+    -DLLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
+    -Wno-dev
   )
 
   cmake .. "${cmake_args[@]}"
   local distribution_components=$(_get_distribution_components | paste -sd\;)
   test -n "$distribution_components"
   cmake_args+=(-DLLVM_DISTRIBUTION_COMPONENTS="$distribution_components")
-  
+
   cmake .. "${cmake_args[@]}"
   ninja $NINJAFLAGS
 }
 
+_python_optimize(){
+  python -m compileall "$@"
+  python -O -m compileall "$@"
+  python -OO -m compileall "$@"
+}
+
 package_llvm-minimal-git(){
-  pkgdesc='Compiler infrastructure (git version)'
+  pkgdesc='Collection of modular and reusable compiler and toolchain technologies (git version)'
   depends=(llvm-libs-minimal-git perl)
-  conflicts=(llvm)
-  provides=(llvm)
+  optdepends=('python: for using lit (LLVM Integrated Tester)'
+              'python-setuptools: for using lit')
+  conflicts=(llvm compiler-rt clang)
+  provides=(llvm compiler-rt clang)
 
   cd llvm-project/llvm/build
 
   DESTDIR="$pkgdir" ninja $NINJAFLAGS install
+  DESTDIR="$pkgdir" ninja $NINJAFLAGS install-distribution
 
   # Include lit for running lit-based tests in other projects
   pushd ../utils/lit
@@ -174,9 +170,18 @@ package_llvm-minimal-git(){
     cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
   fi
 
-  install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-  install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
-  install -Dm644 "$srcdir/llvm-project/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CODE_OWNERS"
+  # Move scanbuild-py into site-packages and install Python bindings
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  install -d "$pkgdir/$site_packages"
+  mv "$pkgdir"/usr/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
+  cp -a ${srcdir}/llvm-project/clang/bindings/python/clang "$pkgdir/$site_packages/"
+
+  # Move analyzer scripts out of /usr/libexec
+  mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
+  rmdir "$pkgdir/usr/libexec"
+  sed -i 's|libexec|lib/clang|' \
+    "$pkgdir/usr/bin/scan-build" \
+    "$pkgdir/$site_packages/libscanbuild/analyze.py"
 
   # spirv-llvm-translator files go to a separate package
   mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
@@ -184,6 +189,17 @@ package_llvm-minimal-git(){
   mv "$pkgdir"/usr/include/LLVMSPIRVLib/* "$srcdir"/spirv/usr/include/LLVMSPIRVLib/
   mv "$pkgdir"/usr/lib/libLLVMSPIRVLib.a "$srcdir"/spirv/usr/lib
   mv "$pkgdir"/usr/lib/pkgconfig/LLVMSPIRVLib.pc "$srcdir"/spirv/usr/lib/pkgconfig
+
+  install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
+  install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
+  install -Dm644 "$srcdir/llvm-project/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CODE_OWNERS"
+
+  install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/LICENSE"
+  install -Dm644 "$srcdir/llvm-project/clang/CodeOwners.rst" "$pkgdir/usr/share/licenses/$pkgname/clang/CodeOwners.rst"
+  install -Dm644 "$srcdir/llvm-project/clang-tools-extra/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/LICENSE"
+  install -Dm644 "$srcdir/llvm-project/clang-tools-extra/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/CODE_OWNERS"
+
+  install -Dm644 "${srcdir}/llvm-project/compiler-rt/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/compiler-rt/LICENSE"
 }
 
 package_llvm-libs-minimal-git(){
@@ -210,7 +226,7 @@ package_llvm-libs-minimal-git(){
 
 package_spirv-llvm-translator-minimal-git(){
   pkgdesc='Tool and a library for bi-directional translation between SPIR-V and LLVM IR (git version)'
-  depends=(llvm-libs16-git spirv-tools-git)
+  depends=(llvm-libs-minimal-git spirv-tools-git)
   conflicts=(spirv-llvm-translator)
   provides=(spirv-llvm-translator)
 
