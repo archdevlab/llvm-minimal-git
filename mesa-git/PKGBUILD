@@ -216,8 +216,7 @@ package_vulkan-virtio-git(){
   pkgdesc='Virtio-GPU protocol for Vulkan command serialization (Venus) (git release)'
   depends=(wayland libx11 libxshmfence libdrm zstd systemd-libs)
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
-  conflicts=(vulkan-virtio-experimental-llvm16-git vulkan-virtio)
-  replaces=(vulkan-virtio-experimental-llvm16-git)
+  conflicts=(vulkan-virtio)
   provides=(vulkan-driver vulkan-virtio)
 
   _install fakeinstall/usr/share/vulkan/icd.d/virtio_icd*.json
@@ -266,8 +265,6 @@ package_vulkan-imagination-git(){
   pkgdesc='Imagination Rogue PowerVR Vulkan driver (git release)'
   depends=(libx11 libxshmfence libdrm libelf zstd llvm-libs systemd-libs libunwind)
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
-  conflicts=(imagination-srv-llvm16-git vulkan-imagination-experimental-llvm16-git)
-  replaces=(imagination-srv-llvm16-git vulkan-imagination-experimental-llvm16-git)
   provides=(vulkan-driver)
 
   _install fakeinstall/usr/share/vulkan/icd.d/powervr_mesa_icd*.json
