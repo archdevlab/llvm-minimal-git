@@ -11,7 +11,7 @@
 #Credits: Reza Jahanbakhshi <reza.jahanbakhshi at gmail dot com
 
 pkgbase=mesa-git
-pkgname=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git 
+pkgname=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git
          mesa-vdpau-git vulkan-intel-hasvk-git vulkan-imagination-git mesa-git)
 pkgver=23.0.0_devel
 pkgrel=1
@@ -22,7 +22,8 @@ license=(MIT)
 makedepends=(meson ninja bison flex python python-mako valgrind cmake xorgproto wayland-protocols glslang libclc elfutils
              libarchive libconfig compiler-rt libxcb wayland libxml2 libx11 libvdpau libelf libglvnd ncurses libva libxrandr
              expat libdrm libxv libxshmfence libxxf86vm libxdamage zstd lm_sensors libunwind vulkan-icd-loader llvm clang llvm-libs
-             spirv-llvm-translator glibc gcc gcc-libs libomxil-bellagio directx-headers systemd patch)
+             glibc gcc gcc-libs libomxil-bellagio directx-headers systemd patch)
+makedepends+=(rust rust-bindgen spirv-tools spirv-llvm-translator) # rusticl dependencies
 options=(!debug !lto)
 source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit=$commit
         0001-anv-force-MEDIA_INTERFACE_DESCRIPTOR_LOAD-reemit-aft-v3.patch
@@ -80,7 +81,8 @@ build(){
   -Dgallium-nine=true \
   -Dgallium-d3d10umd=false \
   -Dgallium-opencl=icd \
-  -Dgallium-rusticl=false \
+  -Dgallium-rusticl=true \
+  -D rust_std=2021 \
   -Dopencl-spirv=false \
   -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental,imagination-experimental \
   -Dimagination-srv=true \
