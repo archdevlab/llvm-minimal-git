@@ -14,7 +14,7 @@ pkgbase=lib32-mesa-git
 pkgname=(lib32-vulkan-mesa-layers-git lib32-opencl-mesa-git lib32-vulkan-intel-git lib32-vulkan-radeon-git
          lib32-vulkan-virtio-git lib32-libva-mesa-driver-git lib32-mesa-vdpau-git lib32-vulkan-swrast-git
          lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git lib32-mesa-git)
-pkgver=23.0.0_devel
+pkgver=23.1.0_devel.165569.247c06d4199
 pkgrel=1
 commit=247c06d41997538e877619326d046f84887a48ab
 arch=(i686 x86_64)
@@ -24,11 +24,10 @@ makedepends=(meson ninja bison lib32-flex python python-mako valgrind cmake xorg
              libarchive libconfig compiler-rt lib32-libxcb lib32-wayland lib32-libxml2 lib32-libx11 lib32-libvdpau lib32-libelf
              lib32-libglvnd lib32-ncurses lib32-libva lib32-libxrandr lib32-expat lib32-libdrm lib32-libxv lib32-libxshmfence lib32-libxxf86vm
              lib32-libxdamage lib32-zstd lib32-lm_sensors lib32-libunwind lib32-vulkan-icd-loader lib32-clang lib32-llvm lib32-llvm-libs
-             spirv-llvm-translator lib32-glibc gcc lib32-gcc-libs directx-headers lib32-systemd patch)
+             lib32-glibc gcc lib32-gcc-libs directx-headers lib32-systemd patch)
+makedepends+=(rust rust-bindgen spirv-tools spirv-llvm-translator) # rusticl dependencies
 options=(!debug !lto)
 source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit=$commit
-        0001-anv-force-MEDIA_INTERFACE_DESCRIPTOR_LOAD-reemit-aft-v3.patch
-        0002-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM-v1.patch
         0003-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem-v1.patch)
 
 # ninja grabs all available cores and leaves almost nothing for other processes.
@@ -138,7 +137,7 @@ END
   -Dintel-clc=disabled \
   -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
   -Dgallium-d3d12-video=enabled
-  
+
   meson configure --no-pager build_32/
   ninja $NINJAFLAGS -C build_32/
   meson compile -C build_32/
@@ -344,6 +343,4 @@ package_lib32-mesa-git(){
 }
 
 sha256sums=('SKIP'
-            '384868758a6d80924a21647f6892ba3d5ecad7d641cb3940d087d001f67aefeb'
-            'fcf94124307394d9687a45d59cfc9f14cda13e0f31f75c80a3905e943da29832'
             '93cfbd909aa3b77dd06501936899b2d73154e5abf939882854a97d15dc355288')
