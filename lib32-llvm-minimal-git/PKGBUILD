@@ -130,7 +130,7 @@ package_lib32-llvm-minimal-git(){
   depends=(lib32-llvm-libs-minimal-git llvm-minimal-git)
   conflicts=(lib32-llvm lib32-clang lib32-compiler-rt)
   provides=(lib32-llvm lib32-clang lib32-compiler-rt lib32-clang-analyzer lib32-clang-tools-extra)
-  conflicts=(lib32-clang-analyzer lib32-clang-tools-extra clang)
+  replaces=(lib32-clang-analyzer lib32-clang-tools-extra)
 
   DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/llvm/build install
   DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/llvm/build install-distribution
