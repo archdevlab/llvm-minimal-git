@@ -179,7 +179,7 @@ package_llvm-minimal-git(){
   mv "$pkgdir"/usr/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
   cp -a ${srcdir}/llvm-project/clang/bindings/python/clang "$pkgdir/$site_packages/"
   # (taken from llvm-git aur)
-  cp -a ${srcdir}/llvm-project/clang/bindings/python/clang "$pkgdir/$site_packages/"
+  cp -a ${srcdir}/llvm-project/llvm/bindings/python/llvm "$pkgdir/$site_packages/"
 
   # Move analyzer scripts out of /usr/libexec
   mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
@@ -193,7 +193,7 @@ package_llvm-minimal-git(){
   
   # (taken from llvm-git aur)
   #optimize other python files except 2 problem cases
-  _python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
+  #_python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
 
   # spirv-llvm-translator files go to a separate package
   mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
