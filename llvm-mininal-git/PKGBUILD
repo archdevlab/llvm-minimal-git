@@ -206,12 +206,10 @@ package_llvm-minimal-git(){
   install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
   install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
   install -Dm644 "$srcdir/llvm-project/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CODE_OWNERS"
-
   install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/LICENSE"
   install -Dm644 "$srcdir/llvm-project/clang/CodeOwners.rst" "$pkgdir/usr/share/licenses/$pkgname/clang/CodeOwners.rst"
   install -Dm644 "$srcdir/llvm-project/clang-tools-extra/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/LICENSE"
   install -Dm644 "$srcdir/llvm-project/clang-tools-extra/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/CODE_OWNERS"
-
   install -Dm644 "${srcdir}/llvm-project/compiler-rt/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/compiler-rt/LICENSE"
 }
 
