@@ -31,6 +31,11 @@ source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit=$commit
         0002-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM-v1.patch
         0003-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem-v1.patch)
 
+# ninja grabs all available cores and leaves almost nothing for other processes.
+# this package uses the environment variable NINJAFLAGS to allow the user to change this behaviour
+# The responsibility to validate the value of NINJAFLAGS lies with the user.
+# If unsure, use NINJAFLAGS=""
+
 pkgver(){
   cd ${srcdir}/mesa
   read -r _ver <VERSION
@@ -134,7 +139,7 @@ END
   -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
   -Dgallium-d3d12-video=enabled
 
-  ninja -C build_32/
+  ninja $NINJAFLAGS -C build_32/
   meson compile -C build_32/
 
   # fake installation to be seperated into packages
