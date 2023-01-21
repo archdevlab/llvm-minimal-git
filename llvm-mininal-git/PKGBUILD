@@ -83,9 +83,9 @@ export CXXFLAGS+=" ${CPPFLAGS}"
 
   cd ${srcdir}/llvm-project/llvm
 
-  #rm -rf build
+  rm -rf build
 
-  #mkdir build
+  mkdir build
 
   cd build
 
