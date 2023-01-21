@@ -11,15 +11,24 @@
 pkgname=libclc-minimal-git
 pkgdesc='Library requirements of the OpenCL C programming language (git version)'
 url='https://libclc.llvm.org/'
-pkgver=16.0.0
+pkgver=16.0.0.r449221.g49d47c4d2f28
 pkgrel=1
 commit=49d47c4d2f280d15d1de94c53b72b6ab3c127b35
 arch=(x86_64)
 license=(MIT)
-makedepends=(clang llvm cmake ninja python spirv-llvm-translator git)
+makedepends=(llvm-minimal-git cmake ninja python spirv-llvm-translator-minimal-git git)
 conflicts=(libclc)
 provides=(libclc)
 source=(git+https://github.com/llvm/llvm-project.git#commit=$commit)
+
+# Both ninja & LIT by default use all available cores. this can lead to heavy stress on systems making them unresponsive.
+# It can also happen that the kernel oom killer interferes and kills important tasks.
+# A reasonable value for them to avoid these issues appears to be 75% of available cores.
+# NINJAFLAGS and LITFLAGS are env vars that can be used to achieve this. They should be set on command line or in files read by your shell on login (like .bashrc ) .
+# example for systems with 24 cores
+# NINJAFLAGS="-j 20 -l 20"
+# LITFLAGS="-j 18"
+# NOTE: It's your responbility to validate the value of NINJAFLAGS and LITFLAGS. If unsure, don't set it.
 
 pkgver(){
   cd ${srcdir}/llvm-project/llvm
@@ -40,17 +49,15 @@ build(){
 
   rm -rf build
 
-  # Temp fix remove spirv-mesa3d- and spirv64-mesa3d-
   cmake -H. -G Ninja -Bbuild \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=/usr
-  #-DLIBCLC_TARGETS_TO_BUILD="amdgcn--;amdgcn--amdhsa;clspv--;r600--;nvptx--;nvptx64--;nvptx--nvidiacl;nvptx64--nvidiacl"
 
-  ninja -C build
+  ninja $NINJAFLAGS -C build
 }
 
 package(){
-  DESTDIR="$pkgdir" ninja -C ${srcdir}/llvm-project/libclc/build/ install
+  DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/libclc/build/ install
 
   install -Dm644 ${srcdir}/llvm-project/libclc/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 ${srcdir}/llvm-project/libclc/CREDITS.TXT "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
