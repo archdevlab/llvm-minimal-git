@@ -171,9 +171,6 @@ package_llvm-minimal-git(){
     cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
   fi
 
-  # Install Python bindings (llvm-git aur)
-  #cp -a ${srcdir}/llvm-project/llvm/bindings/python/llvm  "$pkgdir"/usr/lib/python$_py/site-packages/
-
   # Move scanbuild-py into site-packages and install Python bindings
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   install -d "$pkgdir/$site_packages"
