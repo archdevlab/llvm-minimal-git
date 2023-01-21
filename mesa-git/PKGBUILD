@@ -123,8 +123,7 @@ build(){
   -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
   -Dgallium-d3d12-video=enabled
 
-  #meson configure build_64/
-
+  meson configure --no-pager build_64/
   ninja $NINJAFLAGS -C build_64/
   meson compile -C build_64/
 
