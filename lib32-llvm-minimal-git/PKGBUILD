@@ -77,9 +77,9 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
   cd ${srcdir}/llvm-project/llvm
 
-  #rm -rf build
+  rm -rf build
 
-  #mkdir build
+  mkdir build
 
   cd build
 
