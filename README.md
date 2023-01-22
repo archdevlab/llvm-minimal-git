@@ -88,12 +88,7 @@ You can add this repo to your pacman.conf
     SigLevel = Optional TrustAll
     Server = https://repo.blacksky3.com/$arch/$repo
 
-    sudo pacman -S llvm16-mininal-git llvm-libs-minimal-git lib32-llvm-miniaml-git lib32-llvm-libs-minimal-git clang-minimal-git lib32-clang-minimal-git compiler-rt-minimal-git libclc-minimal-git spirv-llvm-translator-minimal-git spirv-headers-git spirv-tools-git
-
-    Optional, but you can install mesa-llvm16-git and lib32-mesa-llvm16-git that are compiled against llvm-git packages from this repo
-
-    sudo pacman -S mesa-llvm16-git lib32-mesa-llvm16-git
-
+    sudo pacman -S llvm-mininal-git llvm-libs-minimal-git lib32-llvm-miniaml-git lib32-llvm-libs-minimal-git libclc-minimal-git spirv-llvm-translator-minimal-git spirv-headers-git spirv-tools-git glslang-git
 
 # Reinstall normal LLVM Toolchain
 
