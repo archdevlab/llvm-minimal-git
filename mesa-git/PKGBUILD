@@ -13,9 +13,9 @@
 pkgbase=mesa-git
 pkgname=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git
          mesa-vdpau-git vulkan-intel-hasvk-git vulkan-imagination-git mesa-git)
-pkgver=23.1.0_devel.165569.247c06d4199
+pkgver=23.1.0_devel
 pkgrel=1
-commit=247c06d41997538e877619326d046f84887a48ab
+commit=d59683ab8986f977cc91d09fc251f6ed971f0e41
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
