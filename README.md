@@ -12,9 +12,13 @@ LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no t
 
 This repo contain spirv-headers-git and spirv-tools-git package. Why so? Because SPIRV-LLVM-Translator depends on it. Easier to have it in this repo and compile them at the same time of compiling LLVM.
 
+### glslang
+
+This repo contain glslang-git package. Why so? Because glslang depends on SPIRV-Headers and SPIRV-Tools. So it feel more natural to have this package in this repo.
+
 ### Mesa
 
-Why mesa packages are not in a separate repo. No technical reason, just easier for me to have it in this repo and because mesa and llvm are closely tied together, everytime llvm changes/updates, mesa needs to be rebuilt. If you want to just compile Mesa packages and not interested about LLVM and SPIRV package you can go ahead, no problem
+Why mesa packages are not in a separate repo. Because mesa and llvm are closely tied together, everytime llvm changes/updates, mesa needs to be rebuilt. Another reason is that, everytimes glslang version change, archlinux recompile mesa against glslang new version, so it feel more natural to have this package in this repo. If you want to just compile Mesa packages and not interested about LLVM, SPIRV and glslang package you can go ahead, no problem.
 
 #### 20/01/20233
 
