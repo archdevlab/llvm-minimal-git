@@ -25,6 +25,8 @@ cd libclc-minimal-git && makepkg -si --noconfirm && cd ${source}
 
 cd lib32-llvm-minimal-git && makepkg -si --noconfirm && cd ${source}
 
+cd glslang-git && makepkg -si --noconfirm && cd ${source}
+
 cd mesa-git && makepkg -si --noconfirm && cd ${source}
 
 cd lib32-mesa-git && makepkg -si --noconfirm && cd ${source}
