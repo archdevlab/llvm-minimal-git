@@ -21,7 +21,7 @@ depends=(gcc-libs python)
 conflicts=(glslang)
 provides=(glslang glslang-git)
 options=(staticlibs)
-source=(git+https://github.com/KhronosGroup/glslang.git)
+source=(git+https://github.com/KhronosGroup/glslang.git#commit=$commit)
 md5sums=(SKIP)
 
 pkgver(){
