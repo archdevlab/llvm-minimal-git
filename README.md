@@ -22,7 +22,7 @@ Why Mesa's packages are not in a separate repo? Because mesa and llvm are closel
 
 #### 20/01/2023
 
-mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal fortmat, maybe.
+mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal fortmat? Maybe.
 
 # Version
 
