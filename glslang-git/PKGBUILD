@@ -111,3 +111,5 @@ package_glslang-git(){
   #rm -r "${pkgdir}"/usr/{bin/spirv*,include/spirv-tools,lib/cmake/SPIRV-Tools*,lib/libSPIRV-*,lib/pkgconfig}
   #mv spirv-remap "${pkgdir}"/usr/bin/spirv-remap
 }
+
+sha256sums=('SKIP')
