@@ -20,7 +20,7 @@ This repo contain glslang-git package. Why so? Because glslang depends on SPIRV-
 
 Why Mesa's packages are not in a separate repo? Because mesa and llvm are closely tied together, everytime llvm changes/updates, mesa needs to be rebuilt. Another reason is that, everytimes glslang version change, archlinux recompile mesa against glslang new version, so it feel more natural to have this package in this repo. If you want to just compile Mesa's packages and not interested about LLVM, SPIRV and glslang package you can go ahead, no problem.
 
-#### 20/01/20233
+#### 20/01/2023
 
 mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal fortmat, maybe.
 
