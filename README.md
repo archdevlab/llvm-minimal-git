@@ -16,10 +16,6 @@ This repo contain spirv-headers-git and spirv-tools-git package. Why so? Because
 
 This repo contain glslang-git package. Why so? Because glslang depends on SPIRV-Headers and SPIRV-Tools. So it feel more natural to have this package in this repo.
 
-### vulkan-tools
-
-This repo contain vulkan-tools-git package. Why so? Because vulkan-tools depends on glslang. Everytimes glslang version change, archlinux recompile vulkan-tools against glslang new version, so it feel more natural to have this package in this repo.
-
 ### Mesa
 
 Why Mesa's packages are not in a separate repo? Because mesa and llvm are closely tied together, everytime llvm changes/updates, mesa needs to be rebuilt. Another reason is that, everytimes glslang version change, archlinux recompile mesa against glslang new version, so it feel more natural to have this package in this repo. If you want to just compile Mesa's packages and not interested about LLVM, SPIRV and glslang package you can go ahead, no problem.
