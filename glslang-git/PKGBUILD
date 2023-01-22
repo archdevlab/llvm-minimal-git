@@ -21,8 +21,8 @@ depends=(gcc-libs python)
 conflicts=(glslang)
 provides=(glslang glslang-git)
 options=(staticlibs)
-source=(git+https://github.com/KhronosGroup/glslang.git#commit=$commit)
-md5sums=(SKIP)
+source=(git+https://github.com/KhronosGroup/glslang.git#commit=$commit
+        glslang-11.13.0-cmake_include_dirs.patch)
 
 pkgver(){
   cd ${srcdir}/glslang
