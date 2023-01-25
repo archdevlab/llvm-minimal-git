@@ -176,7 +176,7 @@ package_llvm14-minimal(){
   cp -a ${srcdir}/llvm-project-llvmorg-${pkgver}/llvm/bindings/python/llvm "$pkgdir/$site_packages/"
 
   # Move analyzer scripts out of /usr/libexec
-  mv "$pkgdir"/usr/libexec/* "$pkgdir/opt/llvm14/usr/lib/clang/"
+  mv "$pkgdir"/opt/llvm14/usr/libexec/* "$pkgdir/opt/llvm14/usr/lib/clang/"
   rmdir "$pkgdir/usr/libexec"
   sed -i 's|libexec|lib/clang|' \
     "$pkgdir/opt/llvm14/usr/bin/scan-build" \
