@@ -190,7 +190,7 @@ package_llvm14-minimal(){
     "$pkgdir/$site_packages/libscanbuild/analyze.py"
 
   # Compile Python scripts
-  #_python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
+  #_python_optimize "$pkgdir/opt/llvm14/share" "$pkgdir/$site_packages"
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
