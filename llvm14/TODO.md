@@ -1,6 +1,4 @@
-# Add symlink
-
-- Add symlink to /opt/llvm14/lib
+# Add symlink to /opt/llvm14/lib
 
 One that is done (needed for llvm-spirv) (llvm14-libs-minimal)
   
