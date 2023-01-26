@@ -10,7 +10,7 @@
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgbase=llvm-minimal-git
-pkgname=(llvm-minimal-git llvm-libs-minimal-git spirv-llvm-translator-minimal-git)
+pkgname=(llvm-minimal-git llvm-libs-minimal-git)
 url='https://llvm.org/'
 pkgver=16.0.0
 pkgrel=1
