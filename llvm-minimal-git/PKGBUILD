@@ -144,11 +144,12 @@ _python_optimize(){
 package_llvm-minimal-git(){
   pkgdesc='Collection of modular and reusable compiler and toolchain technologies (git version)'
   depends=(llvm-libs-minimal-git perl)
+  depends+=(spirv-tools-git) # For spirv-llvm-translator
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
-  conflicts=(llvm compiler-rt clang spirv-llvm-translator)
+  conflicts=(llvm compiler-rt clang spirv-llvm-translator spirv-llvm-translator-minimal-git)
   provides=(llvm compiler-rt clang clang-analyzer clang-tools-extra spirv-llvm-translator)
-  replaces=(clang-analyzer clang-tools-extra)
+  replaces=(clang-analyzer clang-tools-extra spirv-llvm-translator-minimal-git)
 
   cd llvm-project/llvm/build
 
@@ -194,11 +195,11 @@ package_llvm-minimal-git(){
   #_python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
 
   # spirv-llvm-translator files go to a separate package
-  mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
-  mv "$pkgdir"/usr/bin/llvm-spirv "$srcdir"/spirv/usr/bin
-  mv "$pkgdir"/usr/include/LLVMSPIRVLib/* "$srcdir"/spirv/usr/include/LLVMSPIRVLib/
-  mv "$pkgdir"/usr/lib/libLLVMSPIRVLib.a "$srcdir"/spirv/usr/lib
-  mv "$pkgdir"/usr/lib/pkgconfig/LLVMSPIRVLib.pc "$srcdir"/spirv/usr/lib/pkgconfig
+  #mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
+  #mv "$pkgdir"/usr/bin/llvm-spirv "$srcdir"/spirv/usr/bin
+  #mv "$pkgdir"/usr/include/LLVMSPIRVLib/* "$srcdir"/spirv/usr/include/LLVMSPIRVLib/
+  #mv "$pkgdir"/usr/lib/libLLVMSPIRVLib.a "$srcdir"/spirv/usr/lib
+  #mv "$pkgdir"/usr/lib/pkgconfig/LLVMSPIRVLib.pc "$srcdir"/spirv/usr/lib/pkgconfig
 
   install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
   install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
@@ -208,6 +209,7 @@ package_llvm-minimal-git(){
   install -Dm644 "$srcdir/llvm-project/clang-tools-extra/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/LICENSE"
   install -Dm644 "$srcdir/llvm-project/clang-tools-extra/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/CODE_OWNERS"
   install -Dm644 "${srcdir}/llvm-project/compiler-rt/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/compiler-rt/LICENSE"
+  install -Dm644 "${srcdir}/SPIRV-LLVM-Translator/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/spirv-llvm-translator/LICENSE"
 }
 
 package_llvm-libs-minimal-git(){
@@ -232,15 +234,15 @@ package_llvm-libs-minimal-git(){
   install -Dm644 "$srcdir/llvm-project/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CODE_OWNERS"
 }
 
-package_spirv-llvm-translator-minimal-git(){
-  pkgdesc='Tool and a library for bi-directional translation between SPIR-V and LLVM IR (git version)'
-  depends=(llvm-libs-minimal-git spirv-tools-git)
-  conflicts=(spirv-llvm-translator)
-  provides=(spirv-llvm-translator)
-
-  cp --preserve --recursive "$srcdir"/spirv/* "$pkgdir"/
-  install -Dm644 ${srcdir}/SPIRV-LLVM-Translator/LICENSE.TXT -t "${pkgdir}"/usr/share/licenses/${pkgname}/
-}
+#package_spirv-llvm-translator-minimal-git(){
+#  pkgdesc='Tool and a library for bi-directional translation between SPIR-V and LLVM IR (git version)'
+#  depends=(llvm-libs-minimal-git spirv-tools-git)
+#  conflicts=(spirv-llvm-translator)
+#  provides=(spirv-llvm-translator)
+#
+#  cp --preserve --recursive "$srcdir"/spirv/* "$pkgdir"/
+#  install -Dm644 ${srcdir}/SPIRV-LLVM-Translator/LICENSE.TXT -t "${pkgdir}"/usr/share/licenses/${pkgname}/
+#}
 
 sha256sums=('SKIP'
             'SKIP'
