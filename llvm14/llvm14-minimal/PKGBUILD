@@ -13,7 +13,7 @@ pkgbase=llvm14-minimal
 pkgname=(llvm14-minimal llvm14-libs-minimal)
 url='https://llvm.org/'
 pkgver=14.0.0
-pkgrel=1
+pkgrel=2
 _pkgver=14.0.0
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -75,6 +75,10 @@ prepare(){
   patch -Np2 -i ${srcdir}/enforce-instantiation-of-constexpr-template-functions.patch
   # https://github.com/llvm/llvm-project/issues/49689
   patch -Np2 -i ${srcdir}/clang-coroutines-ubsan.patch
+
+  # Attempt to convert script to Python 3
+  2to3 -wn --no-diffs \
+      ${srcdir}/llvm-project-llvmorg-${pkgver}/clang-tools-extra/clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
 }
 
 build(){
@@ -115,7 +119,7 @@ export CXXFLAGS+=" ${CPPFLAGS}"
     -DLLVM_ENABLE_SPHINX=OFF
     -DLLVM_ENABLE_DOXYGEN=OFF
     -DLLVM_ENABLE_BINDINGS=OFF
-    -DLLVM_ENABLE_PROJECTS="compiler-rt;clang"
+    -DLLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
     -DCOMPILER_RT_INSTALL_PATH=/opt/llvm14/lib/clang/$_pkgver
     -DLLVM_ENABLE_DUMP=ON
     -DLLVM_EXTERNAL_PROJECTS="SPIRV-LLVM-Translator"
@@ -147,7 +151,7 @@ package_llvm14-minimal(){
   depends+=(spirv-tools-git) # For spirv-llvm-translator
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
-  provides=(llvm14 clang14 compiler-rt14 spirv-llvm-translator14)
+  provides=(llvm14 clang14 compiler-rt14 spirv-llvm-translator14 clang-analyzer14 clang-tools-extra14)
 
   cd ${srcdir}/llvm-project-llvmorg-${pkgver}/llvm/build
 
@@ -155,9 +159,9 @@ package_llvm14-minimal(){
   DESTDIR="$pkgdir" ninja $NINJAFLAGS install-distribution
 
   # Include lit for running lit-based tests in other projects
-  pushd ../utils/lit
-  python3 setup.py install --root="$pkgdir" -O1
-  popd
+  #pushd ../utils/lit
+  #python3 setup.py install --root="$pkgdir" -O1
+  #popd
 
   # The runtime libraries go into llvm-libs
   mv -f "$pkgdir"/opt/llvm14/lib/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
@@ -170,11 +174,31 @@ package_llvm14-minimal(){
     cp "$srcdir/llvm-config.h" "$pkgdir/opt/llvm14/include/llvm/Config/llvm-config.h"
   fi
 
+  # Move scanbuild-py into site-packages and install Python bindings
+  local site_packages="/opt/llvm14/lib/python3.10/site-packages"
+  install -d "$pkgdir/$site_packages"
+  mv "$pkgdir"/opt/llvm14/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
+  cp -a ${srcdir}/llvm-project-llvmorg-${pkgver}/clang/bindings/python/clang "$pkgdir/$site_packages/"
+  # (taken from llvm-git aur)
+  cp -a ${srcdir}/llvm-project-llvmorg-${pkgver}/llvm/bindings/python/llvm "$pkgdir/$site_packages/"
+
+  # Move analyzer scripts out of /usr/libexec
+  mv "$pkgdir"/opt/llvm14/libexec/* "$pkgdir/opt/llvm14/lib/clang/"
+  rmdir "$pkgdir/opt/llvm14/libexec"
+  sed -i 's|libexec|lib/clang|' \
+    "$pkgdir/opt/llvm14/bin/scan-build" \
+    "$pkgdir/$site_packages/libscanbuild/analyze.py"
+
+  # Compile Python scripts
+  #_python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
+
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CODE_OWNERS"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/clang/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/CODE_OWNERS"
+  install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/clang-tools-extra/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/LICENSE"
+  install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/clang-tools-extra/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/CODE_OWNERS"
   install -Dm644 "${srcdir}/llvm-project-llvmorg-${pkgver}/compiler-rt/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/compiler-rt/LICENSE"
   install -Dm644 "${srcdir}/llvm-project-llvmorg-${pkgver}/compiler-rt/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/compiler-rt/LICENSE"
   install -Dm644 "${srcdir}/SPIRV-LLVM-Translator-${pkgver}/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/spirv-llvm-translator/LICENSE"
