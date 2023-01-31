@@ -10,7 +10,7 @@ One that is done (needed for llvm-spirv) (also needed for other application) (ll
     
 ### Add symlink to /opt/llvm14/lib32
 
-One that is done (also needed for other application) (lib32-llvm14-libs-minimal)
+One that is done (needed for other application) (lib32-llvm14-libs-minimal)
   
     # Needed for llvm-spirv
     install -d "$pkgdir/usr/lib32"
