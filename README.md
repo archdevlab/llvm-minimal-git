@@ -72,10 +72,10 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 After a succeful build of the toolchain you'll need to recompile mesa package, because mesa and llvm are closely tied together. Everytime llvm changes/updates, mesa needs to be rebuilt.
 
-    cd mesa-git
+    cd mesa/mesa-git
     makepkg -si
 
-    cd lib32-mesa-git
+    cd mesa/lib32-mesa-git
     makepkg -si
 
 # Prebuild package
@@ -90,9 +90,21 @@ You can add this repo to your pacman.conf
 
     sudo pacman -S llvm-mininal-git llvm-libs-minimal-git lib32-llvm-miniaml-git lib32-llvm-libs-minimal-git libclc-minimal-git spirv-llvm-translator-minimal-git spirv-headers-git spirv-tools-git glslang-git
 
-# Reinstall normal LLVM Toolchain
+## Reinstall normal LLVM Toolchain
 
     sudo pacman -S llvm llvm-libs lib32-llvm lib32-llvm-libs clang lib32-clang compiler-rt libclc spirv-llvm-translator spirv-headers spirv-tools glslang
+
+## LLVM14
+
+Prebuild package are available at https://repo.blacksky3.com/x86_64/llvm14-minimal
+
+You can add this repo to your pacman.conf
+
+    [llvm-minimal-git]
+    SigLevel = Optional TrustAll
+    Server = https://repo.blacksky3.com/$arch/$repo
+
+    sudo pacman -S llvm14-minimal llvm14-libs-minimal libclc14-minimal lib32-llvm14-minimal lib32-llvm14-libs-minimal
 
 # Donation
 
