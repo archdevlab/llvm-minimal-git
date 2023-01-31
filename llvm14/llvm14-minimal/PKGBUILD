@@ -220,7 +220,7 @@ package_llvm14-libs-minimal(){
   install -d "$pkgdir/opt/llvm14/lib/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/opt/llvm14/lib/bfd-plugins/LLVMgold.so"
   
-  # Needed for llvm-spirv
+  # Needed for llvm-spirv and other application
   install -d "$pkgdir/usr/lib"
   ln -s /opt/llvm14/lib/libLLVM-14.so "$pkgdir"/usr/lib/libLLVM-14.so
 
