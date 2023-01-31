@@ -153,13 +153,13 @@ package_lib32-llvm14-minimal(){
   chmod -x "$pkgdir"/opt/llvm14/lib32/*.a
 
   mv "$pkgdir/opt/llvm14/bin/llvm-config" "$pkgdir/opt/llvm14/lib32/llvm-config"
-  mv "$pkgdir/opt/llvm14/include/llvm/Config/llvm-config.h" "$pkgdir/opy/llvm14/lib32/llvm-config-32.h"
+  mv "$pkgdir/opt/llvm14/include/llvm/Config/llvm-config.h" "$pkgdir/opt/llvm14/lib32/llvm-config-32.h"
 
   rm -rf "$pkgdir"/opt/llvm14/{bin,include,lib,libexec,share/{doc,man,llvm,opt-viewer,clang,scan-build,scan-view}}
 
   # Needed for multilib (https://bugs.archlinux.org/task/29951)
   # Header stub is taken from Fedora
-  install -d "$pkgdir/usr/include/llvm/Config"
+  install -d "$pkgdir/opt/llvm14/include/llvm/Config"
   mv "$pkgdir/opt/llvm14/lib32/llvm-config-32.h" "$pkgdir/opt/llvm14/include/llvm/Config/"
 
   mkdir "$pkgdir"/opt/llvm14/bin
