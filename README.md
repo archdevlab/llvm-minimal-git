@@ -26,37 +26,37 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 # Version
 
-## LLVM
+### LLVM
 
 - 16.0.0
 
 - commit: 49d47c4d2f280d15d1de94c53b72b6ab3c127b35
 
-## SPIRV-LLVM-Translator
+### SPIRV-LLVM-Translator
 
 - 16.0.0
 
 - commit : 3ff87c3d67b82074f31db1fd6df1677ef7a317b0
 
-## SPIRV-Headers
+### SPIRV-Headers
 
 - 1.5.4.raytracing.fixed
 
 - commit : aa331ab0ffcb3a67021caa1a0c1c9017712f2f31
 
-## SPIRV-Tools
+### SPIRV-Tools
 
 - 2023.1
 
 - commit : cdc4e528f3dbe7e38fa3438544918757b098235c
 
-## glslang
+### glslang
 
 - 12.0.0
 
 - commit : 0d3211ff7bb5b0fbad7866f5a21bdcd81886f4be
 
-## Mesa
+### Mesa
 
 - 23.1.0
 
@@ -68,7 +68,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
     cd llvm-git
     ./build.sh
 
-## After succeful build
+### After succeful build
 
 After a succeful build of the toolchain you'll need to recompile mesa package, because mesa and llvm are closely tied together. Everytime llvm changes/updates, mesa needs to be rebuilt.
 
@@ -90,11 +90,11 @@ You can add this repo to your pacman.conf
 
     sudo pacman -S llvm-mininal-git llvm-libs-minimal-git lib32-llvm-miniaml-git lib32-llvm-libs-minimal-git libclc-minimal-git spirv-llvm-translator-minimal-git spirv-headers-git spirv-tools-git glslang-git
 
-## Reinstall normal LLVM Toolchain
+### Reinstall normal LLVM Toolchain
 
     sudo pacman -S llvm llvm-libs lib32-llvm lib32-llvm-libs clang lib32-clang compiler-rt libclc spirv-llvm-translator spirv-headers spirv-tools glslang
 
-## LLVM14
+### LLVM14
 
 Prebuild package are available at https://repo.blacksky3.com/x86_64/llvm14-minimal
 
