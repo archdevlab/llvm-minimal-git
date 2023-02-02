@@ -16,7 +16,7 @@ pkgname=(lib32-vulkan-mesa-layers-git lib32-opencl-mesa-git lib32-vulkan-intel-g
          lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git lib32-mesa-git)
 pkgver=23.1.0_devel
 pkgrel=1
-commit=d59683ab8986f977cc91d09fc251f6ed971f0e41
+commit=d7730fcf22adae92b0e7a82e36cfe28200920b5f
 arch=(i686 x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
@@ -27,8 +27,7 @@ makedepends=(meson ninja bison lib32-flex python python-mako valgrind cmake xorg
              lib32-glibc gcc lib32-gcc-libs directx-headers lib32-systemd patch)
 makedepends+=(rust rust-bindgen spirv-tools spirv-llvm-translator) # rusticl dependencies
 options=(!debug !lto)
-source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit=$commit
-        0003-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem-v1.patch)
+source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit=$commit)
 
 # ninja grabs all available cores and leaves almost nothing for other processes.
 # this package uses the environment variable NINJAFLAGS to allow the user to change this behaviour
@@ -339,5 +338,4 @@ package_lib32-mesa-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-sha256sums=('SKIP'
-            '93cfbd909aa3b77dd06501936899b2d73154e5abf939882854a97d15dc355288')
+sha256sums=('SKIP')
