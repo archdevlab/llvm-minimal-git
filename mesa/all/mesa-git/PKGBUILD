@@ -140,8 +140,8 @@ package_mesa-git(){
   DESTDIR="${pkgdir}" ninja -C ${srcdir}/mesa/build_64/ install
 
   # remove script file from /usr/bin
-  #rm "${pkgdir}/usr/bin/mesa-overlay-control.py"
-  #rm -rf -v "${pkgdir}/usr/bin"
+  rm "${pkgdir}/usr/bin/mesa-overlay-control.py"
+  rm -rf -v "${pkgdir}/usr/bin"
 
   # indirect rendering
   ln -s /usr/lib/libGLX_mesa.so.0 "${pkgdir}/usr/lib/libGLX_indirect.so.0"
