@@ -10,7 +10,7 @@
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 #Credits: Reza Jahanbakhshi <reza.jahanbakhshi at gmail dot com
 
-pkgbase=mesa-git
+pkgname=mesa-git
 pkgver=23.1.0_devel
 pkgrel=1
 commit=d7730fcf22adae92b0e7a82e36cfe28200920b5f
