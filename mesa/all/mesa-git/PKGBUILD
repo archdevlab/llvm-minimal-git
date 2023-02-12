@@ -28,10 +28,11 @@ makedepends=(meson ninja bison flex python python-mako valgrind cmake xorgproto 
              glibc gcc gcc-libs libomxil-bellagio directx-headers systemd patch)
 makedepends+=(rust rust-bindgen spirv-tools spirv-llvm-translator) # rusticl dependencies
 conflicts=(mesa opencl-mesa vulkan-intel vulkan-radeon vulkan-mesa vulkan-swrast vulkan-virtio vulkan-mesa-layers libva-mesa-driver mesa-vdpau)
+conflicts+=(vulkan-intel-hasvk-git vulkan-imagination-git)
 provides=(mesa opencl-mesa vulkan-intel vulkan-radeon vulkan-swrast vulkan-virtio vulkan-driver vulkan-mesa-layers libva-mesa-driver mesa-vdpau
           opengl-driver opencl-driver mesa-libgl libva-driver vdpau-driver)
-replaces=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git
-         mesa-vdpau-git vulkan-intel-hasvk-git vulkan-imagination-git)
+replaces=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git 
+          mesa-vdpau-git vulkan-intel-hasvk-git vulkan-imagination-git)
 options=(!debug !lto)
 source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit=$commit)
 
