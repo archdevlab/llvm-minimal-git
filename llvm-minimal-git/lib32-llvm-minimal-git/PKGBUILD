@@ -14,6 +14,7 @@ pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git)
 url='https://llvm.org/'
 pkgver=16.0.0
 pkgrel=1
+_pkgver=16.0.0
 commit=49d47c4d2f280d15d1de94c53b72b6ab3c127b35
 arch=(i686 x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
