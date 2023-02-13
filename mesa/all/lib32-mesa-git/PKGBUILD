@@ -21,7 +21,7 @@ depends=(lib32-libdrm lib32-libxcb lib32-wayland lib32-expat lib32-libelf lib32-
          lib32-systemd systemd-libs lib32-llvm-libs lib32-libunwind lib32-libxxf86vm lib32-libxdamage lib32-lm_sensors lib32-libglvnd
          lib32-vulkan-icd-loader)
 depends+=(vulkan-mesa-layers opencl-mesa vulkan-radeon mesa libsensors.so)
-optdepends=('opencl-headers: headers necessary for OpenCL development')
+optdepends=('opencl-headers: headers necessary for OpenCL development'
             'opengl-man-pages: for the OpenGL API man pages')
 makedepends=(meson ninja bison lib32-flex python python-mako valgrind cmake xorgproto wayland-protocols glslang libclc elfutils
              libarchive libconfig compiler-rt lib32-libxcb lib32-wayland lib32-libxml2 lib32-libx11 lib32-libvdpau lib32-libelf
