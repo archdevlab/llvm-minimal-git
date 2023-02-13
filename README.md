@@ -72,10 +72,10 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 After a succeful build of the toolchain you'll need to recompile mesa package, because mesa and llvm are closely tied together. Everytime llvm changes/updates, mesa needs to be rebuilt.
 
-    cd mesa/mesa-git
+    cd mesa/all/mesa-git
     makepkg -si
 
-    cd mesa/lib32-mesa-git
+    cd mesa/all/lib32-mesa-git
     makepkg -si
 
 # Prebuild package
