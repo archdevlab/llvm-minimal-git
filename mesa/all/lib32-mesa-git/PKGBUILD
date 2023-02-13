@@ -28,13 +28,13 @@ makedepends=(meson ninja bison lib32-flex python python-mako valgrind cmake xorg
              lib32-libglvnd lib32-ncurses lib32-libva lib32-libxrandr lib32-expat lib32-libdrm lib32-libxv lib32-libxshmfence lib32-libxxf86vm
              lib32-libxdamage lib32-zstd lib32-lm_sensors lib32-libunwind lib32-vulkan-icd-loader lib32-clang lib32-llvm lib32-llvm-libs
              lib32-glibc gcc lib32-gcc-libs directx-headers lib32-systemd patch)
+makedepends+=(rust rust-bindgen spirv-tools spirv-llvm-translator) # rusticl dependencies
 conflicts=(lib32-mesa lib32-opencl-mesa lib32-vulkan-intel lib32-vulkan-radeon lib32-vulkan-mesa lib32-vulkan-swrast
            lib32-vulkan-virtio lib32-vulkan-mesa-layers lib32-libva-mesa-driver lib32-mesa-vdpau)
 conflicts+=(lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git)
 provides=(lib32-mesa lib32-opencl-mesa lib32-vulkan-intel lib32-vulkan-radeon lib32-vulkan-virtio lib32-vulkan-mesa lib32-vulkan-swrast lib32-vulkan-driver 
           lib32-vulkan-mesa-layers lib32-libva-mesa-driver lib32-mesa-vdpau lib32-opengl-driver lib32-opencl-driver lib32-mesa-libgl lib32-libva-driver 
           lib32-vdpau-driver)
-makedepends+=(rust rust-bindgen spirv-tools spirv-llvm-translator) # rusticl dependencies
 options=(!debug !lto)
 source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit=$commit)
 
