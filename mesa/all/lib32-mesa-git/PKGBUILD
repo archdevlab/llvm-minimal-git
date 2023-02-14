@@ -36,7 +36,7 @@ provides=(lib32-mesa lib32-opencl-mesa lib32-vulkan-intel lib32-vulkan-radeon li
           lib32-libva-mesa-driver lib32-mesa-vdpau lib32-opengl-driver lib32-opencl-driver lib32-mesa-libgl lib32-libva-driver lib32-vdpau-driver)
 replaces=(lib32-vulkan-mesa-layers-git lib32-opencl-mesa-git lib32-vulkan-intel-git lib32-vulkan-radeon-git
           lib32-vulkan-virtio-git lib32-libva-mesa-driver-git lib32-mesa-vdpau-git lib32-vulkan-swrast-git
-          lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git lib32-mesa-git)
+          lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git)
 options=(!debug !lto)
 source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit=$commit)
 
