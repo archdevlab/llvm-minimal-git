@@ -179,3 +179,5 @@ package_lib32-mesa-git(){
   #install -Dt "$pkgdir"/usr/share/licenses/"$pkgname" -m644 LICENSE
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
+
+sha256sums=('SKIP')
