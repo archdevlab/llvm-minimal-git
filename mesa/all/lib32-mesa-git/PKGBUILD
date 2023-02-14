@@ -31,7 +31,7 @@ makedepends=(meson ninja bison lib32-flex python python-mako valgrind cmake xorg
 makedepends+=(rust rust-bindgen spirv-tools spirv-llvm-translator) # rusticl dependencies
 conflicts=(lib32-mesa lib32-opencl-mesa lib32-vulkan-intel lib32-vulkan-radeon lib32-vulkan-virtio lib32-vulkan-mesa-layers lib32-libva-mesa-driver 
            lib32-mesa-vdpau)
-conflicts+=lib32-vulkan-swrast-git lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git)
+conflicts+=(lib32-vulkan-swrast-git lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git)
 provides=(lib32-mesa lib32-opencl-mesa lib32-vulkan-intel lib32-vulkan-radeon lib32-vulkan-virtio lib32-vulkan-driver lib32-vulkan-mesa-layers 
           lib32-libva-mesa-driver lib32-mesa-vdpau lib32-opengl-driver lib32-opencl-driver lib32-mesa-libgl lib32-libva-driver lib32-vdpau-driver)
 replaces=(lib32-vulkan-mesa-layers-git lib32-opencl-mesa-git lib32-vulkan-intel-git lib32-vulkan-radeon-git
