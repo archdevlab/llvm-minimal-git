@@ -18,7 +18,7 @@ _pkgver=14.0.0
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja zlib zstd libffi libedit ncurses libxml2 python-setuptools python-psutil python-sphinx python-recommonmark
-             git spirv-headers-git spirv-tools-git git patch)
+             git patch)
 options=(staticlibs !lto) # Getting thousands of test failures with LTO
 source=(https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-${pkgver}.tar.gz
         https://github.com/KhronosGroup/SPIRV-LLVM-Translator/archive/refs/tags/v${pkgver}.tar.gz
@@ -124,7 +124,7 @@ export CXXFLAGS+=" ${CPPFLAGS}"
     -DLLVM_ENABLE_DUMP=ON
     -DLLVM_EXTERNAL_PROJECTS="SPIRV-LLVM-Translator"
     -DLLVM_EXTERNAL_SPIRV_LLVM_TRANSLATOR_SOURCE_DIR="$srcdir"/SPIRV-LLVM-Translator-${pkgver}
-    -DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=/usr/include/spirv/
+    #-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=/usr/include/spirv/
     -DLLVM_SPIRV_INCLUDE_TESTS=OFF
     -DLLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
     -Wno-dev
@@ -148,7 +148,7 @@ _python_optimize(){
 package_llvm14-minimal(){
   pkgdesc='Collection of modular and reusable compiler and toolchain technologies'
   depends=(llvm14-libs-minimal perl)
-  depends+=(spirv-tools-git) # For spirv-llvm-translator
+  #depends+=(spirv-tools-git) # For spirv-llvm-translator
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
   provides=(llvm14 clang14 compiler-rt14 spirv-llvm-translator14 clang-analyzer14 clang-tools-extra14)
@@ -219,7 +219,7 @@ package_llvm14-libs-minimal(){
   # https://bugs.archlinux.org/task/28479
   install -d "$pkgdir/opt/llvm14/lib/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/opt/llvm14/lib/bfd-plugins/LLVMgold.so"
-  
+
   # Needed for llvm-spirv and other application
   install -d "$pkgdir/usr/lib"
   ln -s /opt/llvm14/lib/libLLVM-14.so "$pkgdir"/usr/lib/libLLVM-14.so
