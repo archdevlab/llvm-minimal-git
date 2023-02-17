@@ -153,7 +153,7 @@ _python_optimize(){
 package_llvm13-minimal(){
   pkgdesc='Collection of modular and reusable compiler and toolchain technologies'
   depends=(llvm13-libs-minimal perl)
-  depends+=(spirv-tools-git) # For spirv-llvm-translator
+  #depends+=(spirv-tools-git) # For spirv-llvm-translator
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
   provides=(llvm13 clang13 compiler-rt13 spirv-llvm-translator13 clang-analyzer13 clang-tools-extra13)
@@ -188,7 +188,7 @@ package_llvm13-minimal(){
   cp -a ${srcdir}/llvm-project-llvmorg-${pkgver}/llvm/bindings/python/llvm "$pkgdir/$site_packages/"
 
   # Move analyzer scripts out of /usr/libexec
-  mv "$pkgdir"/opt/llvm13/libexec/* "$pkgdir/opt/llvm14/lib/clang/"
+  mv "$pkgdir"/opt/llvm13/libexec/* "$pkgdir/opt/llvm13/lib/clang/"
   rmdir "$pkgdir/opt/llvm13/libexec"
   sed -i 's|libexec|lib/clang|' \
     "$pkgdir/opt/llvm13/bin/scan-build" \
