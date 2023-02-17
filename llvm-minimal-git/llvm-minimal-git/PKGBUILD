@@ -20,7 +20,7 @@ spirvcommit=77ee97a807d3ee8b8adc8ca1f452aeaa8f10acb8
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja zlib zstd libffi libedit ncurses libxml2 python-setuptools python-psutil python-sphinx python-recommonmark
-             git spirv-headers-git spirv-tools-git git patch)
+             spirv-headers-git spirv-tools-git git patch)
 options=(staticlibs !lto) # Getting thousands of test failures with LTO
 source=(git+https://github.com/llvm/llvm-project.git#commit=$llvmcommit
         git+https://github.com/KhronosGroup/SPIRV-LLVM-Translator.git#commit=$spirvcommit
@@ -31,7 +31,7 @@ source=(git+https://github.com/llvm/llvm-project.git#commit=$llvmcommit
 # A reasonable value for them to avoid these issues appears to be 75% of available cores.
 # NINJAFLAGS and LITFLAGS are env vars that can be used to achieve this. They should be set on command line or in files read by your shell on login (like .bashrc ) .
 # example for systems with 24 cores
-NINJAFLAGS="-j 20 -l 20"
+NINJAFLAGS="-j 18 -l 18"
 # LITFLAGS="-j 18"
 # NOTE: It's your responbility to validate the value of NINJAFLAGS and LITFLAGS. If unsure, don't set it.
 
