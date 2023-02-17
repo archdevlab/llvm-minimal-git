@@ -34,7 +34,7 @@ build(){
 
   cmake -H. -G Ninja -Bbuild \
   -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_INSTALL_PREFIX=/opt/llvm14 \
+  -DCMAKE_INSTALL_PREFIX=/opt/llvm13 \
   -DLLVM_CONFIG=/opt/llvm14/bin/llvm-config
 
   ninja $NINJAFLAGS -C build
