@@ -202,7 +202,7 @@ package_lib32-llvm14-libs-minimal(){
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CODE_OWNERS"
 }
 
-sha256sums=('8a8dc9f7623010afcc718e4b1bb21fff5b670c1ed36a04b8dc5ef3552403b834'
+sha256sums=('87b1a068b370df5b79a892fdb2935922a8efb1fddec4cc506e30fe57b6a1d9c4'
             'ee9baf6df05474083857044d92f26f59d3ee709cdf82ba3bdb2792e6645f71d9'
             '34ed866e313e4580130a50118a4410d36fa0159123982521b6ef049439fc32ad'
             '2c25ddf0ba6be01949842873fef4d285456321aaccd4ba95db61b69a4c580106'
