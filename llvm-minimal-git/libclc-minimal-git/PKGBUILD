@@ -11,7 +11,7 @@
 pkgname=libclc-minimal-git
 pkgdesc='Library requirements of the OpenCL C programming language (git version)'
 url='https://libclc.llvm.org/'
-pkgver=16.0.0
+pkgver=17.0.0
 pkgrel=1
 commit=603c286334b07f568d39f6706c848f576914f323
 arch=(x86_64)
