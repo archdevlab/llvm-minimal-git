@@ -192,7 +192,7 @@ package_llvm12-minimal(){
   # Move scanbuild-py into site-packages and install Python bindings
   local site_packages="/opt/llvm12/lib/python3.10/site-packages"
   install -d "$pkgdir/$site_packages"
-  mv "$pkgdir"/opt/llvm12/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
+  #mv "$pkgdir"/opt/llvm12/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
   cp -a ${srcdir}/llvm-project-llvmorg-${pkgver}/clang/bindings/python/clang "$pkgdir/$site_packages/"
   # (taken from llvm-git aur)
   cp -a ${srcdir}/llvm-project-llvmorg-${pkgver}/llvm/bindings/python/llvm "$pkgdir/$site_packages/"
@@ -201,8 +201,8 @@ package_llvm12-minimal(){
   mv "$pkgdir"/opt/llvm12/libexec/* "$pkgdir/opt/llvm12/lib/clang/"
   rmdir "$pkgdir/opt/llvm12/libexec"
   sed -i 's|libexec|lib/clang|' \
-    "$pkgdir/opt/llvm12/bin/scan-build" \
-    "$pkgdir/$site_packages/libscanbuild/analyze.py"
+    "$pkgdir/opt/llvm12/bin/scan-build"
+    #"$pkgdir/$site_packages/libscanbuild/analyze.py"
 
   # Compile Python scripts
   #_python_optimize "$pkgdir/opt/llvm12/share" "$pkgdir/$site_packages"
