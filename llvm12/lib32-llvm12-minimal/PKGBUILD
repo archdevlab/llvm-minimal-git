@@ -170,7 +170,7 @@ package_lib32-llvm12-minimal(){
   mv "$pkgdir/opt/llvm12/bin/llvm-config" "$pkgdir/opt/llvm12/lib32/llvm-config"
   mv "$pkgdir/opt/llvm12/include/llvm/Config/llvm-config.h" "$pkgdir/opt/llvm12/lib32/llvm-config-32.h"
 
-  rm -rf "$pkgdir"/opt/llvm12/{bin,include,lib,libexec,share/{doc,man,llvm,opt-viewer,clang,scan-build,scan-view}}
+  rm -rf "$pkgdir"/opt/llvm12/{bin,include,lib,libexec,share}
 
   # Needed for multilib (https://bugs.archlinux.org/task/29951)
   # Header stub is taken from Fedora
