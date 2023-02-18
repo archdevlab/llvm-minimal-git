@@ -138,7 +138,7 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
     -DLLVM_ENABLE_DOXYGEN=OFF
     -DLLVM_ENABLE_BINDINGS=OFF
     -DLLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
-    -DCOMPILER_RT_INSTALL_PATH=/opt/llvm13/lib32/clang/$_pkgver
+    -DCOMPILER_RT_INSTALL_PATH=/opt/llvm12/lib32/clang/$_pkgver
     -DLLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
     -Wno-dev
   )
