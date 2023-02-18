@@ -8,7 +8,7 @@ One that is done (needed for llvm-spirv) (also needed for other application) (ll
     install -d "$pkgdir/usr/lib"
     ln -s /opt/llvm12/lib/libLLVM-12.so "$pkgdir"/usr/lib/libLLVM-12.so
 
-### Add symlink to /opt/llvm13/lib32
+### Add symlink to /opt/llvm12/lib32
 
 One that is done (needed for other application) (lib32-llvm12-libs-minimal)
 
