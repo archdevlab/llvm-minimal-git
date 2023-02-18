@@ -237,7 +237,7 @@ package_llvm12-libs-minimal(){
 
   # Needed for llvm-spirv and other application
   install -d "$pkgdir/usr/lib"
-  ln -s /opt/llvm12/lib/libLLVM-13.so "$pkgdir"/usr/lib/libLLVM-12.so
+  ln -s /opt/llvm12/lib/libLLVM-12.so "$pkgdir"/usr/lib/libLLVM-12.so
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
