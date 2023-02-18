@@ -100,12 +100,23 @@ Prebuild package are available at https://repo.blacksky3.com/x86_64/llvm14-minim
 
 You can add this repo to your pacman.conf
 
-    [llvm-minimal-git]
+    [llvm14-minimal]
     SigLevel = Optional TrustAll
     Server = https://repo.blacksky3.com/$arch/$repo
 
     sudo pacman -S llvm14-minimal llvm14-libs-minimal libclc14-minimal lib32-llvm14-minimal lib32-llvm14-libs-minimal
 
+### LLVM13
+
+Prebuild package are available at https://repo.blacksky3.com/x86_64/llvm14-minimal
+
+You can add this repo to your pacman.conf
+
+    [llvm13-minimal]
+    SigLevel = Optional TrustAll
+    Server = https://repo.blacksky3.com/$arch/$repo
+
+    sudo pacman -S llvm13-minimal llvm13-libs-minimal libclc13-minimal lib32-llvm13-minimal lib32-llvm13-libs-minimal
 # Donation
 
 BTC : bc1quz6zcjjy769cn9fd42r89hfh9unr4u2w4sfxer
