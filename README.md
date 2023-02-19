@@ -117,7 +117,6 @@ You can add this repo to your pacman.conf
     Server = https://repo.blacksky3.com/$arch/$repo
 
     sudo pacman -S llvm13-minimal llvm13-libs-minimal libclc13-minimal lib32-llvm13-minimal lib32-llvm13-libs-minimal
-# Donation
 
 ### LLVM12
 
