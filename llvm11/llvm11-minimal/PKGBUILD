@@ -186,7 +186,7 @@ package_llvm11-minimal(){
   mv "$pkgdir"/opt/llvm11/libexec/* "$pkgdir/opt/llvm11/lib/clang/"
   rmdir "$pkgdir/opt/llvm11/libexec"
   sed -i 's|libexec|lib/clang|' \
-    "$pkgdir/opt/llvm12/bin/scan-build"
+    "$pkgdir/opt/llvm11/bin/scan-build"
     #"$pkgdir/$site_packages/libscanbuild/analyze.py"
 
   # Compile Python scripts
