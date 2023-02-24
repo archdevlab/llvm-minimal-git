@@ -116,10 +116,10 @@ export CXXFLAGS+=" ${CPPFLAGS}"
     -DLLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
     -DCOMPILER_RT_INSTALL_PATH=/opt/llvm10/lib/clang/$_pkgver
     -DLLVM_ENABLE_DUMP=ON
-    -DLLVM_EXTERNAL_PROJECTS="SPIRV-LLVM-Translator"
-    -DLLVM_EXTERNAL_SPIRV_LLVM_TRANSLATOR_SOURCE_DIR="$srcdir"/SPIRV-LLVM-Translator-${pkgver}
+    #-DLLVM_EXTERNAL_PROJECTS="SPIRV-LLVM-Translator"
+    #-DLLVM_EXTERNAL_SPIRV_LLVM_TRANSLATOR_SOURCE_DIR="$srcdir"/SPIRV-LLVM-Translator-${pkgver}
     #-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=/usr/include/spirv/
-    -DLLVM_SPIRV_INCLUDE_TESTS=OFF
+    #-DLLVM_SPIRV_INCLUDE_TESTS=OFF
     -DLLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
     -Wno-dev
   )
@@ -145,7 +145,8 @@ package_llvm10-minimal(){
   #depends+=(spirv-tools-git) # For spirv-llvm-translator
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
-  provides=(llvm10 clang10 compiler-rt10 spirv-llvm-translator10 clang-analyzer10 clang-tools-extra10)
+  #provides=(llvm10 clang10 compiler-rt10 spirv-llvm-translator10 clang-analyzer10 clang-tools-extra10)
+  provides=(llvm10 clang10 compiler-rt10 clang-analyzer10 clang-tools-extra10)
 
   cd ${srcdir}/llvm-project-llvmorg-${pkgver}/llvm/build
 
@@ -195,7 +196,7 @@ package_llvm10-minimal(){
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/clang-tools-extra/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/CODE_OWNERS"
   install -Dm644 "${srcdir}/llvm-project-llvmorg-${pkgver}/compiler-rt/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/compiler-rt/LICENSE"
   install -Dm644 "${srcdir}/llvm-project-llvmorg-${pkgver}/compiler-rt/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/compiler-rt/LICENSE"
-  install -Dm644 "${srcdir}/SPIRV-LLVM-Translator-${pkgver}/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/spirv-llvm-translator/LICENSE"
+  #install -Dm644 "${srcdir}/SPIRV-LLVM-Translator-${pkgver}/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/spirv-llvm-translator/LICENSE"
 }
 
 package_llvm10-libs-minimal(){
@@ -215,6 +216,7 @@ package_llvm10-libs-minimal(){
   ln -s ../LLVMgold.so "$pkgdir/opt/llvm10/lib/bfd-plugins/LLVMgold.so"
 
   # Needed for llvm-spirv and other application
+  # link libLLVM-10.so to /opt/llvm10
   install -d "$pkgdir/usr/lib"
   ln -s /opt/llvm10/lib/libLLVM-10.so "$pkgdir"/usr/lib/libLLVM-10.so
 
