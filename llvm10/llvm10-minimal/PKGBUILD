@@ -186,6 +186,11 @@ package_llvm10-minimal(){
 
   # Compile Python scripts
   #_python_optimize "$pkgdir/opt/llvm11/share" "$pkgdir/$site_packages"
+  
+  # link to /opt/llvm10/lib
+  install -d "$pkgdir/usr/lib"
+  ln -s /opt/llvm10/lib/libclang.so.10 "$pkgdir"/usr/lib/libclang.so.10
+  ln -s /opt/llvm10/lib/libclang-cpp.so.10 "$pkgdir"/usr/lib/libclang-cpp.so.10
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
@@ -220,8 +225,6 @@ package_llvm10-libs-minimal(){
   ln -s /opt/llvm10/lib/libLLVM-10.so "$pkgdir"/usr/lib/libLLVM-10.so
   ln -s /opt/llvm10/lib/libLTO.so.10 "$pkgdir"/usr/lib/libLTO.so.10
   ln -s /opt/llvm10/lib/libRemarks.so.10 "$pkgdir"/usr/lib/libRemarks.so.10
-  ln -s /opt/llvm10/lib/libclang.so.10 "$pkgdir"/usr/lib/libclang.so.10
-  ln -s /opt/llvm10/lib/libclang-cpp.so.10 "$pkgdir"/usr/lib/libclang-cpp.so.10
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
