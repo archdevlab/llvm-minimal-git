@@ -142,6 +142,18 @@ You can add this repo to your pacman.conf
 
     sudo pacman -S llvm11-minimal llvm11-libs-minimal libclc11-minimal lib32-llvm11-minimal lib32-llvm11-libs-minimal
     
+### LLVM10
+
+Prebuild package are available at https://repo.blacksky3.com/x86_64/llvm10-minimal
+
+You can add this repo to your pacman.conf
+
+    [llvm10-minimal]
+    SigLevel = Optional TrustAll
+    Server = https://repo.blacksky3.com/$arch/$repo
+
+    sudo pacman -S llvm10-minimal llvm10-libs-minimal libclc10-minimal lib32-llvm10-minimal lib32-llvm10-libs-minimal
+    
 # Donation
 
 BTC : bc1quz6zcjjy769cn9fd42r89hfh9unr4u2w4sfxer
