@@ -215,7 +215,7 @@ package_llvm10-libs-minimal(){
   install -d "$pkgdir/opt/llvm10/lib/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/opt/llvm10/lib/bfd-plugins/LLVMgold.so"
 
-  # link libLLVM-10.so to /opt/llvm10
+  # link to /opt/llvm10/lib
   install -d "$pkgdir/usr/lib"
   ln -s /opt/llvm10/lib/libLLVM-10.so "$pkgdir"/usr/lib/libLLVM-10.so
   ln -s /opt/llvm10/lib/libLTO.so.10 "$pkgdir"/usr/lib/libLTO.so.10
