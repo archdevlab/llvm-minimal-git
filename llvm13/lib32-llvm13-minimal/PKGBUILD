@@ -205,6 +205,7 @@ package_lib32-llvm13-libs-minimal(){
 
   # link to /opt/llvm13/lib32
   install -d "$pkgdir/usr/lib32"
+  ln -s /opt/llvm13/lib32/libLLVM-13.0.0.so "$pkgdir"/usr/lib32/libLLVM-13.0.0.so
   ln -s /opt/llvm13/lib32/libLLVM-13.so "$pkgdir"/usr/lib32/libLLVM-13.so
   ln -s /opt/llvm13/lib32/libLTO.so.13 "$pkgdir"/usr/lib32/libLTO.so.13
   ln -s /opt/llvm13/lib32/libRemarks.so.13 "$pkgdir"/usr/lib32/libRemarks.so.13

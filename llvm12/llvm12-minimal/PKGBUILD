@@ -206,7 +206,7 @@ package_llvm12-minimal(){
 
   # Compile Python scripts
   #_python_optimize "$pkgdir/opt/llvm12/share" "$pkgdir/$site_packages"
-  
+
   # link to /opt/llvm12/lib
   install -d "$pkgdir/usr/lib"
   ln -s /opt/llvm12/lib/libclang.so.12 "$pkgdir"/usr/lib/libclang.so.12
@@ -242,6 +242,7 @@ package_llvm12-libs-minimal(){
 
   # link to /opt/llvm12/lib
   install -d "$pkgdir/usr/lib"
+  ln -s /opt/llvm12/lib/libLLVM-12.0.0.so "$pkgdir"/usr/lib/libLLVM-12.0.0.so
   ln -s /opt/llvm12/lib/libLLVM-12.so "$pkgdir"/usr/lib/libLLVM-12.so
   ln -s /opt/llvm12/lib/libLTO.so.12 "$pkgdir"/usr/lib/libLTO.so.12
   ln -s /opt/llvm12/lib/libRemarks.so.12 "$pkgdir"/usr/lib/libRemarks.so.12

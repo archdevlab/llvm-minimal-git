@@ -158,7 +158,7 @@ package_lib32-llvm10-minimal(){
 
   mkdir "$pkgdir"/opt/llvm10/bin
   mv "$pkgdir/opt/llvm10/lib32/llvm-config" "$pkgdir/opt/llvm10/bin/llvm-config32"
-  
+
   # link to /opt/llvm10/lib32
   install -d "$pkgdir/usr/lib32"
   ln -s /opt/llvm10/lib32/libclang.so.10 "$pkgdir"/usr/lib32/libclang.so.10
@@ -191,9 +191,10 @@ package_lib32-llvm10-libs-minimal(){
   # https://bugs.archlinux.org/task/28479
   install -d "$pkgdir/opt/llvm10/lib32/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/opt/llvm10/lib32/bfd-plugins/LLVMgold.so"
-  
+
   # link to /opt/llvm10/lib32
   install -d "$pkgdir/usr/lib32"
+  ln -s /opt/llvm10/lib32/libLLVM-10.0.0.so "$pkgdir"/usr/lib32/libLLVM-10.0.0.so
   ln -s /opt/llvm10/lib32/libLLVM-10.so "$pkgdir"/usr/lib32/libLLVM-10.so
   ln -s /opt/llvm10/lib32/libLTO.so.10 "$pkgdir"/usr/lib32/libLTO.so.10
   ln -s /opt/llvm10/lib32/libRemarks.so.10 "$pkgdir"/usr/lib32/libRemarks.so.10

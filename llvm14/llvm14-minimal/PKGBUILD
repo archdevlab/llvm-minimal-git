@@ -191,7 +191,7 @@ package_llvm14-minimal(){
 
   # Compile Python scripts
   #_python_optimize "$pkgdir/opt/llvm14/share" "$pkgdir/$site_packages"
-  
+
   # link to /opt/llvm14/lib
   install -d "$pkgdir/usr/lib"
   ln -s /opt/llvm14/lib/libclang.so.14 "$pkgdir"/usr/lib/libclang.so.14
@@ -227,6 +227,7 @@ package_llvm14-libs-minimal(){
 
   # link to /opt/llvm14/lib
   install -d "$pkgdir/usr/lib"
+  ln -s /opt/llvm14/lib/libLLVM-14.0.0.so "$pkgdir"/usr/lib/libLLVM-14.0.0.so
   ln -s /opt/llvm14/lib/libLLVM-14.so "$pkgdir"/usr/lib/libLLVM-14.so
   ln -s /opt/llvm14/lib/libLTO.so.14 "$pkgdir"/usr/lib/libLTO.so.14
   ln -s /opt/llvm14/lib/libRemarks.so.14 "$pkgdir"/usr/lib/libRemarks.so.14

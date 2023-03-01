@@ -196,7 +196,7 @@ package_llvm13-minimal(){
 
   # Compile Python scripts
   #_python_optimize "$pkgdir/opt/llvm13/share" "$pkgdir/$site_packages"
-  
+
   # link to /opt/llvm13/lib
   install -d "$pkgdir/usr/lib"
   ln -s /opt/llvm13/lib/libclang.so.13 "$pkgdir"/usr/lib/libclang.so.13
@@ -232,6 +232,7 @@ package_llvm13-libs-minimal(){
 
   # link to /opt/llvm13/lib
   install -d "$pkgdir/usr/lib"
+  ln -s /opt/llvm13/lib/libLLVM-13.0.0.so "$pkgdir"/usr/lib/libLLVM-13.0.0.so
   ln -s /opt/llvm13/lib/libLLVM-13.so "$pkgdir"/usr/lib/libLLVM-13.so
   ln -s /opt/llvm13/lib/libLTO.so.13 "$pkgdir"/usr/lib/libLTO.so.13
   ln -s /opt/llvm13/lib/libRemarks.so.13 "$pkgdir"/usr/lib/libRemarks.so.13

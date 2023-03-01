@@ -200,6 +200,7 @@ package_lib32-llvm11-libs-minimal(){
 
   # link to /opt/llvm11/lib32
   install -d "$pkgdir/usr/lib32"
+  ln -s /opt/llvm11/lib32/libLLVM-11.0.0.so "$pkgdir"/usr/lib32/libLLVM-11.0.0.so
   ln -s /opt/llvm11/lib32/libLLVM-11.so "$pkgdir"/usr/lib32/libLLVM-11.so
   ln -s /opt/llvm11/lib32/libLTO.so.11 "$pkgdir"/usr/lib32/libLTO.so.11
   ln -s /opt/llvm11/lib32/libRemarks.so.11 "$pkgdir"/usr/lib32/libRemarks.so.11

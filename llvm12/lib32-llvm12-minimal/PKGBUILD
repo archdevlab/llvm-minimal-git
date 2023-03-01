@@ -215,6 +215,7 @@ package_lib32-llvm12-libs-minimal(){
 
   # link to /opt/llvm12/lib32
   install -d "$pkgdir/usr/lib32"
+  ln -s /opt/llvm12/lib32/libLLVM-12.0.0.so "$pkgdir"/usr/lib32/libLLVM-12.0.0.so
   ln -s /opt/llvm12/lib32/libLLVM-12.so "$pkgdir"/usr/lib32/libLLVM-12.so
   ln -s /opt/llvm12/lib32/libLTO.so.12 "$pkgdir"/usr/lib32/libLTO.so.12
   ln -s /opt/llvm12/lib32/libRemarks.so.12 "$pkgdir"/usr/lib32/libRemarks.so.12

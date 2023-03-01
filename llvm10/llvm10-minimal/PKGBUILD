@@ -186,7 +186,7 @@ package_llvm10-minimal(){
 
   # Compile Python scripts
   #_python_optimize "$pkgdir/opt/llvm11/share" "$pkgdir/$site_packages"
-  
+
   # link to /opt/llvm10/lib
   install -d "$pkgdir/usr/lib"
   ln -s /opt/llvm10/lib/libclang.so.10 "$pkgdir"/usr/lib/libclang.so.10
@@ -222,6 +222,7 @@ package_llvm10-libs-minimal(){
 
   # link to /opt/llvm10/lib
   install -d "$pkgdir/usr/lib"
+  ln -s /opt/llvm10/lib/libLLVM-10.0.0.so "$pkgdir"/usr/lib/libLLVM-10.0.0.so
   ln -s /opt/llvm10/lib/libLLVM-10.so "$pkgdir"/usr/lib/libLLVM-10.so
   ln -s /opt/llvm10/lib/libLTO.so.10 "$pkgdir"/usr/lib/libLTO.so.10
   ln -s /opt/llvm10/lib/libRemarks.so.10 "$pkgdir"/usr/lib/libRemarks.so.10
