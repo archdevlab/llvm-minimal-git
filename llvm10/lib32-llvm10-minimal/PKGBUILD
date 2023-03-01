@@ -187,7 +187,7 @@ package_lib32-llvm10-libs-minimal(){
   install -d "$pkgdir/opt/llvm10/lib32/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/opt/llvm10/lib32/bfd-plugins/LLVMgold.so"
 
-  # Needed for other application
+  # link libLLVM-10.so to /opt/llvm10
   install -d "$pkgdir/usr/lib32"
   ln -s /opt/llvm10/lib32/libLLVM-10.so "$pkgdir"/usr/lib32/libLLVM-10.so
 
