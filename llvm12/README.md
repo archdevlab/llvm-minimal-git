@@ -2,16 +2,30 @@
 
 ### Add symlink to /opt/llvm12/lib
 
-One that is done (needed for llvm-spirv) (also needed for other application) (llvm12-libs-minimal)
-
-    # Needed for llvm-spirv
-    install -d "$pkgdir/usr/lib"
-    ln -s /opt/llvm12/lib/libLLVM-12.so "$pkgdir"/usr/lib/libLLVM-12.so
+- [ ] LLVMgold.so
+- [ ] libLLVM.so
+- [ ] libLLVM-12.0.0.so
+- [x] libLLVM-12.so
+- [ ] libLTO.so
+- [x] libLTO.so.12
+- [ ] libRemarks.so
+- [x] libRemarks.so.12
+- [ ] libclang.so
+- [x] libclang.so.12
+- [ ] libclang-cpp.so
+- [x] libclang-cpp.so.12
 
 ### Add symlink to /opt/llvm12/lib32
 
-One that is done (needed for other application) (lib32-llvm12-libs-minimal)
-
-    # Needed for llvm-spirv
-    install -d "$pkgdir/usr/lib32"
-    ln -s /opt/llvm12/lib32/libLLVM-12.so "$pkgdir"/usr/lib/libLLVM-12.so
+- [ ] LLVMgold.so
+- [ ] libLLVM.so
+- [ ] libLLVM-12.0.0.so
+- [x] libLLVM-12.so
+- [ ] libLTO.so
+- [x] libLTO.so.12
+- [ ] libRemarks.so
+- [x] libRemarks.so.12
+- [ ] libclang.so
+- [x] libclang.so.12
+- [ ] libclang-cpp.so
+- [x] libclang-cpp.so.12

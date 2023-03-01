@@ -2,16 +2,30 @@
 
 ### Add symlink to /opt/llvm13/lib
 
-One that is done (needed for llvm-spirv) (also needed for other application) (llvm13-libs-minimal)
-
-    # Needed for llvm-spirv
-    install -d "$pkgdir/usr/lib"
-    ln -s /opt/llvm13/lib/libLLVM-13.so "$pkgdir"/usr/lib/libLLVM-13.so
+- [ ] LLVMgold.so
+- [ ] libLLVM.so
+- [ ] libLLVM-13.0.0.so
+- [x] libLLVM-13.so
+- [ ] libLTO.so
+- [x] libLTO.so.13
+- [ ] libRemarks.so
+- [x] libRemarks.so.13
+- [ ] libclang.so
+- [x] libclang.so.13
+- [ ] libclang-cpp.so
+- [x] libclang-cpp.so.13
 
 ### Add symlink to /opt/llvm13/lib32
 
-One that is done (needed for other application) (lib32-llvm13-libs-minimal)
-
-    # Needed for llvm-spirv
-    install -d "$pkgdir/usr/lib32"
-    ln -s /opt/llvm13/lib32/libLLVM-13.so "$pkgdir"/usr/lib/libLLVM-13.so
+- [ ] LLVMgold.so
+- [ ] libLLVM.so
+- [ ] libLLVM-13.0.0.so
+- [x] libLLVM-13.so
+- [ ] libLTO.so
+- [x] libLTO.so.13
+- [ ] libRemarks.so
+- [x] libRemarks.so.13
+- [ ] libclang.so
+- [x] libclang.so.13
+- [ ] libclang-cpp.so
+- [x] libclang-cpp.so.13

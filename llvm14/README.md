@@ -2,16 +2,30 @@
 
 ### Add symlink to /opt/llvm14/lib
 
-One that is done (needed for llvm-spirv) (also needed for other application) (llvm14-libs-minimal)
-  
-    # Needed for llvm-spirv
-    install -d "$pkgdir/usr/lib"
-    ln -s /opt/llvm14/lib/libLLVM-14.so "$pkgdir"/usr/lib/libLLVM-14.so
-    
+- [ ] LLVMgold.so
+- [ ] libLLVM.so
+- [ ] libLLVM-14.0.0.so
+- [x] libLLVM-14.so
+- [ ] libLTO.so
+- [x] libLTO.so.14
+- [ ] libRemarks.so
+- [x] libRemarks.so.14
+- [ ] libclang.so
+- [x] libclang.so.14
+- [ ] libclang-cpp.so
+- [x] libclang-cpp.so.14
+
 ### Add symlink to /opt/llvm14/lib32
 
-One that is done (needed for other application) (lib32-llvm14-libs-minimal)
-  
-    # Needed for llvm-spirv
-    install -d "$pkgdir/usr/lib32"
-    ln -s /opt/llvm14/lib32/libLLVM-14.so "$pkgdir"/usr/lib/libLLVM-14.so
+- [ ] LLVMgold.so
+- [ ] libLLVM.so
+- [ ] libLLVM-14.0.0.so
+- [x] libLLVM-14.so
+- [ ] libLTO.so
+- [x] libLTO.so.14
+- [ ] libRemarks.so
+- [x] libRemarks.so.14
+- [ ] libclang.so
+- [x] libclang.so.14
+- [ ] libclang-cpp.so
+- [x] libclang-cpp.so.14
