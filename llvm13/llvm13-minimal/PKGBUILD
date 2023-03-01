@@ -225,9 +225,13 @@ package_llvm13-libs-minimal(){
   install -d "$pkgdir/opt/llvm13/lib/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/opt/llvm13/lib/bfd-plugins/LLVMgold.so"
 
-  # Needed for llvm-spirv and other application
+  # link to /opt/llvm13/lib
   install -d "$pkgdir/usr/lib"
   ln -s /opt/llvm13/lib/libLLVM-13.so "$pkgdir"/usr/lib/libLLVM-13.so
+  ln -s /opt/llvm13/lib/libLTO.so.13 "$pkgdir"/usr/lib/libLTO.so.13
+  ln -s /opt/llvm13/lib/libRemarks.so.13 "$pkgdir"/usr/lib/libRemarks.so.13
+  ln -s /opt/llvm13/lib/libclang.so.13 "$pkgdir"/usr/lib/libclang.so.13
+  ln -s /opt/llvm13/lib/libclang-cpp.so.13 "$pkgdir"/usr/lib/libclang-cpp.so.13
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"

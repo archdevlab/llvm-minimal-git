@@ -220,9 +220,13 @@ package_llvm14-libs-minimal(){
   install -d "$pkgdir/opt/llvm14/lib/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/opt/llvm14/lib/bfd-plugins/LLVMgold.so"
 
-  # Needed for llvm-spirv and other application
+  # link to /opt/llvm14/lib
   install -d "$pkgdir/usr/lib"
   ln -s /opt/llvm14/lib/libLLVM-14.so "$pkgdir"/usr/lib/libLLVM-14.so
+  ln -s /opt/llvm14/lib/libLTO.so.14 "$pkgdir"/usr/lib/libLTO.so.14
+  ln -s /opt/llvm14/lib/libRemarks.so.14 "$pkgdir"/usr/lib/libRemarks.so.14
+  ln -s /opt/llvm14/lib/libclang.so.14 "$pkgdir"/usr/lib/libclang.so.14
+  ln -s /opt/llvm14/lib/libclang-cpp.so.14 "$pkgdir"/usr/lib/libclang-cpp.so.14
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"

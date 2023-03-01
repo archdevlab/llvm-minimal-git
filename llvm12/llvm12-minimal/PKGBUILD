@@ -235,9 +235,13 @@ package_llvm12-libs-minimal(){
   install -d "$pkgdir/opt/llvm12/lib/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/opt/llvm12/lib/bfd-plugins/LLVMgold.so"
 
-  # Needed for llvm-spirv and other application
+  # link to /opt/llvm12/lib
   install -d "$pkgdir/usr/lib"
   ln -s /opt/llvm12/lib/libLLVM-12.so "$pkgdir"/usr/lib/libLLVM-12.so
+  ln -s /opt/llvm12/lib/libLTO.so.12 "$pkgdir"/usr/lib/libLTO.so.12
+  ln -s /opt/llvm12/lib/libRemarks.so.12 "$pkgdir"/usr/lib/libRemarks.so.12
+  ln -s /opt/llvm12/lib/libclang.so.12 "$pkgdir"/usr/lib/libclang.so.12
+  ln -s /opt/llvm12/lib/libclang-cpp.so.12 "$pkgdir"/usr/lib/libclang-cpp.so.12
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
