@@ -191,6 +191,11 @@ package_llvm11-minimal(){
 
   # Compile Python scripts
   #_python_optimize "$pkgdir/opt/llvm11/share" "$pkgdir/$site_packages"
+  
+  # link to /opt/llvm11/lib
+  install -d "$pkgdir/usr/lib"
+  ln -s /opt/llvm11/lib/libclang.so.11 "$pkgdir"/usr/lib/libclang.so.11
+  ln -s /opt/llvm11/lib/libclang-cpp.so.11 "$pkgdir"/usr/lib/libclang-cpp.so.11
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
@@ -225,8 +230,6 @@ package_llvm11-libs-minimal(){
   ln -s /opt/llvm11/lib/libLLVM-11.so "$pkgdir"/usr/lib/libLLVM-11.so
   ln -s /opt/llvm11/lib/libLTO.so.11 "$pkgdir"/usr/lib/libLTO.so.11
   ln -s /opt/llvm11/lib/libRemarks.so.11 "$pkgdir"/usr/lib/libRemarks.so.11
-  ln -s /opt/llvm11/lib/libclang.so.11 "$pkgdir"/usr/lib/libclang.so.11
-  ln -s /opt/llvm11/lib/libclang-cpp.so.11 "$pkgdir"/usr/lib/libclang-cpp.so.11
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
