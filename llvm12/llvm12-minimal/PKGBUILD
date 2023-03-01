@@ -206,6 +206,11 @@ package_llvm12-minimal(){
 
   # Compile Python scripts
   #_python_optimize "$pkgdir/opt/llvm12/share" "$pkgdir/$site_packages"
+  
+  # link to /opt/llvm12/lib
+  install -d "$pkgdir/usr/lib"
+  ln -s /opt/llvm12/lib/libclang.so.12 "$pkgdir"/usr/lib/libclang.so.12
+  ln -s /opt/llvm12/lib/libclang-cpp.so.12 "$pkgdir"/usr/lib/libclang-cpp.so.12
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
@@ -240,8 +245,6 @@ package_llvm12-libs-minimal(){
   ln -s /opt/llvm12/lib/libLLVM-12.so "$pkgdir"/usr/lib/libLLVM-12.so
   ln -s /opt/llvm12/lib/libLTO.so.12 "$pkgdir"/usr/lib/libLTO.so.12
   ln -s /opt/llvm12/lib/libRemarks.so.12 "$pkgdir"/usr/lib/libRemarks.so.12
-  ln -s /opt/llvm12/lib/libclang.so.12 "$pkgdir"/usr/lib/libclang.so.12
-  ln -s /opt/llvm12/lib/libclang-cpp.so.12 "$pkgdir"/usr/lib/libclang-cpp.so.12
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
