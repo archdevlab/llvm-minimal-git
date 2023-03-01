@@ -2,12 +2,30 @@
 
 ### Add symlink to /opt/llvm10/lib
 
+- [ ] LLVMgold.so
+- [ ] libLLVM.so
+- [ ] libLLVM-10.0.0.so
 - [x] libLLVM-10.so
 - [ ] libLTO.so
-- [ ] LLVMgold.so
+- [ ] libLTO.so.10
+- [ ] libRemarks.so
+- [ ] libRemarks.so.10
+- [ ] libclang.so
+- [ ] libclang.so.10
+- [ ] libclang-cpp.so
+- [ ] libclang-cpp.so.10
 
 ### Add symlink to /opt/llvm10/lib32
 
+- [ ] LLVMgold.so
+- [ ] libLLVM.so
+- [ ] libLLVM-10.0.0.so
 - [x] libLLVM-10.so
 - [ ] libLTO.so
-- [ ] LLVMgold.so
+- [ ] libLTO.so.10
+- [ ] libRemarks.so
+- [ ] libRemarks.so.10
+- [ ] libclang.so
+- [ ] libclang.so.10
+- [ ] libclang-cpp.so
+- [ ] libclang-cpp.so.10
