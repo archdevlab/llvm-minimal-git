@@ -165,6 +165,11 @@ package_lib32-llvm14-minimal(){
   mkdir "$pkgdir"/opt/llvm14/bin
   mv "$pkgdir/opt/llvm14/lib32/llvm-config" "$pkgdir/opt/llvm14/bin/llvm-config32"
 
+  # link to /opt/llvm14/lib32
+  install -d "$pkgdir/usr/lib32"
+  ln -s /opt/llvm14/lib32/libclang.so.14 "$pkgdir"/usr/lib32/libclang.so.14
+  ln -s /opt/llvm14/lib32/libclang-cpp.so.14 "$pkgdir"/usr/lib32/libclang-cpp.so.14
+
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CODE_OWNERS"
@@ -193,9 +198,11 @@ package_lib32-llvm14-libs-minimal(){
   install -d "$pkgdir/opt/llvm14/lib32/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/opt/llvm14/lib32/bfd-plugins/LLVMgold.so"
 
-  # Needed for other application
+  # link to /opt/llvm14/lib32
   install -d "$pkgdir/usr/lib32"
   ln -s /opt/llvm14/lib32/libLLVM-14.so "$pkgdir"/usr/lib32/libLLVM-14.so
+  ln -s /opt/llvm14/lib32/libLTO.so.14 "$pkgdir"/usr/lib32/libLTO.so.14
+  ln -s /opt/llvm14/lib32/libRemarks.so.14 "$pkgdir"/usr/lib32/libRemarks.so.14
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"

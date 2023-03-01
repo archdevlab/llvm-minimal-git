@@ -170,6 +170,11 @@ package_lib32-llvm13-minimal(){
   mkdir "$pkgdir"/opt/llvm13/bin
   mv "$pkgdir/opt/llvm13/lib32/llvm-config" "$pkgdir/opt/llvm13/bin/llvm-config32"
 
+  # link to /opt/llvm13/lib32
+  install -d "$pkgdir/usr/lib32"
+  ln -s /opt/llvm13/lib32/libclang.so.13 "$pkgdir"/usr/lib32/libclang.so.13
+  ln -s /opt/llvm13/lib32/libclang-cpp.so.13 "$pkgdir"/usr/lib32/libclang-cpp.so.13
+
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CODE_OWNERS"
@@ -198,9 +203,11 @@ package_lib32-llvm13-libs-minimal(){
   install -d "$pkgdir/opt/llvm13/lib32/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/opt/llvm13/lib32/bfd-plugins/LLVMgold.so"
 
-  # Needed for other application
+  # link to /opt/llvm13/lib32
   install -d "$pkgdir/usr/lib32"
   ln -s /opt/llvm13/lib32/libLLVM-13.so "$pkgdir"/usr/lib32/libLLVM-13.so
+  ln -s /opt/llvm13/lib32/libLTO.so.13 "$pkgdir"/usr/lib32/libLTO.so.13
+  ln -s /opt/llvm13/lib32/libRemarks.so.13 "$pkgdir"/usr/lib32/libRemarks.so.13
 
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project-llvmorg-${pkgver}/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
