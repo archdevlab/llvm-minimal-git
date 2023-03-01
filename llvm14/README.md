@@ -4,7 +4,7 @@
 
 - [ ] LLVMgold.so
 - [ ] libLLVM.so
-- [ ] libLLVM-14.0.0.so
+- [x] libLLVM-14.0.0.so
 - [x] libLLVM-14.so
 - [ ] libLTO.so
 - [x] libLTO.so.14
@@ -19,7 +19,7 @@
 
 - [ ] LLVMgold.so
 - [ ] libLLVM.so
-- [ ] libLLVM-14.0.0.so
+- [x] libLLVM-14.0.0.so
 - [x] libLLVM-14.so
 - [ ] libLTO.so
 - [x] libLTO.so.14
