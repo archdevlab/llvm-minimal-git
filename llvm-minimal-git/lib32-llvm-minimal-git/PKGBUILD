@@ -75,6 +75,19 @@ pkgver(){
   echo "$_pkgver"
 }
 
+prepare(){
+  # Patch taken from https://aur.archlinux.org/packages/llvm-minimal-git
+  # https://aur.archlinux.org/cgit/aur.git/commit/?h=llvm-minimal-git&id=5cb6bb8bed8d4ef863858c834bf1f2830345fc9d
+  # https://aur.archlinux.org/cgit/aur.git/commit/?h=llvm-minimal-git&id=84afb56696e392af9517f30cb406fee5073a3498
+  # https://aur.archlinux.org/cgit/aur.git/commit/?h=llvm-minimal-git&id=cefafd3308f9321e83576ab5455dd717a63cbc82
+  #more reverts to keep legacy passmanager working
+  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}/0001-llvm-c-Remove-bindings-for-creating-legacy-passes.patch"
+  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}/0001-IPO-Remove-various-legacy-passes.patch"
+  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}/0001-OCaml-Remove-all-PassManager-related-functions.patch"
+  # reverting commit b677d0753c0a771c6203607f5dbb56189193a14c , see https://gitlab.freedesktop.org/mesa/mesa/-/issues/8297
+  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}/0001-IPSCCP-Remove-legacy-pass.patch"
+}
+
 build(){
 export CC='gcc -m32'
 export CXX='g++ -m32'
