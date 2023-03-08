@@ -1,0 +1,757 @@
+From 54df42c7dd5ad5e6d2d42a81573e2c2dc0a31a71 Mon Sep 17 00:00:00 2001
+From: Karol Herbst <kherbst@redhat.com>
+Date: Mon, 16 May 2022 22:39:44 +0200
+Subject: [PATCH] nvk: add vulkan skeleton
+
+This is enough to run vulkaninfo without crashing.
+
+Jason:
+* Drop a redundant nvk_device_entrypoints
+* Add some VKAPI_ATTR and VKAPI_CALL
+* nvk: Move EnumerateInstanceExtensionProperties to the top
+  This way things are more-or-less in initialization order.  First the
+  version then extensions then create the instance.
+---
+ meson.build                              |   2 +
+ meson_options.txt                        |   3 +-
+ src/meson.build                          |   2 +-
+ src/nouveau/compiler/meson.build         |   0
+ src/nouveau/meson.build                  |   4 +
+ src/nouveau/vulkan/meson.build           |  59 +++++
+ src/nouveau/vulkan/nvk_device.c          |  53 ++++
+ src/nouveau/vulkan/nvk_device.h          |  13 +
+ src/nouveau/vulkan/nvk_instance.c        |  82 ++++++
+ src/nouveau/vulkan/nvk_instance.h        |  17 ++
+ src/nouveau/vulkan/nvk_physical_device.c | 324 +++++++++++++++++++++++
+ src/nouveau/vulkan/nvk_physical_device.h |  25 ++
+ src/nouveau/vulkan/nvk_private.h         |  33 +++
+ 13 files changed, 615 insertions(+), 2 deletions(-)
+ create mode 100644 src/nouveau/compiler/meson.build
+ create mode 100644 src/nouveau/vulkan/meson.build
+ create mode 100644 src/nouveau/vulkan/nvk_device.c
+ create mode 100644 src/nouveau/vulkan/nvk_device.h
+ create mode 100644 src/nouveau/vulkan/nvk_instance.c
+ create mode 100644 src/nouveau/vulkan/nvk_instance.h
+ create mode 100644 src/nouveau/vulkan/nvk_physical_device.c
+ create mode 100644 src/nouveau/vulkan/nvk_physical_device.h
+ create mode 100644 src/nouveau/vulkan/nvk_private.h
+
+diff --git a/meson.build b/meson.build
+index 03fcc1a03815..3e946639c88c 100644
+--- a/meson.build
++++ b/meson.build
+@@ -249,10 +249,12 @@ with_broadcom_vk = _vulkan_drivers.contains('broadcom')
+ with_imagination_vk = _vulkan_drivers.contains('imagination-experimental')
+ with_imagination_srv = get_option('imagination-srv')
+ with_microsoft_vk = _vulkan_drivers.contains('microsoft-experimental')
++with_nouveau_vk = _vulkan_drivers.contains('nouveau-experimental')
+ with_any_vk = _vulkan_drivers.length() != 0
+ 
+ with_any_broadcom = with_gallium_vc4 or with_gallium_v3d or with_broadcom_vk
+ with_any_intel = with_intel_vk or with_intel_hasvk or with_gallium_iris or with_gallium_crocus or with_intel_tools
++with_any_nouveau = with_gallium_nouveau or with_nouveau_vk
+ 
+ if with_swrast_vk and not with_gallium_softpipe
+   error('swrast vulkan requires gallium swrast')
+diff --git a/meson_options.txt b/meson_options.txt
+index 0bd92d3916dc..9108ebb98d32 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -192,7 +192,8 @@ option(
+   value : ['auto'],
+   choices : ['auto', 'amd', 'broadcom', 'freedreno', 'intel', 'intel_hasvk',
+              'panfrost', 'swrast', 'imagination-experimental',
+-             'microsoft-experimental', 'virtio-experimental'],
++             'microsoft-experimental', 'nouveau-experimental',
++             'virtio-experimental'],
+   description : 'List of vulkan drivers to build. If this is set to auto ' +
+                 'all drivers applicable to the target OS/architecture ' +
+                 'will be built'
+diff --git a/src/meson.build b/src/meson.build
+index ebfcf94858fe..1d13466dcddd 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -103,7 +103,7 @@ endif
+ if with_microsoft_clc or with_gallium_d3d12 or with_spirv_to_dxil or with_microsoft_vk
+   subdir('microsoft')
+ endif
+-if with_gallium_nouveau
++if with_any_nouveau
+   subdir('nouveau')
+ endif
+ if with_gallium_asahi or with_tools.contains('asahi')
+diff --git a/src/nouveau/compiler/meson.build b/src/nouveau/compiler/meson.build
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/src/nouveau/meson.build b/src/nouveau/meson.build
+index 2c01c9df0faf..07b914cca92b 100644
+--- a/src/nouveau/meson.build
++++ b/src/nouveau/meson.build
+@@ -18,6 +18,10 @@
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ # SOFTWARE.
+ 
++subdir('compiler')
++if with_nouveau_vk
++  subdir('vulkan')
++endif
+ if with_tools.contains('drm-shim')
+   subdir('drm-shim')
+ endif
+diff --git a/src/nouveau/vulkan/meson.build b/src/nouveau/vulkan/meson.build
+new file mode 100644
+index 000000000000..43dfacb1add8
+--- /dev/null
++++ b/src/nouveau/vulkan/meson.build
+@@ -0,0 +1,59 @@
++nvk_files = files(
++  'nvk_device.c',
++  'nvk_device.h',
++  'nvk_instance.c',
++  'nvk_instance.h',
++  'nvk_physical_device.c',
++  'nvk_physical_device.h',
++  'nvk_private.h',
++)
++
++nouveau_icd = custom_target(
++  'nouveau_icd',
++  input : [vk_icd_gen, vk_api_xml],
++  output : 'nouveau_icd.@0@.json'.format(host_machine.cpu()),
++  command : [
++    prog_python, '@INPUT0@',
++    '--api-version', '1.3', '--xml', '@INPUT1@',
++    '--lib-path', join_paths(get_option('prefix'), get_option('libdir'),
++                             'libvulkan_nouveau.so'),
++    '--out', '@OUTPUT@',
++  ],
++  build_by_default : true,
++  install_dir : with_vulkan_icd_dir,
++  install : true,
++)
++
++nvk_entrypoints = custom_target(
++  'nvk_entrypoints',
++  input : [vk_entrypoints_gen, vk_api_xml],
++  output : ['nvk_entrypoints.h', 'nvk_entrypoints.c'],
++  command : [
++    prog_python, '@INPUT0@', '--xml', '@INPUT1@', '--proto', '--weak',
++    '--out-h', '@OUTPUT0@', '--out-c', '@OUTPUT1@', '--prefix', 'nvk',
++  ],
++  depend_files : vk_entrypoints_gen_depend_files,
++)
++
++nvk_deps = [
++  dep_libdrm,
++  idep_vulkan_runtime,
++  idep_vulkan_util,
++  idep_vulkan_wsi,
++  idep_vulkan_wsi_headers,
++]
++
++libvulkan_nouveau = shared_library(
++  'vulkan_nouveau',
++  [
++    nvk_entrypoints,
++    nvk_files,
++  ],
++  include_directories : [
++    inc_include,
++    inc_src,
++  ],
++  dependencies : nvk_deps,
++  gnu_symbol_visibility : 'hidden',
++  install : true,
++)
+diff --git a/src/nouveau/vulkan/nvk_device.c b/src/nouveau/vulkan/nvk_device.c
+new file mode 100644
+index 000000000000..d64f4c394027
+--- /dev/null
++++ b/src/nouveau/vulkan/nvk_device.c
+@@ -0,0 +1,53 @@
++#include "nvk_device.h"
++
++#include "nvk_instance.h"
++#include "nvk_physical_device.h"
++
++#include "vulkan/wsi/wsi_common.h"
++
++VKAPI_ATTR VkResult VKAPI_CALL
++nvk_CreateDevice(VkPhysicalDevice physicalDevice,
++   const VkDeviceCreateInfo *pCreateInfo,
++   const VkAllocationCallbacks *pAllocator,
++   VkDevice *pDevice)
++{
++   VK_FROM_HANDLE(nvk_physical_device, physical_device, physicalDevice);
++   VkResult result = VK_ERROR_OUT_OF_HOST_MEMORY;
++   struct nvk_device *device;
++
++   device = vk_zalloc2(&physical_device->instance->vk.alloc,
++      pAllocator,
++      sizeof(*device),
++      8,
++      VK_SYSTEM_ALLOCATION_SCOPE_DEVICE);
++   if (!device)
++      return vk_error(physical_device, VK_ERROR_OUT_OF_HOST_MEMORY);
++
++   struct vk_device_dispatch_table dispatch_table;
++   vk_device_dispatch_table_from_entrypoints(&dispatch_table, &nvk_device_entrypoints, true);
++   vk_device_dispatch_table_from_entrypoints(&dispatch_table, &wsi_device_entrypoints, false);
++
++   result =
++      vk_device_init(&device->vk, &physical_device->vk, &dispatch_table, pCreateInfo, pAllocator);
++   if (result != VK_SUCCESS)
++      goto fail_alloc;
++
++   *pDevice = nvk_device_to_handle(device);
++
++   return VK_SUCCESS;
++
++fail_alloc:
++   vk_free(&device->vk.alloc, device);
++   return result;
++}
++
++VKAPI_ATTR void VKAPI_CALL
++nvk_DestroyDevice(VkDevice _device, const VkAllocationCallbacks *pAllocator)
++{
++   VK_FROM_HANDLE(nvk_device, device, _device);
++
++   if (!device)
++      return;
++
++   vk_free(&device->vk.alloc, device);
++}
+diff --git a/src/nouveau/vulkan/nvk_device.h b/src/nouveau/vulkan/nvk_device.h
+new file mode 100644
+index 000000000000..95ba571f2d73
+--- /dev/null
++++ b/src/nouveau/vulkan/nvk_device.h
+@@ -0,0 +1,13 @@
++#ifndef NVK_DEVICE
++#define NVK_DEVICE 1
++
++#include "nvk_private.h"
++
++#include "vulkan/runtime/vk_device.h"
++
++struct nvk_device {
++   struct vk_device vk;
++};
++
++VK_DEFINE_HANDLE_CASTS(nvk_device, vk.base, VkDevice, VK_OBJECT_TYPE_DEVICE)
++#endif
+diff --git a/src/nouveau/vulkan/nvk_instance.c b/src/nouveau/vulkan/nvk_instance.c
+new file mode 100644
+index 000000000000..a8520edec342
+--- /dev/null
++++ b/src/nouveau/vulkan/nvk_instance.c
+@@ -0,0 +1,82 @@
++#include "nvk_instance.h"
++
++#include "nvk_physical_device.h"
++
++static const struct vk_instance_extension_table instance_extensions = {
++   .KHR_get_physical_device_properties2 = true,
++   .EXT_debug_report = true,
++   .EXT_debug_utils = true,
++};
++
++VKAPI_ATTR VkResult VKAPI_CALL
++nvk_EnumerateInstanceExtensionProperties(const char *pLayerName,
++   uint32_t *pPropertyCount,
++   VkExtensionProperties *pProperties)
++{
++   if (pLayerName)
++      return vk_error(NULL, VK_ERROR_LAYER_NOT_PRESENT);
++
++   return vk_enumerate_instance_extension_properties(
++      &instance_extensions, pPropertyCount, pProperties);
++}
++
++VKAPI_ATTR VkResult VKAPI_CALL
++nvk_CreateInstance(const VkInstanceCreateInfo *pCreateInfo,
++   const VkAllocationCallbacks *pAllocator,
++   VkInstance *pInstance)
++{
++   struct nvk_instance *instance;
++   VkResult result;
++
++   if (pAllocator == NULL)
++      pAllocator = vk_default_allocator();
++
++   instance = vk_alloc(pAllocator, sizeof(*instance), 8, VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE);
++   if (!instance)
++      return vk_error(NULL, VK_ERROR_OUT_OF_HOST_MEMORY);
++
++   struct vk_instance_dispatch_table dispatch_table;
++   vk_instance_dispatch_table_from_entrypoints(&dispatch_table, &nvk_instance_entrypoints, true);
++
++   result = vk_instance_init(
++      &instance->vk, &instance_extensions, &dispatch_table, pCreateInfo, pAllocator);
++
++   if (result != VK_SUCCESS) {
++      vk_free(pAllocator, instance);
++      return result;
++   }
++
++   instance->physical_devices_enumerated = false;
++   list_inithead(&instance->physical_devices);
++
++   *pInstance = nvk_instance_to_handle(instance);
++   return VK_SUCCESS;
++}
++
++VKAPI_ATTR void VKAPI_CALL
++nvk_DestroyInstance(VkInstance _instance, const VkAllocationCallbacks *pAllocator)
++{
++   VK_FROM_HANDLE(nvk_instance, instance, _instance);
++
++   if (!instance)
++      return;
++
++   list_for_each_entry_safe(struct nvk_physical_device, pdevice, &instance->physical_devices, link)
++      nvk_physical_device_destroy(pdevice);
++
++   vk_instance_finish(&instance->vk);
++   vk_free(&instance->vk.alloc, instance);
++}
++
++VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL
++nvk_GetInstanceProcAddr(VkInstance _instance, const char *pName)
++{
++   VK_FROM_HANDLE(nvk_instance, instance, _instance);
++   return vk_instance_get_proc_addr(&instance->vk, &nvk_instance_entrypoints, pName);
++}
++
++PUBLIC VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL
++vk_icdGetInstanceProcAddr(VkInstance instance, const char *pName)
++{
++   return nvk_GetInstanceProcAddr(instance, pName);
++}
+diff --git a/src/nouveau/vulkan/nvk_instance.h b/src/nouveau/vulkan/nvk_instance.h
+new file mode 100644
+index 000000000000..729f92f76bf2
+--- /dev/null
++++ b/src/nouveau/vulkan/nvk_instance.h
+@@ -0,0 +1,17 @@
++#ifndef NVK_INSTANCE
++#define NVK_INSTANCE 1
++
++#include "nvk_private.h"
++
++#include "vulkan/runtime/vk_instance.h"
++
++struct nvk_instance {
++   struct vk_instance vk;
++
++   bool physical_devices_enumerated;
++   struct list_head physical_devices;
++};
++
++VK_DEFINE_HANDLE_CASTS(nvk_instance, vk.base, VkInstance, VK_OBJECT_TYPE_INSTANCE)
++
++#endif
+diff --git a/src/nouveau/vulkan/nvk_physical_device.c b/src/nouveau/vulkan/nvk_physical_device.c
+new file mode 100644
+index 000000000000..af2b7d61ad01
+--- /dev/null
++++ b/src/nouveau/vulkan/nvk_physical_device.c
+@@ -0,0 +1,324 @@
++#include "nvk_physical_device.h"
++
++#include "nvk_entrypoints.h"
++#include "nvk_instance.h"
++
++#include "vulkan/runtime/vk_device.h"
++#include "vulkan/wsi/wsi_common.h"
++
++VKAPI_ATTR void VKAPI_CALL
++nvk_GetPhysicalDeviceFeatures2(VkPhysicalDevice physicalDevice,
++   VkPhysicalDeviceFeatures2 *pFeatures)
++{
++   // VK_FROM_HANDLE(nvk_physical_device, pdevice, physicalDevice);
++
++   pFeatures->features = (VkPhysicalDeviceFeatures) {
++      .robustBufferAccess = true,
++      /* More features */
++   };
++
++   VkPhysicalDeviceVulkan11Features core_1_1 = {
++      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES,
++      /* Vulkan 1.1 features */
++   };
++
++   VkPhysicalDeviceVulkan12Features core_1_2 = {
++      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES,
++      /* Vulkan 1.2 features */
++   };
++
++   VkPhysicalDeviceVulkan13Features core_1_3 = {
++      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES,
++      /* Vulkan 1.3 features */
++   };
++
++   vk_foreach_struct(ext, pFeatures->pNext)
++   {
++      if (vk_get_physical_device_core_1_1_feature_ext(ext, &core_1_1))
++         continue;
++      if (vk_get_physical_device_core_1_2_feature_ext(ext, &core_1_2))
++         continue;
++      if (vk_get_physical_device_core_1_3_feature_ext(ext, &core_1_3))
++         continue;
++
++      switch (ext->sType) {
++      case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT: {
++         VkPhysicalDevice4444FormatsFeaturesEXT *features = (void *)ext;
++         features->formatA4R4G4B4 = true;
++         features->formatA4B4G4R4 = true;
++         break;
++      }
++      /* More feature structs */
++      default:
++         break;
++      }
++   }
++}
++
++VKAPI_ATTR void VKAPI_CALL
++nvk_GetPhysicalDeviceProperties2(VkPhysicalDevice physicalDevice,
++   VkPhysicalDeviceProperties2 *pProperties)
++{
++   // VK_FROM_HANDLE(nvk_physical_device, pdevice, physicalDevice);
++
++   pProperties->properties = (VkPhysicalDeviceProperties) {
++      .apiVersion = VK_MAKE_VERSION(1, 0, VK_HEADER_VERSION),
++      .driverVersion = vk_get_driver_version(),
++      /* More properties */
++   };
++
++   VkPhysicalDeviceVulkan11Properties core_1_1 = {
++      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES,
++      /* Vulkan 1.1 properties */
++   };
++
++   VkPhysicalDeviceVulkan12Properties core_1_2 = {
++      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES,
++      /* Vulkan 1.2 properties */
++   };
++
++   VkPhysicalDeviceVulkan13Properties core_1_3 = {
++      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES,
++      /* Vulkan 1.3 properties */
++   };
++
++   vk_foreach_struct(ext, pProperties->pNext)
++   {
++      if (vk_get_physical_device_core_1_1_property_ext(ext, &core_1_1))
++         continue;
++      if (vk_get_physical_device_core_1_2_property_ext(ext, &core_1_2))
++         continue;
++      if (vk_get_physical_device_core_1_3_property_ext(ext, &core_1_3))
++         continue;
++
++      switch (ext->sType) {
++      /* More property structs */
++      default:
++         break;
++      }
++   }
++}
++
++PUBLIC VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL
++vk_icdGetPhysicalDeviceProcAddr(VkInstance _instance, const char *pName)
++{
++   VK_FROM_HANDLE(nvk_instance, instance, _instance);
++   return vk_instance_get_physical_device_proc_addr(&instance->vk, pName);
++}
++
++static void
++nvk_get_device_extensions(const struct nvk_physical_device *device,
++   struct vk_device_extension_table *ext)
++{
++   *ext = (struct vk_device_extension_table) {
++      .KHR_variable_pointers = true,
++   };
++}
++
++static VkResult
++nvk_physical_device_try_create(struct nvk_instance *instance,
++   drmDevicePtr drm_device,
++   struct nvk_physical_device **device_out)
++{
++   // const char *primary_path = drm_device->nodes[DRM_NODE_PRIMARY];
++   const char *path = drm_device->nodes[DRM_NODE_RENDER];
++   VkResult result;
++   int fd;
++
++   fd = open(path, O_RDWR | O_CLOEXEC);
++   if (fd < 0) {
++      if (errno == ENOMEM) {
++         return vk_errorf(
++            instance, VK_ERROR_OUT_OF_HOST_MEMORY, "Unable to open device %s: out of memory", path);
++      }
++      return vk_errorf(
++         instance, VK_ERROR_INCOMPATIBLE_DRIVER, "Unable to open device %s: %m", path);
++   }
++
++   vk_warn_non_conformant_implementation("nvk");
++
++   struct nvk_physical_device *device =
++      vk_zalloc(&instance->vk.alloc, sizeof(*device), 8, VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE);
++
++   if (device == NULL) {
++      result = vk_error(instance, VK_ERROR_OUT_OF_HOST_MEMORY);
++      goto fail_fd;
++   }
++
++   struct vk_physical_device_dispatch_table dispatch_table;
++   vk_physical_device_dispatch_table_from_entrypoints(
++      &dispatch_table, &nvk_physical_device_entrypoints, true);
++   vk_physical_device_dispatch_table_from_entrypoints(
++      &dispatch_table, &wsi_physical_device_entrypoints, false);
++
++   struct vk_device_extension_table supported_extensions;
++   nvk_get_device_extensions(device, &supported_extensions);
++
++   result =
++      vk_physical_device_init(&device->vk, &instance->vk, &supported_extensions, &dispatch_table);
++
++   if (result != VK_SUCCESS) {
++      vk_error(instance, result);
++      goto fail_alloc;
++   }
++
++   device->instance = instance;
++
++   *device_out = device;
++
++   return VK_SUCCESS;
++
++fail_alloc:
++   vk_free(&instance->vk.alloc, device);
++
++fail_fd:
++   close(fd);
++   return result;
++}
++
++void
++nvk_physical_device_destroy(struct nvk_physical_device *device)
++{
++   vk_free(&device->instance->vk.alloc, device);
++}
++
++static VkResult
++nvk_enumerate_physical_devices(struct nvk_instance *instance)
++{
++   if (instance->physical_devices_enumerated)
++      return VK_SUCCESS;
++
++   instance->physical_devices_enumerated = true;
++
++   int max_devices = drmGetDevices2(0, NULL, 0);
++   if (max_devices < 1)
++      return VK_SUCCESS;
++
++   drmDevicePtr *devices = MALLOC(max_devices * sizeof(drmDevicePtr));
++   drmGetDevices2(0, devices, max_devices);
++
++   VkResult result = VK_SUCCESS;
++   for (unsigned i = 0; i < (unsigned)max_devices; i++) {
++      if (devices[i]->available_nodes & 1 << DRM_NODE_RENDER &&
++         devices[i]->bustype == DRM_BUS_PCI && devices[i]->deviceinfo.pci->vendor_id == 0x10de) {
++         struct nvk_physical_device *pdevice;
++         result = nvk_physical_device_try_create(instance, devices[i], &pdevice);
++         /* Incompatible DRM device, skip. */
++         if (result == VK_ERROR_INCOMPATIBLE_DRIVER) {
++            result = VK_SUCCESS;
++            continue;
++         }
++
++         /* Error creating the physical device, report the error. */
++         if (result != VK_SUCCESS)
++            break;
++
++         list_addtail(&pdevice->link, &instance->physical_devices);
++      }
++   }
++   drmFreeDevices(devices, max_devices);
++   FREE(devices);
++
++   /* If we successfully enumerated any devices, call it success */
++   return result;
++}
++
++VKAPI_ATTR VkResult VKAPI_CALL
++nvk_EnumeratePhysicalDevices(VkInstance _instance,
++   uint32_t *pPhysicalDeviceCount,
++   VkPhysicalDevice *pPhysicalDevices)
++{
++   VK_FROM_HANDLE(nvk_instance, instance, _instance);
++   VK_OUTARRAY_MAKE_TYPED(VkPhysicalDevice, out, pPhysicalDevices, pPhysicalDeviceCount);
++
++   VkResult result = nvk_enumerate_physical_devices(instance);
++   if (result != VK_SUCCESS)
++      return result;
++
++   list_for_each_entry(struct nvk_physical_device, pdevice, &instance->physical_devices, link)
++   {
++      vk_outarray_append_typed(VkPhysicalDevice, &out, i)
++      {
++         *i = nvk_physical_device_to_handle(pdevice);
++      }
++   }
++
++   return vk_outarray_status(&out);
++}
++
++VKAPI_ATTR VkResult VKAPI_CALL
++nvk_EnumeratePhysicalDeviceGroups(VkInstance _instance,
++   uint32_t *pPhysicalDeviceGroupCount,
++   VkPhysicalDeviceGroupProperties *pPhysicalDeviceGroupProperties)
++{
++   VK_FROM_HANDLE(nvk_instance, instance, _instance);
++   VK_OUTARRAY_MAKE_TYPED(VkPhysicalDeviceGroupProperties,
++      out,
++      pPhysicalDeviceGroupProperties,
++      pPhysicalDeviceGroupCount);
++
++   VkResult result = nvk_enumerate_physical_devices(instance);
++   if (result != VK_SUCCESS)
++      return result;
++
++   list_for_each_entry(struct nvk_physical_device, pdevice, &instance->physical_devices, link)
++   {
++      vk_outarray_append_typed(VkPhysicalDeviceGroupProperties, &out, p)
++      {
++         p->physicalDeviceCount = 1;
++         memset(p->physicalDevices, 0, sizeof(p->physicalDevices));
++         p->physicalDevices[0] = nvk_physical_device_to_handle(pdevice);
++         p->subsetAllocation = false;
++      }
++   }
++
++   return vk_outarray_status(&out);
++}
++
++VKAPI_ATTR void VKAPI_CALL
++nvk_GetPhysicalDeviceMemoryProperties2(VkPhysicalDevice physicalDevice,
++   VkPhysicalDeviceMemoryProperties2 *pMemoryProperties)
++{
++   vk_foreach_struct(ext, pMemoryProperties->pNext)
++   {
++      switch (ext->sType) {
++      default:
++         nvk_debug_ignored_stype(ext->sType);
++         break;
++      }
++   }
++}
++
++VKAPI_ATTR void VKAPI_CALL
++nvk_GetPhysicalDeviceQueueFamilyProperties2(VkPhysicalDevice physicalDevice,
++   uint32_t *pQueueFamilyPropertyCount,
++   VkQueueFamilyProperties2 *pQueueFamilyProperties)
++{
++   // VK_FROM_HANDLE(nvk_physical_device, pdevice, physicalDevice);
++   VK_OUTARRAY_MAKE_TYPED(
++      VkQueueFamilyProperties2, out, pQueueFamilyProperties, pQueueFamilyPropertyCount);
++}
++
++VKAPI_ATTR void VKAPI_CALL
++nvk_GetPhysicalDeviceFormatProperties2(VkPhysicalDevice physicalDevice,
++   VkFormat vk_format,
++   VkFormatProperties2 *pFormatProperties)
++{
++   vk_foreach_struct(ext, pFormatProperties->pNext)
++   {
++      /* Use unsigned since some cases are not in the VkStructureType enum. */
++      switch ((unsigned)ext->sType) {
++      default:
++         nvk_debug_ignored_stype(ext->sType);
++         break;
++      }
++   }
++}
++
++VKAPI_ATTR VkResult VKAPI_CALL
++nvk_GetPhysicalDeviceImageFormatProperties2(VkPhysicalDevice physicalDevice,
++   const VkPhysicalDeviceImageFormatInfo2 *base_info,
++   VkImageFormatProperties2 *base_props)
++{
++   return VK_ERROR_FORMAT_NOT_SUPPORTED;
++}
+diff --git a/src/nouveau/vulkan/nvk_physical_device.h b/src/nouveau/vulkan/nvk_physical_device.h
+new file mode 100644
+index 000000000000..f696045ed5c9
+--- /dev/null
++++ b/src/nouveau/vulkan/nvk_physical_device.h
+@@ -0,0 +1,25 @@
++#ifndef NVK_PHYSICAL_DEVICE
++#define NVK_PHYSICAL_DEVICE 1
++
++#include "nvk_private.h"
++
++#include "vulkan/runtime/vk_physical_device.h"
++
++struct nvk_instance;
++
++struct nvk_physical_device {
++   struct vk_physical_device vk;
++   struct nvk_instance *instance;
++
++   /* Link in nvk_instance::physical_devices */
++   struct list_head link;
++};
++
++VK_DEFINE_HANDLE_CASTS(nvk_physical_device,
++   vk.base,
++   VkPhysicalDevice,
++   VK_OBJECT_TYPE_PHYSICAL_DEVICE)
++
++void nvk_physical_device_destroy(struct nvk_physical_device *);
++
++#endif
+diff --git a/src/nouveau/vulkan/nvk_private.h b/src/nouveau/vulkan/nvk_private.h
+new file mode 100644
+index 000000000000..edb8acb2c482
+--- /dev/null
++++ b/src/nouveau/vulkan/nvk_private.h
+@@ -0,0 +1,33 @@
++#ifndef NVK_PRIVATE
++#define NVK_PRIVATE 1
++
++#include "nvk_entrypoints.h"
++
++#include "util/log.h"
++#include "util/u_memory.h"
++#include "vulkan/runtime/vk_log.h"
++#include "vulkan/util/vk_alloc.h"
++#include "vulkan/util/vk_util.h"
++
++#include <fcntl.h>
++#include <xf86drm.h>
++
++/**
++ * Warn on ignored extension structs.
++ *
++ * The Vulkan spec requires us to ignore unsupported or unknown structs in
++ * a pNext chain.  In debug mode, emitting warnings for ignored structs may
++ * help us discover structs that we should not have ignored.
++ *
++ *
++ * From the Vulkan 1.0.38 spec:
++ *
++ *    Any component of the implementation (the loader, any enabled layers,
++ *    and drivers) must skip over, without processing (other than reading the
++ *    sType and pNext members) any chained structures with sType values not
++ *    defined by extensions supported by that component.
++ */
++#define nvk_debug_ignored_stype(sType)                                                             \
++   mesa_logd("%s: ignored VkStructureType %u\n", __func__, (sType))
++
++#endif
+-- 
+GitLab
+
