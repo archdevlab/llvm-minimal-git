@@ -27,7 +27,7 @@ pkgver(){
   cd ${srcdir}/SPIRV-Tools
 
   # cutting off 'foo-' prefix that presents in the git tag
-  git describe --long --tags --exclude sdk-* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags --abbrev=7 --exclude sdk-* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 # prepare(){
