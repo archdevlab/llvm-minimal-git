@@ -13,7 +13,7 @@
 pkgname=mesa-git
 pkgver=23.1.0_devel
 pkgrel=1
-commit=efcb63938c195b765c530e6e6eff1d712bfc6e74
+commit=0614c2e8bd752bd387308aa98aa411fcda6a3b0d
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
