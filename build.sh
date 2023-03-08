@@ -33,11 +33,11 @@ cd mesa/lib32-mesa-git && makepkg -si --noconfirm && cd ${source}
 
 # make a copy of every pkg in package/ dir
 
-#mkdir package
+mkdir package
 
-#cp -v */*.pkg.tar.zst package/
+cp -v */*/*.pkg.tar.zst package/
 
 # clean build dir
 
-#rm -rf */src/
-#rm -rf */pkg/
+rm -rf */*/src/
+rm -rf */*/pkg/
