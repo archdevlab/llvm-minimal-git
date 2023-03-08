@@ -167,7 +167,7 @@ package_llvm-minimal-git(){
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
   conflicts=(llvm compiler-rt clang spirv-llvm-translator spirv-llvm-translator-minimal-git)
-  provides=(llvm compiler-rt clang clang-analyzer clang-tools-extra spirv-llvm-translator)
+  provides=(llvm compiler-rt clang clang-analyzer clang-tools-extra spirv-llvm-translator spirv-llvm-translator-git)
   replaces=(clang-analyzer clang-tools-extra spirv-llvm-translator-minimal-git)
 
   cd llvm-project/llvm/build
