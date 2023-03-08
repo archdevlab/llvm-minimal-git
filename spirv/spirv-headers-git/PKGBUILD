@@ -26,7 +26,7 @@ md5sums=(SKIP)
 pkgver(){
   cd ${srcdir}/SPIRV-Headers
 
-  git describe --long --tags --exclude sdk-* | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags --abbrev=7 --exclude sdk-* | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build(){
