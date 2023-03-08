@@ -36,7 +36,7 @@ source=(git+https://github.com/KhronosGroup/glslang.git#commit=$commit)
 pkgver(){
   cd ${srcdir}/glslang
 
-  git describe --long --tags --exclude master-tot --exclude main-tot --exclude sdk-* --exclude SDK-candidate\* --exclude untagged\* | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags --abbrev=7 --exclude master-tot --exclude main-tot --exclude sdk-* --exclude SDK-candidate\* --exclude untagged\* | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare(){
