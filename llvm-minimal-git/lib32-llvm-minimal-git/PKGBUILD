@@ -75,7 +75,7 @@ pkgver(){
 }
 
 prepare(){
-  # Patch taken from https://aur.archlinux.org/packages/llvm-minimal-git
+  # Patch taken from https://aur.archlinux.org/packages/lib32-llvm-minimal-git
   # https://aur.archlinux.org/cgit/aur.git/commit/?h=lib32-llvm-minimal-git&id=c8fe7ff1d6e14ce4948da9572b82cb178332ba4c
   # https://aur.archlinux.org/cgit/aur.git/commit/?h=lib32-llvm-minimal-git&id=07f8a395fd924336592e3c2c0d727d87ceb14d87
   #more reverts to keep legacy passmanager working
