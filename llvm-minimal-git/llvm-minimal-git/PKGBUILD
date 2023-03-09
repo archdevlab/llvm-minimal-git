@@ -93,7 +93,7 @@ prepare(){
   # reverting commit b677d0753c0a771c6203607f5dbb56189193a14c , see https://gitlab.freedesktop.org/mesa/mesa/-/issues/8297
   patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}/0001-IPSCCP-Remove-legacy-pass.patch"
   # Another revert to keep mesa building with gallium opencl
-  patch -p1 --directory="llvm-project" --reverse --strip=1 --input="${srcdir}/0001-Reland-LegacyPM-Remove-some-legacy-passes.patch"
+  patch --directory="llvm-project" --reverse --fuzz=50 --strip=1 --input="${srcdir}/0001-Reland-LegacyPM-Remove-some-legacy-passes.patch"
 
   # Attempt to convert script to Python 3
   2to3 -wn --no-diffs \
