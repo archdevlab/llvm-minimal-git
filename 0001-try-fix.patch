@@ -1,0 +1,29 @@
+From b39d053599d04266871221a2bdf28ee9e04e5e90 Mon Sep 17 00:00:00 2001
+From: blacksky3 <blacksky3@tuta.io>
+Date: Wed, 8 Mar 2023 21:16:02 -0500
+Subject: [PATCH] try fix
+
+---
+ src/gallium/frontends/clover/llvm/invocation.cpp | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/gallium/frontends/clover/llvm/invocation.cpp b/src/gallium/frontends/clover/llvm/invocation.cpp
+index 7a50fea..2386646 100644
+--- a/src/gallium/frontends/clover/llvm/invocation.cpp
++++ b/src/gallium/frontends/clover/llvm/invocation.cpp
+@@ -458,7 +458,12 @@ namespace {
+       if (internalize_symbols) {
+          std::vector<std::string> names =
+             map(std::mem_fn(&Function::getName), get_kernels(mod));
++#if LLVM_VERSION_MAJOR <= 16
+          pm.add(::llvm::createInternalizePass(
++#endif
++#if LLVM_VERSION_MAJOR >= 17
++         pm.add(::llvm::InternalizePass(
++#endif
+                       [=](const ::llvm::GlobalValue &gv) {
+                          return std::find(names.begin(), names.end(),
+                                           gv.getName()) != names.end();
+-- 
+2.39.2
+
