@@ -182,4 +182,5 @@ package_lib32-mesa-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-sha256sums=('SKIP')
+sha256sums=('SKIP'
+            '1c5cb11114f5bd6538f5bab0b3fc00126c2fc4b49ec64923cbbe29ff1fe208ec')
