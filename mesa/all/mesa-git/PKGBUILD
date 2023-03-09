@@ -36,6 +36,7 @@ replaces=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-
           mesa-vdpau-git vulkan-intel-hasvk-git vulkan-imagination-git)
 options=(!debug !lto)
 source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit=$commit
+        # anv: fix build with -Dvulkan-beta=true
         https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21637.patch)
 
 # ninja grabs all available cores and leaves almost nothing for other processes.
