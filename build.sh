@@ -27,9 +27,9 @@ cd llvm-minimal-git/lib32-llvm-minimal-git && makepkg -si --noconfirm && cd ${so
 
 cd glslang/glslang-git && makepkg -si --noconfirm && cd ${source}
 
-cd mesa/mesa-git && makepkg -si --noconfirm && cd ${source}
+cd mesa/all/mesa-git && makepkg -si --noconfirm && cd ${source}
 
-cd mesa/lib32-mesa-git && makepkg -si --noconfirm && cd ${source}
+cd mesa/all/lib32-mesa-git && makepkg -si --noconfirm && cd ${source}
 
 # make a copy of every pkg in package/ dir
 
