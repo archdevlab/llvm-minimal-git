@@ -35,7 +35,8 @@ provides=(mesa opencl-mesa vulkan-intel vulkan-radeon vulkan-swrast vulkan-virti
 replaces=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git 
           mesa-vdpau-git vulkan-intel-hasvk-git vulkan-imagination-git)
 options=(!debug !lto)
-source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit=$commit)
+source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit=$commit
+        https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21637.patch)
 
 # ninja grabs all available cores and leaves almost nothing for other processes.
 # this package uses the environment variable NINJAFLAGS to allow the user to change this behaviour
