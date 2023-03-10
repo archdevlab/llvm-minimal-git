@@ -29,6 +29,8 @@ source=(git+https://github.com/llvm/llvm-project.git#commit=$commit
         0001-llvm-c-Remove-bindings-for-creating-legacy-passes.patch
         0001-IPO-Remove-various-legacy-passes.patch
         # Another revert to keep mesa building with gallium opencl
+        # https://aur.archlinux.org/packages/llvm-minimal-git#comment-905463
+        # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
         0001-Reland-LegacyPM-Remove-some-legacy-passes.patch)
 
 # Both ninja & LIT by default use all available cores. this can lead to heavy stress on systems making them unresponsive.
@@ -87,6 +89,8 @@ prepare(){
   # reverting commit b677d0753c0a771c6203607f5dbb56189193a14c , see https://gitlab.freedesktop.org/mesa/mesa/-/issues/8297
   patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}/0001-IPSCCP-Remove-legacy-pass.patch"
   # Another revert to keep mesa building with gallium opencl
+  # https://aur.archlinux.org/packages/llvm-minimal-git#comment-905463
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
   patch --directory="llvm-project" --reverse --fuzz=50 --strip=1 --input="${srcdir}/0001-Reland-LegacyPM-Remove-some-legacy-passes.patch"
 }
 
