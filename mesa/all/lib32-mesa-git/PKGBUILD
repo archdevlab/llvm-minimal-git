@@ -40,6 +40,7 @@ replaces=(lib32-vulkan-mesa-layers-git lib32-opencl-mesa-git lib32-vulkan-intel-
 options=(!debug !lto)
 source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit=$commit
         # vulkan: fix builds with beta extensions
+        # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21806
         https://gitlab.freedesktop.org/airlied/mesa/-/commit/c3444d52a35d0a46ab186de9fc63cf6b94a666a6.patch
         https://gitlab.freedesktop.org/airlied/mesa/-/commit/5a271b8ff8d1b1a560847718a806f652b9040e34.patch)
 
