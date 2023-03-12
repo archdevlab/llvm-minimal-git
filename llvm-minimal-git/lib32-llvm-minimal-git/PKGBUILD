@@ -22,12 +22,14 @@ makedepends=(cmake ninja lib32-libffi lib32-zlib lib32-zstd python gcc-multilib 
 options=(staticlibs !lto ) # extra/llvm has many test failures with LTO
 source=(git+https://github.com/llvm/llvm-project.git#commit=$commit
         # Patch taken from https://aur.archlinux.org/packages/lib32-llvm-minimal-git
-        # https://aur.archlinux.org/cgit/aur.git/commit/?h=lib32-llvm-minimal-git&id=c8fe7ff1d6e14ce4948da9572b82cb178332ba4c
-        # https://aur.archlinux.org/cgit/aur.git/commit/?h=lib32-llvm-minimal-git&id=07f8a395fd924336592e3c2c0d727d87ceb14d87
+        # https://aur.archlinux.org/cgit/aur.git/commit/?h=lib32-llvm-minimal-git&id=371fb93578b2b2fe0601204cac6cd0cd1f481291
         0001-IPSCCP-Remove-legacy-pass.patch
-        0001-OCaml-Remove-all-PassManager-related-functions.patch
-        0001-llvm-c-Remove-bindings-for-creating-legacy-passes.patch
-        0001-IPO-Remove-various-legacy-passes.patch
+        0002-OCaml-Remove-all-PassManager-related-functions.patch
+        0003-IPO-Remove-various-legacy-passes.patch
+        0004-llvm-c-Remove-bindings-for-creating-legacy-passes.patch
+        0005-llvm-c-Remove-PassManagerBuilder-APIs.patch
+        0006-llvm-c-Remove-pointee-support-from-LLVMGetElementTyp.patch
+        0007-Passes-Remove-some-legacy-passes.patch
         # Another revert to keep mesa building with gallium opencl
         # https://aur.archlinux.org/packages/llvm-minimal-git#comment-905463
         # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
@@ -80,18 +82,19 @@ pkgver(){
 
 prepare(){
   # Patch taken from https://aur.archlinux.org/packages/lib32-llvm-minimal-git
-  # https://aur.archlinux.org/cgit/aur.git/commit/?h=lib32-llvm-minimal-git&id=c8fe7ff1d6e14ce4948da9572b82cb178332ba4c
-  # https://aur.archlinux.org/cgit/aur.git/commit/?h=lib32-llvm-minimal-git&id=07f8a395fd924336592e3c2c0d727d87ceb14d87
-  #more reverts to keep legacy passmanager working
-  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}/0001-llvm-c-Remove-bindings-for-creating-legacy-passes.patch"
-  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}/0001-IPO-Remove-various-legacy-passes.patch"
-  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}/0001-OCaml-Remove-all-PassManager-related-functions.patch"
+  # https://aur.archlinux.org/cgit/aur.git/commit/?h=lib32-llvm-minimal-git&id=371fb93578b2b2fe0601204cac6cd0cd1f481291
+  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0007-Passes-Remove-some-legacy-passes.patch
+  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0006-llvm-c-Remove-pointee-support-from-LLVMGetElementTyp.patch
+  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0005-llvm-c-Remove-PassManagerBuilder-APIs.patch
+  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0004-llvm-c-Remove-bindings-for-creating-legacy-passes.patch
+  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0003-IPO-Remove-various-legacy-passes.patch
+  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0002-OCaml-Remove-all-PassManager-related-functions.patch
   # reverting commit b677d0753c0a771c6203607f5dbb56189193a14c , see https://gitlab.freedesktop.org/mesa/mesa/-/issues/8297
-  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}/0001-IPSCCP-Remove-legacy-pass.patch"
+  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0001-IPSCCP-Remove-legacy-pass.patch
   # Another revert to keep mesa building with gallium opencl
   # https://aur.archlinux.org/packages/llvm-minimal-git#comment-905463
   # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
-  patch --directory="llvm-project" --reverse --fuzz=50 --strip=1 --input="${srcdir}/0001-Reland-LegacyPM-Remove-some-legacy-passes.patch"
+  patch --directory="llvm-project" --reverse --fuzz=50 --strip=1 --input="${srcdir}"/0001-Reland-LegacyPM-Remove-some-legacy-passes.patch
 }
 
 build(){
@@ -219,6 +222,9 @@ package_lib32-llvm-libs-minimal-git(){
 sha256sums=('SKIP'
             '0c28b92e399b8d0f99ce871265f27e44a7e54dd4f6979efc236d0aa6ccb1bc91'
             'd80f3a327b012224a816078a7cf002413478c206a0d8d23d1b1bbdadbc15b10e'
-            'df261a14dd533005d309b3c443dc0ca3f1e0fe66833928d32f1401d80e9977cd'
             '8a59d80cbb3d8edac1128a2c46d8df8f1c45ed210998567ccef1c7a0d335d4f4'
+            'df261a14dd533005d309b3c443dc0ca3f1e0fe66833928d32f1401d80e9977cd'
+            '9291d7a93deb23a389b619280052a19feb971f5dc37c3aa67c25a84dd083c49e'
+            '0a03347c60f5f9b5cfeb80cf644de2dee6347a8253a0f287aa6754dff04e484f'
+            '081b0c6c19f038ba63b89b12c894e2868cbc28084c4279205a9fdbfc3f7cc08b'
             '1ac83633f463cb7db2d11149c35b981ba77fa50a98c944caacb13a16901bddc4')
