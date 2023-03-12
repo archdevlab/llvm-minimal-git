@@ -13,7 +13,7 @@
 pkgname=mesa-git
 pkgver=23.1.0_devel
 pkgrel=1
-commit=11bc2bde8365682ae0a06741aff00c12130f7dcb
+commit=2b00eaaedc8cb83d4ed138930e0dc8f7824f28ec
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
@@ -32,7 +32,7 @@ conflicts=(mesa opencl-mesa vulkan-intel vulkan-radeon vulkan-mesa vulkan-swrast
 conflicts+=(vulkan-intel-hasvk-git vulkan-imagination-git)
 provides=(mesa opencl-mesa vulkan-intel vulkan-radeon vulkan-swrast vulkan-virtio vulkan-driver vulkan-mesa-layers libva-mesa-driver mesa-vdpau
           opengl-driver opencl-driver mesa-libgl libva-driver vdpau-driver)
-replaces=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git 
+replaces=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git
           mesa-vdpau-git vulkan-intel-hasvk-git vulkan-imagination-git)
 options=(!debug !lto)
 source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit=$commit

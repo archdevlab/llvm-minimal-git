@@ -12,10 +12,10 @@
 pkgbase=llvm-minimal-git
 pkgname=(llvm-minimal-git llvm-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=17.0.0
+pkgver=17.0.0.r454304.g6590a372fa3f
 pkgrel=1
 _pkgver=17.0.0
-llvmcommit=e0ecc322ec840f375863bd56c589cdc03b1483e6
+llvmcommit=6590a372fa3f4582c04b4b179f90a3c728e75025
 spirvcommit=7906823ab821ad19f5d5aa9235e726dc36331784
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')

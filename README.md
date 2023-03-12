@@ -30,7 +30,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 17.0.0
 
-- commit: e0ecc322ec840f375863bd56c589cdc03b1483e6
+- commit: 6590a372fa3f4582c04b4b179f90a3c728e75025
 
 ### SPIRV-LLVM-Translator
 
@@ -60,7 +60,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 23.1.0
 
-- commit : 11bc2bde8365682ae0a06741aff00c12130f7dcb
+- commit : 2b00eaaedc8cb83d4ed138930e0dc8f7824f28ec
 
 # Build
 
@@ -129,7 +129,7 @@ You can add this repo to your pacman.conf
     Server = https://repo.blacksky3.com/$arch/$repo
 
     sudo pacman -S llvm12-minimal llvm12-libs-minimal libclc12-minimal lib32-llvm12-minimal lib32-llvm12-libs-minimal
- 
+
 ### LLVM11
 
 Prebuild package are available at https://repo.blacksky3.com/x86_64/llvm11-minimal
@@ -141,7 +141,7 @@ You can add this repo to your pacman.conf
     Server = https://repo.blacksky3.com/$arch/$repo
 
     sudo pacman -S llvm11-minimal llvm11-libs-minimal libclc11-minimal lib32-llvm11-minimal lib32-llvm11-libs-minimal
-    
+
 ### LLVM10
 
 Prebuild package are available at https://repo.blacksky3.com/x86_64/llvm10-minimal
@@ -153,7 +153,7 @@ You can add this repo to your pacman.conf
     Server = https://repo.blacksky3.com/$arch/$repo
 
     sudo pacman -S llvm10-minimal llvm10-libs-minimal libclc10-minimal lib32-llvm10-minimal lib32-llvm10-libs-minimal
-    
+
 # Donation
 
 BTC : bc1quz6zcjjy769cn9fd42r89hfh9unr4u2w4sfxer
