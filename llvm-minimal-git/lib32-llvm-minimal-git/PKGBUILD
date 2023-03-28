@@ -20,20 +20,7 @@ arch=(i686 x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja lib32-libffi lib32-zlib lib32-zstd python gcc-multilib lib32-libxml2 git patch)
 options=(staticlibs !lto ) # extra/llvm has many test failures with LTO
-source=(git+https://github.com/llvm/llvm-project.git#commit=$commit
-        # Patch taken from https://aur.archlinux.org/packages/lib32-llvm-minimal-git
-        # https://aur.archlinux.org/cgit/aur.git/commit/?h=lib32-llvm-minimal-git&id=371fb93578b2b2fe0601204cac6cd0cd1f481291
-        0001-IPSCCP-Remove-legacy-pass.patch
-        0002-OCaml-Remove-all-PassManager-related-functions.patch
-        0003-IPO-Remove-various-legacy-passes.patch
-        0004-llvm-c-Remove-bindings-for-creating-legacy-passes.patch
-        0005-llvm-c-Remove-PassManagerBuilder-APIs.patch
-        0006-llvm-c-Remove-pointee-support-from-LLVMGetElementTyp.patch
-        0007-Passes-Remove-some-legacy-passes.patch
-        # Another revert to keep mesa building with gallium opencl
-        # https://aur.archlinux.org/packages/llvm-minimal-git#comment-905463
-        # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
-        0001-Reland-LegacyPM-Remove-some-legacy-passes.patch)
+source=(git+https://github.com/llvm/llvm-project.git#commit=$commit)
 
 # Both ninja & LIT by default use all available cores. this can lead to heavy stress on systems making them unresponsive.
 # It can also happen that the kernel oom killer interferes and kills important tasks.
@@ -78,23 +65,6 @@ pkgver(){
   END { print "\n" }' \
   CMakeLists.txt).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
   echo "$_pkgver"
-}
-
-prepare(){
-  # Patch taken from https://aur.archlinux.org/packages/lib32-llvm-minimal-git
-  # https://aur.archlinux.org/cgit/aur.git/commit/?h=lib32-llvm-minimal-git&id=371fb93578b2b2fe0601204cac6cd0cd1f481291
-  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0007-Passes-Remove-some-legacy-passes.patch
-  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0006-llvm-c-Remove-pointee-support-from-LLVMGetElementTyp.patch
-  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0005-llvm-c-Remove-PassManagerBuilder-APIs.patch
-  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0004-llvm-c-Remove-bindings-for-creating-legacy-passes.patch
-  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0003-IPO-Remove-various-legacy-passes.patch
-  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0002-OCaml-Remove-all-PassManager-related-functions.patch
-  # reverting commit b677d0753c0a771c6203607f5dbb56189193a14c , see https://gitlab.freedesktop.org/mesa/mesa/-/issues/8297
-  patch --directory="llvm-project" --reverse --strip=1 --input="${srcdir}"/0001-IPSCCP-Remove-legacy-pass.patch
-  # Another revert to keep mesa building with gallium opencl
-  # https://aur.archlinux.org/packages/llvm-minimal-git#comment-905463
-  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
-  patch --directory="llvm-project" --reverse --fuzz=50 --strip=1 --input="${srcdir}"/0001-Reland-LegacyPM-Remove-some-legacy-passes.patch
 }
 
 build(){
