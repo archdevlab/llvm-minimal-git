@@ -88,7 +88,7 @@ You can add this repo to your pacman.conf
     SigLevel = Optional TrustAll
     Server = https://repo.blacksky3.com/$arch/$repo
 
-    sudo pacman -S llvm-mininal-git llvm-libs-minimal-git lib32-llvm-miniaml-git lib32-llvm-libs-minimal-git libclc-minimal-git spirv-llvm-translator-minimal-git spirv-headers-git spirv-tools-git glslang-git
+    sudo pacman -S llvm-minimal-git llvm-libs-minimal-git lib32-llvm-minimal-git lib32-llvm-libs-minimal-git libclc-minimal-git spirv-llvm-translator-minimal-git spirv-headers-git spirv-tools-git glslang-git
 
 ### Reinstall normal LLVM Toolchain
 
