@@ -112,7 +112,7 @@ END
   -Dgallium-xa=enabled \
   -Dgallium-nine=true \
   -Dgallium-d3d10umd=false \
-  -Dgallium-opencl=icd \
+  -Dgallium-opencl=disabled \
   -Dgallium-rusticl=false \
   -Dopencl-spirv=false \
   -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental,imagination-experimental \
