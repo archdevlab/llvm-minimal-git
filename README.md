@@ -52,7 +52,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 ### glslang
 
-- 12.0.0
+- 12.1.0
 
 - commit : 45405e1d942e7af1a1f2fad94a8b9ddf2600af0d
 
