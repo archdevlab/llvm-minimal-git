@@ -30,7 +30,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 17.0.0
 
-- commit: fda53ad9374b60fc83f1a6065ae3e7985182a5d2
+- commit: 842dc35fc93203751047490f2989360b15ea67d1
 
 ### SPIRV-LLVM-Translator
 
@@ -42,25 +42,25 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 1.5.4.raytracing.fixed
 
-- commit : 90547c54e24e01aae41a68124e7a304d0ec11dd0
+- commit : cfbe4feef20c3c0628712c2792624f0221e378ac
 
 ### SPIRV-Tools
 
 - 2023.1
 
-- commit : a0fcd06f8fcc65c4c340e1a72492dc89017af8f5
+- commit : d5f69dba559822c2c968a959238ab037b5556af6
 
 ### glslang
 
 - 12.1.0
 
-- commit : 45405e1d942e7af1a1f2fad94a8b9ddf2600af0d
+- commit : 68f073b19569b580ecc7ba13fa96be3ecf65a0f6
 
 ### Mesa
 
-- 23.1.0
+- 23.2.0
 
-- commit : 4147dbdb7e9f5d094d6fbd060d18a817a36b8a30
+- commit : 4aab6bd456de2e1b9c9af836c7212ef41638d400
 
 # Build
 

@@ -11,9 +11,9 @@
 #Credits: Reza Jahanbakhshi <reza.jahanbakhshi at gmail dot com
 
 pkgname=lib32-mesa-git
-pkgver=23.1.0_devel
+pkgver=23.2.0_devel
 pkgrel=1
-commit=4147dbdb7e9f5d094d6fbd060d18a817a36b8a30
+commit=4aab6bd456de2e1b9c9af836c7212ef41638d400
 arch=(i686 x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
@@ -46,7 +46,9 @@ source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit=$commit
         # https://aur.archlinux.org/cgit/aur.git/commit/?h=mesa-minimal-git&id=b9d401948dca25c70070a057e0046556bb56d9ac
         # https://aur.archlinux.org/cgit/aur.git/commit/?h=mesa-minimal-git&id=71ba1fd6b3323d64c8a9fa39b7934b8fdc1390b3
         # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/22021
-        0001-gallivm-llvm17-deleted-includefiles.patch)
+        0001-gallivm-llvm17-deleted-includefiles.patch
+        # https://aur.archlinux.org/cgit/aur.git/commit/?h=mesa-minimal-git&id=2963b245642fd87519245c6c823586d45456d160
+        0002-fix-build-with-rust-bindgen-0.65+.patch)
 
 # ninja grabs all available cores and leaves almost nothing for other processes.
 # this package uses the environment variable NINJAFLAGS to allow the user to change this behaviour
@@ -190,4 +192,6 @@ package_lib32-mesa-git(){
 
 sha256sums=('SKIP'
             '2aa36a1678ee3940fab62e28ff07ba4177259478baf2f2afe47585f74c0f6b9a'
-            '21214974e01ee2ab1bcfe43188319905c7a457584f87f9ac2eaaddff2f276b78')
+            '21214974e01ee2ab1bcfe43188319905c7a457584f87f9ac2eaaddff2f276b78'
+            'da367fc31bc3292f876fb540c16e5789b229da63d1e82ee916123dd00f3427ef'
+            'cba114fe6195a53324680b5aa9c1c17ced89f5ca6b7c8f3c1e39823561a77b2a')

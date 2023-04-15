@@ -13,13 +13,15 @@ pkgdesc='Library requirements of the OpenCL C programming language (git version)
 url='https://libclc.llvm.org/'
 pkgver=17.0.0
 pkgrel=1
-commit=fda53ad9374b60fc83f1a6065ae3e7985182a5d2
+commit=842dc35fc93203751047490f2989360b15ea67d1
 arch=(x86_64)
 license=(MIT)
 makedepends=(llvm-minimal-git cmake ninja python spirv-llvm-translator-minimal-git git)
 conflicts=(libclc)
 provides=(libclc)
-source=(git+https://github.com/llvm/llvm-project.git#commit=$commit)
+source=(git+https://github.com/llvm/llvm-project.git#commit=$commit
+        # https://aur.archlinux.org/cgit/aur.git/commit/?h=libclc-minimal-git&id=cf5a11160e3631cbc11c57c8f3169d0012825b0a
+        libclc.patch)
 
 # Both ninja & LIT by default use all available cores. this can lead to heavy stress on systems making them unresponsive.
 # It can also happen that the kernel oom killer interferes and kills important tasks.
@@ -44,6 +46,10 @@ pkgver(){
   echo "$_pkgver"
 }
 
+prepare(){
+  patch --directory="llvm-project" --strip=1 --input="${srcdir}/libclc.patch"
+}
+
 build(){
   cd ${srcdir}/llvm-project/libclc
 
@@ -63,4 +69,5 @@ package(){
   install -Dm644 ${srcdir}/llvm-project/libclc/CREDITS.TXT "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
 }
 
-sha256sums=('SKIP')
+sha256sums=('SKIP'
+            '567e7467923835c1790322b0049efc7dd1962a0600afed66adbdfa545f8a0a8c')

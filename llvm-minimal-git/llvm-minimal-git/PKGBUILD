@@ -15,8 +15,8 @@ url='https://llvm.org/'
 pkgver=17.0.0.r454304.g6590a372fa3f
 pkgrel=1
 _pkgver=17.0.0
-llvmcommit=fda53ad9374b60fc83f1a6065ae3e7985182a5d2
-spirvcommit=68855f60b26fd630175b4c8696d2a6a7939f21f5
+llvmcommit=842dc35fc93203751047490f2989360b15ea67d1
+spirvcommit=093814af9ac10647c66f94f5332d328166d70928
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja zlib zstd libffi libedit ncurses libxml2 python-setuptools python-psutil python-sphinx python-recommonmark
@@ -50,6 +50,23 @@ _get_distribution_components(){
       clang|clangd|clang-*)
         ;;
       clang*|findAllSymbols)
+        continue
+        ;;
+      llvm-libraries|distribution)
+        continue
+        ;;
+      # shared libraries
+      LLVM|LLVMgold)
+        ;;
+      # libraries needed for clang-tblgen
+      LLVMDemangle|LLVMSupport|LLVMTableGen)
+        ;;
+      # exclude static libraries
+      LLVM*)
+        continue
+        ;;
+      # exclude llvm-exegesis (doesn't seem useful without libpfm)
+      llvm-exegesis)
         continue
         ;;
     esac
