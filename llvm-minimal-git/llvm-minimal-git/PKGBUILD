@@ -177,10 +177,17 @@ package_llvm-minimal-git(){
   pushd ../utils/lit
   python3 setup.py install --root="$pkgdir" -O1
   popd
+  
+  # Remove files which conflict with repo llvm-libs
+  rm "$pkgdir"/usr/lib/{LLVMgold,lib{LLVM,LTO}}.so
+  rm "$pkgdir"/usr/lib/libRemarks.so
 
-  # The runtime libraries go into llvm-libs
-  mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
-  mv -f "$pkgdir"/usr/lib/LLVMgold.so "$srcdir"
+  #  # The runtime libraries go into llvm-libs
+  #  mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
+  #  mv -f "$pkgdir"/usr/lib/LLVMgold.so "$srcdir"
+  
+  # The llvm runtime libraries go into llvm-libs-minimal-git
+  mv -f "$pkgdir"/usr/lib/lib{LLVM-*.so,LTO.so.*,Remarks.so.*} "$srcdir"
 
   # The clang runtime libraries go into clang-libs-minimal-git
   mv -f "$pkgdir"/usr/lib/libclang{,-cpp}.so* "$srcdir"
@@ -241,19 +248,26 @@ package_llvm-minimal-git(){
 package_llvm-libs-minimal-git(){
   pkgdesc='LLVM runtime libraries (git version)'
   depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2)
-  conflicts=(llvm-libs)
+  #conflicts=(llvm-libs)
   provides=(llvm-libs)
+  optdepends=('llvm-libs: for LLVMgold linker')
 
+  #  install -d "$pkgdir/usr/lib"
+  #  cp -P \
+  #    "$srcdir"/lib{LLVM,LTO,Remarks}*.so* \
+  #    "$srcdir"/LLVMgold.so \
+  #    "$pkgdir/usr/lib/"
+  #
+  #  # Symlink LLVMgold.so from /usr/lib/bfd-plugins
+  #  # https://bugs.archlinux.org/task/28479
+  #  install -d "$pkgdir/usr/lib/bfd-plugins"
+  #  ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
+  
   install -d "$pkgdir/usr/lib"
   cp -P \
-    "$srcdir"/lib{LLVM,LTO,Remarks}*.so* \
-    "$srcdir"/LLVMgold.so \
+    "$srcdir"/lib{LLVM}*.so* \
+    "$srcdir"/lib{LTO,Remarks}.so* \
     "$pkgdir/usr/lib/"
-
-  # Symlink LLVMgold.so from /usr/lib/bfd-plugins
-  # https://bugs.archlinux.org/task/28479
-  install -d "$pkgdir/usr/lib/bfd-plugins"
-  ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
 
   install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
