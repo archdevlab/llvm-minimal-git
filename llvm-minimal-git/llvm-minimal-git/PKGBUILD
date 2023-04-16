@@ -10,7 +10,7 @@
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgbase=llvm-minimal-git
-pkgname=(llvm-minimal-git llvm-libs-minimal-git)
+pkgname=(llvm-minimal-git llvm-libs-minimal-git clang-libs-minimal-git spirv-llvm-translator-minimal-git)
 url='https://llvm.org/'
 pkgver=17.0.0.r454304.g6590a372fa3f
 pkgrel=1
@@ -160,7 +160,7 @@ _python_optimize(){
 
 package_llvm-minimal-git(){
   pkgdesc='Collection of modular and reusable compiler and toolchain technologies (git version)'
-  depends=(llvm-libs-minimal-git perl)
+  depends=(llvm-libs-minimal-git clang-libs-minimal-git perl)
   #depends+=(spirv-tools-git) # For spirv-llvm-translator
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
@@ -184,6 +184,9 @@ package_llvm-minimal-git(){
   # The runtime libraries go into llvm-libs
   mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
   mv -f "$pkgdir"/usr/lib/LLVMgold.so "$srcdir"
+
+  # The clang runtime libraries go into clang-libs-minimal-git
+  mv -f "$pkgdir"/usr/lib/libclang{,-cpp}.so* "$srcdir"
 
   if [[ $CARCH == x86_64 ]]; then
     # Needed for multilib (https://bugs.archlinux.org/task/29951)
@@ -229,7 +232,7 @@ package_llvm-minimal-git(){
   install -Dm644 "$srcdir/llvm-project/clang-tools-extra/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/LICENSE"
   install -Dm644 "$srcdir/llvm-project/clang-tools-extra/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/CODE_OWNERS"
   install -Dm644 "${srcdir}/llvm-project/compiler-rt/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/compiler-rt/LICENSE"
-  install -Dm644 "${srcdir}/SPIRV-LLVM-Translator/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/spirv-llvm-translator/LICENSE"
+  #install -Dm644 "${srcdir}/SPIRV-LLVM-Translator/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/spirv-llvm-translator/LICENSE"
 }
 
 package_llvm-libs-minimal-git(){
@@ -252,6 +255,23 @@ package_llvm-libs-minimal-git(){
   install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CREDITS"
   install -Dm644 "$srcdir/llvm-project/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CODE_OWNERS"
+}
+
+package_clang-libs-minimal-git(){
+  pkgdesc='Clang runtime libraries (git version)'
+  depends=(llvm-libs-minimal-git)
+  # clang-libs doesn't exist in repos at this time, but it's cleaner to provide & conflict it.
+  # TODO: Once repo clang-libs comes into existence, verify if changes are needed to this package
+  provides=(clang-libs)
+  conflicts=(clang-libs clang-libs-minimal-git)
+
+  install -d "$pkgdir/usr/lib"
+  cp -P \
+    "$srcdir"/lib{clang,clang-cpp}*.so* \
+    "$pkgdir/usr/lib/"
+
+  install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/LICENSE"
+  install -Dm644 "$srcdir/llvm-project/clang/CodeOwners.rst" "$pkgdir/usr/share/licenses/$pkgname/clang/CodeOwners.rst"
 }
 
 package_spirv-llvm-translator-minimal-git(){
