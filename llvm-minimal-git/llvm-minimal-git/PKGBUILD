@@ -164,11 +164,8 @@ package_llvm-minimal-git(){
   #depends+=(spirv-tools-git) # For spirv-llvm-translator
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
-  #conflicts=(llvm compiler-rt clang spirv-llvm-translator spirv-llvm-translator-minimal-git)
   conflicts=(llvm compiler-rt clang)
-  #provides=(llvm compiler-rt clang clang-analyzer clang-tools-extra spirv-llvm-translator spirv-llvm-translator-minimal-git)
   provides=(llvm compiler-rt clang clang-analyzer clang-tools-extra)
-  #replaces=(clang-analyzer clang-tools-extra spirv-llvm-translator-minimal-git)
   replaces=(clang-analyzer clang-tools-extra)
 
   cd llvm-project/llvm/build
@@ -262,8 +259,8 @@ package_clang-libs-minimal-git(){
   depends=(llvm-libs-minimal-git)
   # clang-libs doesn't exist in repos at this time, but it's cleaner to provide & conflict it.
   # TODO: Once repo clang-libs comes into existence, verify if changes are needed to this package
-  provides=(clang-libs)
-  conflicts=(clang-libs clang-libs-minimal-git)
+  conflicts=(clang-libs)
+  provides=(clang-libs clang-libs-minimal-git)
 
   install -d "$pkgdir/usr/lib"
   cp -P \
@@ -278,7 +275,7 @@ package_spirv-llvm-translator-minimal-git(){
   pkgdesc='Tool and a library for bi-directional translation between SPIR-V and LLVM IR (git version)'
   depends=(llvm-libs-minimal-git spirv-tools-git)
   conflicts=(spirv-llvm-translator)
-  provides=(spirv-llvm-translator spirv-llvm-translator-git)
+  provides=(spirv-llvm-translator)
 
   cp --preserve --recursive "$srcdir"/spirv/* "$pkgdir"/
   install -Dm644 ${srcdir}/SPIRV-LLVM-Translator/LICENSE.TXT -t "${pkgdir}"/usr/share/licenses/${pkgname}/
