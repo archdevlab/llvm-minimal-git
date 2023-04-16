@@ -264,7 +264,7 @@ package_clang-libs-minimal-git(){
 
   install -d "$pkgdir/usr/lib"
   cp -P \
-    "$srcdir"/lib{clang,clang-cpp}*.so* \
+    "$srcdir"/lib{clang,clang-cpp}.so* \
     "$pkgdir/usr/lib/"
 
   install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/LICENSE"
