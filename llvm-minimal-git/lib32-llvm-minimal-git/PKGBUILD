@@ -208,8 +208,8 @@ package_lib32-llvm-libs-minimal-git(){
 package_lib32-clang-libs-minimal-git(){
   pkgdesc='Clang runtime libraries (32-bit) (git version)'
   depends=(lib32-llvm-libs-minimal-git)
-  # clang-libs doesn't exist in repos at this time, but it's cleaner to provide & conflict it.
-  # TODO: Once repo clang-libs comes into existence, verify if changes are needed to this package
+  # lib32-clang-libs doesn't exist in repos at this time, but it's cleaner to provide & conflict it.
+  # TODO: Once repo lib32-clang-libs comes into existence, verify if changes are needed to this package
   conflicts=(lib32-clang-libs)
   provides=(lib32-clang-libs lib32-clang-libs-minimal-git)
 
