@@ -265,7 +265,7 @@ package_llvm-libs-minimal-git(){
   
   install -d "$pkgdir/usr/lib"
   cp -P \
-    "$srcdir"/lib{LLVM}*.so* \
+    "$srcdir"/libLLVM*.so \
     "$srcdir"/lib{LTO,Remarks}.so* \
     "$pkgdir/usr/lib/"
 
