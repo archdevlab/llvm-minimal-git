@@ -177,7 +177,7 @@ package_llvm-minimal-git(){
   pushd ../utils/lit
   python3 setup.py install --root="$pkgdir" -O1
   popd
-  
+
   # Remove files which conflict with repo llvm-libs
   rm "$pkgdir"/usr/lib/{LLVMgold,lib{LLVM,LTO}}.so
   rm "$pkgdir"/usr/lib/libRemarks.so
@@ -185,12 +185,17 @@ package_llvm-minimal-git(){
   #  # The runtime libraries go into llvm-libs
   #  mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
   #  mv -f "$pkgdir"/usr/lib/LLVMgold.so "$srcdir"
-  
+
   # The llvm runtime libraries go into llvm-libs-minimal-git
   mv -f "$pkgdir"/usr/lib/lib{LLVM-*.so,LTO.so.*,Remarks.so.*} "$srcdir"
 
   # The clang runtime libraries go into clang-libs-minimal-git
   mv -f "$pkgdir"/usr/lib/libclang{,-cpp}.so* "$srcdir"
+
+  # Python libraries go into clang-libs
+  mv -f "$pkgdir"/usr/lib/{libear,libscanbuild} "$srcdir"
+  mv -f "$pkgdir"/usr/libexec "$srcdir"
+  mv -f "$pkgdir"/usr/bin/scan-build "$srcdir"
 
   if [[ $CARCH == x86_64 ]]; then
     # Needed for multilib (https://bugs.archlinux.org/task/29951)
@@ -199,20 +204,11 @@ package_llvm-minimal-git(){
     cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
   fi
 
-  #  # Move scanbuild-py into site-packages and install Python bindings
+  #  install LLVM Python bindings
   #  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   #  install -d "$pkgdir/$site_packages"
-  #  mv "$pkgdir"/usr/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
-  #  cp -a ${srcdir}/llvm-project/clang/bindings/python/clang "$pkgdir/$site_packages/"
   #  # (taken from llvm-git aur)
-  #  cp -a ${srcdir}/llvm-project/llvm/bindings/python/llvm "$pkgdir/$site_packages/" 
-  #
-  #  # Move analyzer scripts out of /usr/libexec
-  #  mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
-  #  rmdir "$pkgdir/usr/libexec"
-  #  sed -i 's|libexec|lib/clang|' \
-  #    "$pkgdir/usr/bin/scan-build" \
-  #    "$pkgdir/$site_packages/libscanbuild/analyze.py"
+  #  cp -a ${srcdir}/llvm-project/llvm/bindings/python/llvm "$pkgdir/$site_packages/"
   #
   #  # Compile Python scripts
   #  _python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
@@ -220,12 +216,6 @@ package_llvm-minimal-git(){
   #  # (taken from llvm-git aur)
   #  #optimize other python files except 2 problem cases
   #  #_python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
-
-  # Move analyzer scripts out of /usr/libexec
-  mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
-  rmdir "$pkgdir/usr/libexec"
-  sed -i 's|libexec|lib/clang|' \
-    "$pkgdir/usr/bin/scan-build"
 
   # spirv-llvm-translator files go to a separate package
   mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
@@ -262,7 +252,7 @@ package_llvm-libs-minimal-git(){
   #  # https://bugs.archlinux.org/task/28479
   #  install -d "$pkgdir/usr/lib/bfd-plugins"
   #  ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
-  
+
   install -d "$pkgdir/usr/lib"
   cp -P \
     "$srcdir"/libLLVM*.so \
@@ -286,6 +276,41 @@ package_clang-libs-minimal-git(){
   cp -P \
     "$srcdir"/lib{clang,clang-cpp}.so* \
     "$pkgdir/usr/lib/"
+
+  install -d "$pkgdir/usr/lib/clang"
+  install -d "$pkgdir/usr/bin"
+  # These three moved again below, but keeping those blocks untouched for cleaner merges with upstream monopackage.
+  cp -a "$srcdir"/{libear,libscanbuild} "$pkgdir/usr/lib"
+  cp -av "$srcdir"/libexec "$pkgdir"/usr/
+  cp -av "$srcdir"/scan-build "$pkgdir"/usr/bin/
+
+  #  # Move scanbuild-py into site-packages and install Python bindings
+  #  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  #  install -d "$pkgdir/$site_packages"
+  #  mv "$pkgdir"/usr/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
+  #  cp -a ${srcdir}/llvm-project/clang/bindings/python/clang "$pkgdir/$site_packages/"
+  #  # (taken from llvm-git aur)
+  #  cp -a ${srcdir}/llvm-project/llvm/bindings/python/llvm "$pkgdir/$site_packages/"
+  #
+  #  # Move analyzer scripts out of /usr/libexec
+  #  mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
+  #  rmdir "$pkgdir/usr/libexec"
+  #  sed -i 's|libexec|lib/clang|' \
+  #    "$pkgdir/usr/bin/scan-build" \
+  #    "$pkgdir/$site_packages/libscanbuild/analyze.py"
+  #
+  #  # Compile Python scripts
+  #  _python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
+  #
+  #  # (taken from llvm-git aur)
+  #  #optimize other python files except 2 problem cases
+  #  #_python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
+
+  # Move analyzer scripts out of /usr/libexec
+  mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
+  rmdir "$pkgdir/usr/libexec"
+  sed -i 's|libexec|lib/clang|' \
+    "$pkgdir/usr/bin/scan-build"
 
   install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/LICENSE"
   install -Dm644 "$srcdir/llvm-project/clang/CodeOwners.rst" "$pkgdir/usr/share/licenses/$pkgname/clang/CodeOwners.rst"
