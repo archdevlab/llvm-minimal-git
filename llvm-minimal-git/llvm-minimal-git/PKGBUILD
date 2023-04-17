@@ -300,9 +300,9 @@ package_clang-libs-minimal-git(){
   # Compile Python scripts
   _python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
   
-  #  # (taken from llvm-git aur)
-  #  #optimize other python files except 2 problem cases
-  #  #_python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
+  # (taken from llvm-git aur)
+  #optimize other python files except 2 problem cases
+  _python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
 
   #  # Move analyzer scripts out of /usr/libexec
   #  mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
