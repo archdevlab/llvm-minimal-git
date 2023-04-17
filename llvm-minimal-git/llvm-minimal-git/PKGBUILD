@@ -267,6 +267,7 @@ package_llvm-libs-minimal-git(){
 package_clang-libs-minimal-git(){
   pkgdesc='Clang runtime libraries (git version)'
   depends=(llvm-libs-minimal-git)
+  optdepends=('python: for scan-view and git-clang-format')
   # clang-libs doesn't exist in repos at this time, but it's cleaner to provide & conflict it.
   # TODO: Once repo clang-libs comes into existence, verify if changes are needed to this package
   conflicts=(clang-libs)
