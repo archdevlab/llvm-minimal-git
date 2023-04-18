@@ -17,20 +17,24 @@ commit=4aab6bd456de2e1b9c9af836c7212ef41638d400
 arch=(i686 x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
+
 depends=(lib32-libdrm lib32-libxcb lib32-wayland lib32-expat lib32-libelf lib32-zstd lib32-libx11 lib32-libxshmfence
          lib32-systemd systemd-libs lib32-libunwind lib32-libxxf86vm lib32-libxdamage lib32-lm_sensors lib32-libglvnd 
          lib32-vulkan-icd-loader)
 depends+=(vulkan-mesa-layers opencl-mesa vulkan-radeon mesa libsensors.so)
 # Depends on lib32-llvm-minimal-git and lib32-llvm-libs stuff
-depends+=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git 'lib32-llvm-libs<16')
+depends+=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git 'lib32-llvm-libs<16' libclc-minimal-git)
 optdepends=('opencl-headers: headers necessary for OpenCL development'
             'opengl-man-pages: for the OpenGL API man pages')
+
 makedepends=(meson ninja bison lib32-flex python python-mako valgrind cmake xorgproto wayland-protocols glslang elfutils
              libarchive libconfig lib32-libxcb lib32-wayland lib32-libxml2 lib32-libx11 lib32-libvdpau lib32-libelf lib32-libglvnd 
              lib32-ncurses lib32-libva lib32-libxrandr lib32-expat lib32-libdrm lib32-libxv lib32-libxshmfence lib32-libxxf86vm lib32-libxdamage 
              lib32-zstd lib32-lm_sensors lib32-libunwind lib32-vulkan-icd-loader lib32-glibc gcc lib32-gcc-libs directx-headers lib32-systemd patch)
 makedepends+=(rust rust-bindgen spirv-tools spirv-llvm-translator-minimal-git) # rusticl dependencies
+# Makedepends on lib32-llvm-minimal-git and lib32-llvm-libs stuff
 makedepends+=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git 'lib32-llvm-libs<16' libclc-minimal-git)
+
 conflicts=(lib32-mesa lib32-opencl-mesa lib32-vulkan-intel lib32-vulkan-radeon lib32-vulkan-virtio lib32-vulkan-mesa-layers lib32-libva-mesa-driver
            lib32-mesa-vdpau)
 conflicts+=(lib32-vulkan-swrast-git lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git)
