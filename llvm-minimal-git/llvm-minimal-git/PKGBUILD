@@ -75,7 +75,7 @@ _get_distribution_components(){
 }
 
 pkgver(){
-  cd ${srcdir}/llvm-project/llvm
+  cd ${srcdir}/llvm-project/llvm/
 
   # This will almost match the output of `llvm-config --version` when the
   # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
@@ -98,13 +98,13 @@ build(){
 export CFLAGS+=" ${CPPFLAGS}"
 export CXXFLAGS+=" ${CPPFLAGS}"
 
-  cd ${srcdir}/llvm-project/llvm
+  cd ${srcdir}/llvm-project/llvm/
 
   rm -rf build
 
   mkdir build
 
-  cd build
+  cd build/
 
   local cmake_args=(
     -G Ninja
@@ -168,12 +168,12 @@ package_llvm-minimal-git(){
   provides=(llvm compiler-rt clang clang-analyzer clang-tools-extra)
   replaces=(clang-analyzer clang-tools-extra)
 
-  cd ${srcdir}/llvm-project/llvm/build
+  cd ${srcdir}/llvm-project/llvm/build/
 
   DESTDIR="$pkgdir" ninja $NINJAFLAGS install-distribution
 
   # Include lit for running lit-based tests in other projects
-  pushd ${srcdir}/llvm-project/llvm/utils/lit
+  pushd ${srcdir}/llvm-project/llvm/utils/lit/
   python3 setup.py install --root="$pkgdir" -O1
   popd
   
