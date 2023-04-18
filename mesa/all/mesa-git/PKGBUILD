@@ -98,7 +98,7 @@ build(){
   -Dgallium-nine=true \
   -Dgallium-d3d10umd=false \
   -Dgallium-opencl=disabled \
-  -Dgallium-rusticl=false \
+  -Dgallium-rusticl=true \
   -D rust_std=2021 \
   -Dopencl-spirv=false \
   -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental,imagination-experimental \
