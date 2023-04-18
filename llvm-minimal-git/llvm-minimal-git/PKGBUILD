@@ -162,7 +162,7 @@ package_llvm-minimal-git(){
   pkgdesc='Collection of modular and reusable compiler and toolchain technologies (git version)'
   depends=(llvm-libs-minimal-git clang-libs-minimal-git perl)
   optdepends=('python: for using lit (LLVM Integrated Tester)'
-              'python: for scan-view, scan-build, git-clang-format and python bindings'
+              'python: for scan-view, scan-build, git-clang-format, clang-rename and python bindings'
               'python-setuptools: for using lit')
   conflicts=(llvm compiler-rt clang)
   provides=(llvm compiler-rt clang clang-analyzer clang-tools-extra)
