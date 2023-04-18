@@ -171,6 +171,9 @@ package_llvm-minimal-git(){
   cd ${srcdir}/llvm-project/llvm/build/
 
   DESTDIR="$pkgdir" ninja $NINJAFLAGS install-distribution
+  # Fix installing llvm-spirv because we use LLVM_DISTRIBUTION_COMPONENTS for LLVM/CLANG
+  # So add the below 
+  DESTDIR="$pkgdir" ninja $NINJAFLAGS install llvm-spirv
 
   # Include lit for running lit-based tests in other projects
   pushd ${srcdir}/llvm-project/llvm/utils/lit/
