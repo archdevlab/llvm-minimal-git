@@ -16,7 +16,9 @@ pkgrel=1
 commit=842dc35fc93203751047490f2989360b15ea67d1
 arch=(x86_64)
 license=(MIT)
-makedepends=(llvm-minimal-git cmake ninja python spirv-llvm-translator-minimal-git git)
+# Added llvm-libs because llvm-libs-minimal-git and llvm-libs can now coexist in the same system 
+# and libclc need LLVMgold.so at build time
+makedepends=(llvm-minimal-git cmake ninja python spirv-llvm-translator-minimal-git git llvm-libs)
 conflicts=(libclc)
 provides=(libclc)
 source=(git+https://github.com/llvm/llvm-project.git#commit=$commit
