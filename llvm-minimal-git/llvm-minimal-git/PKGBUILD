@@ -100,9 +100,9 @@ export CXXFLAGS+=" ${CPPFLAGS}"
 
   cd ${srcdir}/llvm-project/llvm/
 
-  rm -rf build
+  rm -rf build/
 
-  mkdir build
+  mkdir build/
 
   cd build/
 
@@ -270,6 +270,7 @@ package_llvm-libs-minimal-git(){
   #  install -d "$pkgdir/usr/lib/bfd-plugins"
   #  ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
 
+  # This is when we want to have llvm-libs and llvm-libs-minimal-git on the same system
   install -d "$pkgdir/usr/lib"
   cp -P \
     "$srcdir"/libLLVM*.so \
