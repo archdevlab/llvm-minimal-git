@@ -166,6 +166,7 @@ package_llvm-minimal-git(){
               'python-setuptools: for using lit')
   conflicts=(llvm compiler-rt clang)
   provides=(llvm compiler-rt clang clang-analyzer clang-tools-extra)
+  provides+=(llvm-minimal-git compiler-rt-minimal-git clang-minimal-git llvm-git compiler-rt-git clang-git)
   replaces=(clang-analyzer clang-tools-extra)
 
   cd ${srcdir}/llvm-project/llvm/build/
@@ -256,6 +257,7 @@ package_llvm-libs-minimal-git(){
   depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2)
   #conflicts=(llvm-libs)
   provides=(llvm-libs)
+  provides+=(llvm-libs-minimal-git llvm-libs-git)
   optdepends=('llvm-libs: for LLVMgold linker')
 
   # This is when wee want llvm-libs-minimal-git to conflict with llvm-libs
@@ -292,6 +294,7 @@ package_clang-libs-minimal-git(){
   # TODO: Once repo clang-libs comes into existence, verify if changes are needed to this package
   conflicts=(clang-libs)
   provides=(clang-libs)
+  provides+=(clang-libs-minimal-git clang-libs-git)
 
   install -d "$pkgdir/usr/lib"
   cp -P \
@@ -337,6 +340,7 @@ package_spirv-llvm-translator-minimal-git(){
   depends=(llvm-libs-minimal-git spirv-tools-git)
   conflicts=(spirv-llvm-translator)
   provides=(spirv-llvm-translator)
+  provides+=(spirv-llvm-translator-minimal-git spirv-llvm-translator-git)
 
   cp --preserve --recursive "$srcdir"/spirv/* "$pkgdir"/
 
