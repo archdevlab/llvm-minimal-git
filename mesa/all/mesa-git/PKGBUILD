@@ -17,6 +17,7 @@ commit=4aab6bd456de2e1b9c9af836c7212ef41638d400
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
+
 depends=(libdrm libxcb wayland python expat libx11 libxshmfence zstd systemd-libs 
          libelf libunwind libxxf86vm libxdamage libomxil-bellagio lm_sensors libglvnd 
          vulkan-icd-loader)
@@ -25,13 +26,16 @@ depends+=(libsensors.so libexpat.so libvulkan.so libexpat.so)
 depends+=(llvm-minimal-git llvm-libs-minimal-git clang-libs-minimal-git libclc-minimal-git spirv-llvm-translator-minimal-git 'llvm-libs<16')
 optdepends=('opengl-man-pages: for the OpenGL API man pages'
             'opencl-headers: headers necessary for OpenCL development')
+
 makedepends=(meson ninja bison flex python python-mako valgrind cmake xorgproto wayland-protocols glslang elfutils
              libarchive libconfig libxcb wayland libxml2 libx11 libvdpau libelf libglvnd ncurses libva libxrandr
              expat libdrm libxv libxshmfence libxxf86vm libxdamage zstd lm_sensors libunwind vulkan-icd-loader 
              glibc gcc gcc-libs libomxil-bellagio directx-headers systemd patch)
 makedepends+=(python-ply) # intel-clc Ray tracing
 makedepends+=(rust rust-bindgen spirv-tools spirv-llvm-translator-minimal-git) # rusticl dependencies
+# Makedepends on llvm-minimal-git and llvm-libs stuff
 makedepends+=(llvm-minimal-git llvm-libs-minimal-git clang-libs-minimal-git libclc-minimal-git spirv-llvm-translator-minimal-git 'llvm-libs<16')
+
 conflicts=(mesa opencl-mesa vulkan-intel vulkan-radeon vulkan-mesa vulkan-swrast vulkan-virtio vulkan-mesa-layers libva-mesa-driver mesa-vdpau)
 conflicts+=(vulkan-intel-hasvk-git vulkan-imagination-git)
 provides=(mesa opencl-mesa vulkan-intel vulkan-radeon vulkan-swrast vulkan-virtio vulkan-driver vulkan-mesa-layers libva-mesa-driver mesa-vdpau
