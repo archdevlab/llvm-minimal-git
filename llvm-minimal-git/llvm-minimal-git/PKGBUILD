@@ -10,9 +10,9 @@
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgbase=llvm-minimal-git
-pkgname=(llvm-minimal-git llvm-libs-minimal-git clang-libs-minimal-git spirv-llvm-translator-minimal-git)
+pkgname=(llvm-minimal-git clang-minimal-git llvm-libs-minimal-git clang-libs-minimal-git spirv-llvm-translator-minimal-git)
 url='https://llvm.org/'
-pkgver=17.0.0.r454304.g6590a372fa3f
+pkgver=17.0.0.r457923.g842dc35fc932
 pkgrel=1
 _pkgver=17.0.0
 llvmcommit=842dc35fc93203751047490f2989360b15ea67d1
@@ -173,14 +173,14 @@ package_llvm-minimal-git(){
 
   DESTDIR="$pkgdir" ninja $NINJAFLAGS install-distribution
   # Fix installing llvm-spirv because we use LLVM_DISTRIBUTION_COMPONENTS for LLVM/CLANG
-  # So add the below 
+  # So add the below
   DESTDIR="$pkgdir" ninja $NINJAFLAGS install llvm-spirv
 
   # Include lit for running lit-based tests in other projects
   pushd ${srcdir}/llvm-project/llvm/utils/lit/
   python3 setup.py install --root="$pkgdir" -O1
   popd
-  
+
   # This is when we want llvm-libs-minimal-git to conflict with llvm-libs
   #  # The runtime libraries go into llvm-libs
   #  mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
@@ -192,10 +192,19 @@ package_llvm-minimal-git(){
   rm "$pkgdir"/usr/lib/libRemarks.so
   # The llvm runtime libraries go into llvm-libs-minimal-git
   mv -f "$pkgdir"/usr/lib/lib{LLVM-*.so,LTO.so.*,Remarks.so.*} "$srcdir"
-  
+
   # The clang runtime libraries go into clang-libs-minimal-git
   # https://bugs.archlinux.org/task/72588?project=1&string=clang
   mv -f "$pkgdir"/usr/lib/libclang{,-cpp}.so* "$srcdir"
+
+  # clang-minimal-git files go to a separate package
+  mkdir -p "$srcdir"/clang/usr/{bin,include,lib,lib/cmake,share}
+  mv -f "$pkgdir"/usr/lib/{libear,libscanbuild,libclang*.a,clang} "$srcdir"/clang/usr/lib
+  mv -f "$pkgdir"/usr/lib/cmake/clang "$srcdir"/clang/usr/lib/cmake/
+  mv -f "$pkgdir"/usr/include/{clang,clang-tidy,clang-c} "$srcdir"/clang/usr/include/
+  mv -f "$pkgdir"/usr/libexec "$srcdir"/clang/usr/
+  mv -f "$pkgdir"/usr/bin/{analyze-build,c-index-test,clang*,diagtool,find-all-symbols,git-clang-format,hmaptool,intercept-build,modularize,pp-trace,run-clang-tidy,scan-build,scan-build-py,scan-view} "$srcdir"/clang/usr/bin/
+  mv -f "$pkgdir"/usr/share/{clang,man,opt-viewer,scan-build,scan-view} "$srcdir"/clang/usr/share/
 
   if [[ $CARCH == x86_64 ]]; then
     # Needed for multilib (https://bugs.archlinux.org/task/29951)
@@ -203,6 +212,33 @@ package_llvm-minimal-git(){
     mv "$pkgdir/usr/include/llvm/Config/llvm-config"{,-64}.h
     cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
   fi
+
+  # spirv-llvm-translator files go to a separate package
+  mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
+  mv "$pkgdir"/usr/bin/llvm-spirv "$srcdir"/spirv/usr/bin
+  mv "$pkgdir"/usr/include/LLVMSPIRVLib/* "$srcdir"/spirv/usr/include/LLVMSPIRVLib/
+  mv "$pkgdir"/usr/lib/libLLVMSPIRVLib.a "$srcdir"/spirv/usr/lib
+  mv "$pkgdir"/usr/lib/pkgconfig/LLVMSPIRVLib.pc "$srcdir"/spirv/usr/lib/pkgconfig
+  # Remove pkgconfig dir from llvm-minimal-git
+  rm -rf "$pkgdir"/usr/lib/pkgconfig/
+
+  install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
+  install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
+  install -Dm644 "$srcdir/llvm-project/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CODE_OWNERS"
+}
+
+package_clang-minimal-git(){
+  pkgdesc='C language family frontend for LLVM (git version)'
+  depends=(llvm-libs-minimal-git clang-libs-minimal-git gcc)
+  optdepends=('openmp: OpenMP support in clang with -fopenmp'
+              'python: for scan-view, scan-build, git-clang-format, clang-rename and python bindings'
+              'llvm: referenced by some clang headers')
+  conflicts=(compiler-rt clang)
+  provides=(compiler-rt clang clang-analyzer clang-tools-extra)
+  provides+=(compiler-rt-minimal-git clang-minimal-git compiler-rt-git clang-git)
+  replaces=(clang-analyzer clang-tools-extra)
+
+  cp --preserve --recursive "$srcdir"/clang/* "$pkgdir"/
 
   # I think it's usefull to have this CLANG Python bindings since we ship complete CLANG
   # If I proove that it's not usefull we will remove the below
@@ -215,31 +251,21 @@ package_llvm-minimal-git(){
   # We can use this command in a llvm-git spirit
   #  # (taken from llvm-git aur)
   #  cp -a ${srcdir}/llvm-project/llvm/bindings/python/llvm "$pkgdir/$site_packages/"
-  
+
   # Move analyzer scripts out of /usr/libexec
   mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
   rmdir "$pkgdir/usr/libexec"
   sed -i 's|libexec|lib/clang|' \
     "$pkgdir/usr/bin/scan-build" \
     "$pkgdir/$site_packages/libscanbuild/analyze.py"
-      
+
   # Compile Python scripts
   _python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
-  
+
   # (taken from llvm-git aur)
   #optimize other python files except 2 problem cases
   _python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
-  
-  # spirv-llvm-translator files go to a separate package
-  mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
-  mv "$pkgdir"/usr/bin/llvm-spirv "$srcdir"/spirv/usr/bin
-  mv "$pkgdir"/usr/include/LLVMSPIRVLib/* "$srcdir"/spirv/usr/include/LLVMSPIRVLib/
-  mv "$pkgdir"/usr/lib/libLLVMSPIRVLib.a "$srcdir"/spirv/usr/lib
-  mv "$pkgdir"/usr/lib/pkgconfig/LLVMSPIRVLib.pc "$srcdir"/spirv/usr/lib/pkgconfig
 
-  install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
-  install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
-  install -Dm644 "$srcdir/llvm-project/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CODE_OWNERS"
   install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/LICENSE"
   install -Dm644 "$srcdir/llvm-project/clang/CodeOwners.rst" "$pkgdir/usr/share/licenses/$pkgname/clang/CodeOwners.rst"
   install -Dm644 "$srcdir/llvm-project/clang-tools-extra/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/LICENSE"
