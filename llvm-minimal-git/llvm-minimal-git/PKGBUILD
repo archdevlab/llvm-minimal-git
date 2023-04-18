@@ -196,11 +196,6 @@ package_llvm-minimal-git(){
   # The clang runtime libraries go into clang-libs-minimal-git
   # https://bugs.archlinux.org/task/72588?project=1&string=clang
   mv -f "$pkgdir"/usr/lib/libclang{,-cpp}.so* "$srcdir"
-  # I don't think its usefull but keep the command here for now. Remove the below
-  #  # Python libraries go into clang-libs
-  #  mv -f "$pkgdir"/usr/lib/{libear,libscanbuild} "$srcdir"
-  #  mv -f "$pkgdir"/usr/libexec "$srcdir"
-  #  mv -f "$pkgdir"/usr/bin/scan-build "$srcdir"
 
   if [[ $CARCH == x86_64 ]]; then
     # Needed for multilib (https://bugs.archlinux.org/task/29951)
@@ -288,8 +283,6 @@ package_llvm-libs-minimal-git(){
 package_clang-libs-minimal-git(){
   pkgdesc='Clang runtime libraries (git version)'
   depends=(llvm-libs-minimal-git)
-  # keep this optdepends here since we know if we need python stuff in clang-libs
-  #optdepends=('python: for scan-view and git-clang-format')
   # clang-libs doesn't exist in repos at this time, but it's cleaner to provide & conflict it.
   # TODO: Once repo clang-libs comes into existence, verify if changes are needed to this package
   conflicts=(clang-libs)
@@ -300,36 +293,6 @@ package_clang-libs-minimal-git(){
   cp -P \
     "$srcdir"/lib{clang,clang-cpp}.so* \
     "$pkgdir/usr/lib/"
-
-  # I don't think its usefull but keep the command here for now
-  # Since I don't know why Python stuff are in clang-libs we will remove the command below
-  # https://bugs.archlinux.org/task/72588?project=1&string=clang
-  #  install -d "$pkgdir/usr/lib/clang"
-  #  install -d "$pkgdir/usr/bin"
-  #  # These three moved again below, but keeping those blocks untouched for cleaner merges with upstream monopackage.
-  #  cp -a "$srcdir"/{libear,libscanbuild} "$pkgdir/usr/lib"
-  #  cp -av "$srcdir"/libexec "$pkgdir"/usr/
-  #  cp -av "$srcdir"/scan-build "$pkgdir"/usr/bin/
-  #
-  #  #  # Move scanbuild-py into site-packages and install Python bindings
-  #  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
-  #  install -d "$pkgdir/$site_packages"
-  #  mv "$pkgdir"/usr/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
-  #  cp -a ${srcdir}/llvm-project/clang/bindings/python/clang "$pkgdir/$site_packages/"
-  #  
-  #  # Move analyzer scripts out of /usr/libexec
-  #  mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
-  #  rmdir "$pkgdir/usr/libexec"
-  #  sed -i 's|libexec|lib/clang|' \
-  #    "$pkgdir/usr/bin/scan-build" \
-  #    "$pkgdir/$site_packages/libscanbuild/analyze.py"
-  #      
-  #  # Compile Python scripts
-  #  _python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
-  #  
-  #  # (taken from llvm-git aur)
-  #  #optimize other python files except 2 problem cases
-  #  _python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
 
   install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/LICENSE"
   install -Dm644 "$srcdir/llvm-project/clang/CodeOwners.rst" "$pkgdir/usr/share/licenses/$pkgname/clang/CodeOwners.rst"
