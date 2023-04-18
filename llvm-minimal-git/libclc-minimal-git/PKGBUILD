@@ -21,6 +21,7 @@ license=(MIT)
 makedepends=(llvm-minimal-git cmake ninja python spirv-llvm-translator-minimal-git git llvm-libs<16)
 conflicts=(libclc)
 provides=(libclc)
+provides+=(libclc-minimal-git libclc-git)
 source=(git+https://github.com/llvm/llvm-project.git#commit=$commit
         # https://aur.archlinux.org/cgit/aur.git/commit/?h=libclc-minimal-git&id=cf5a11160e3631cbc11c57c8f3169d0012825b0a
         libclc.patch)
