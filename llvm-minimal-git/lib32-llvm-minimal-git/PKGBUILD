@@ -48,13 +48,31 @@ _get_distribution_components(){
       clang*|findAllSymbols)
         continue
         ;;
+      # Taken from llvm package https://github.com/archlinux/svntogit-packages/commit/bc5ab1d4b61a7d2221cfdd9154e01ccd14073333
+      llvm-libraries|distribution)
+        continue
+        ;;
+      # shared libraries
+      LLVM|LLVMgold)
+        ;;
+      # libraries needed for clang-tblgen
+      LLVMDemangle|LLVMSupport|LLVMTableGen)
+        ;;
+      # exclude static libraries
+      LLVM*)
+        continue
+        ;;
+      # exclude llvm-exegesis (doesn't seem useful without libpfm)
+      llvm-exegesis)
+        continue
+        ;;
     esac
     echo $target
   done
 }
 
 pkgver(){
-  cd ${srcdir}/llvm-project/llvm
+  cd ${srcdir}/llvm-project/llvm/
 
   # This will almost match the output of `llvm-config --version` when the
   # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
@@ -75,13 +93,13 @@ export CFLAGS=-m32
 export CXXFLAGS=-m32
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
-  cd ${srcdir}/llvm-project/llvm
+  cd ${srcdir}/llvm-project/llvm/
 
-  rm -rf build
+  rm -rf build/
 
-  mkdir build
+  mkdir build/
 
-  cd build
+  cd build/
 
   local cmake_args=(
     -G Ninja
@@ -133,20 +151,27 @@ package_lib32-llvm-minimal-git(){
   provides=(lib32-llvm lib32-clang lib32-compiler-rt lib32-clang-analyzer lib32-clang-tools-extra)
   replaces=(lib32-clang-analyzer lib32-clang-tools-extra)
 
-  DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/llvm/build install
-  DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/llvm/build install-distribution
-
-  # Remove files which conflict with lib32-llvm-libs
-  rm "$pkgdir"/usr/lib32/{LLVMgold,lib{LLVM,LTO,Remarks}}.so
-
-  #  # The runtime library goes into lib32-llvm-libs
-  #  mv "$pkgdir"/usr/lib32/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
+  # Remove this one since wee use LLVM_DISTRIBUTION_COMPONENTS for llvm 
+  # Taken from llvm package https://github.com/archlinux/svntogit-packages/commit/bc5ab1d4b61a7d2221cfdd9154e01ccd14073333
+  # But keep the below if wee want to revert it
+  #  DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/llvm/build install
+  
+  DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/llvm/build/ install-distribution
+  
+  # This is when we want lib32-llvm-libs-minimal-git to conflict with lib32-llvm-libs
+  #  # The runtime libraries go into llvm-libs
+  #  mv -f "$pkgdir"/usr/lib32/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
   #  mv -f "$pkgdir"/usr/lib32/LLVMgold.so "$srcdir"
 
-  # The runtime library goes into lib32-llvm-libs-git
-  mv "$pkgdir"/usr/lib32/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
-
-  # The clang runtime libraries go into clang-libs-minimal-git
+  # This is when we want to have lib32-llvm-libs and lib32-llvm-libs-minimal-git on the same system
+  # Remove files which conflict with repo llvm-libs
+  rm "$pkgdir"/usr/lib32/{LLVMgold,lib{LLVM,LTO}}.so
+  rm "$pkgdir"/usr/lib32/libRemarks.so
+  # The llvm runtime libraries go into llvm-libs-minimal-git
+  mv -f "$pkgdir"/usr/lib32/lib{LLVM-*.so,LTO.so.*,Remarks.so.*} "$srcdir"
+  
+  # The clang runtime libraries go into lib32-clang-libs-minimal-git
+  # https://bugs.archlinux.org/task/72588?project=1&string=clang
   mv -f "$pkgdir"/usr/lib32/libclang{,-cpp}.so* "$srcdir"
 
   # Fix permissions of static libs
@@ -182,6 +207,7 @@ package_lib32-llvm-libs-minimal-git(){
   provides=(lib32-llvm-libs)
   optdepends=('lib32-llvm-libs: for LLVMgold linker')
 
+  # This is when wee want lib32-llvm-libs-minimal-git to conflict with lib32-llvm-libs
   #  install -d "$pkgdir/usr/lib32"
   #
   #  cp -P \
@@ -194,6 +220,7 @@ package_lib32-llvm-libs-minimal-git(){
   #  install -d "$pkgdir/usr/lib32/bfd-plugins"
   #  ln -s ../LLVMgold.so "$pkgdir/usr/lib32/bfd-plugins/LLVMgold.so"
 
+  # This is when we want to have lib32-llvm-libs and lib32-llvm-libs-minimal-git on the same system
   install -d "$pkgdir/usr/lib32"
   cp -P \
     "$srcdir"/libLLVM*.so \
@@ -205,6 +232,7 @@ package_lib32-llvm-libs-minimal-git(){
   install -Dm644 "$srcdir/llvm-project/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/CODE_OWNERS"
 }
 
+# https://bugs.archlinux.org/task/72588?project=1&string=clang
 package_lib32-clang-libs-minimal-git(){
   pkgdesc='Clang runtime libraries (32-bit) (git version)'
   depends=(lib32-llvm-libs-minimal-git)
