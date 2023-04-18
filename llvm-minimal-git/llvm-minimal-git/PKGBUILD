@@ -230,16 +230,13 @@ package_llvm-minimal-git(){
   # (taken from llvm-git aur)
   #optimize other python files except 2 problem cases
   _python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
-
-  # Instead of moving out we can use DESTDIR="$pkgdir" ninja $NINJAFLAGS install llvm-spirv since
-  # we use DESTDIR="$pkgdir" ninja $NINJAFLAGS install-distribution for LLVM/CLANG/compiler-rt
-  # but keep the command here
-  #  # spirv-llvm-translator files go to a separate package
-  #  mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
-  #  mv "$pkgdir"/usr/bin/llvm-spirv "$srcdir"/spirv/usr/bin
-  #  mv "$pkgdir"/usr/include/LLVMSPIRVLib/* "$srcdir"/spirv/usr/include/LLVMSPIRVLib/
-  #  mv "$pkgdir"/usr/lib/libLLVMSPIRVLib.a "$srcdir"/spirv/usr/lib
-  #  mv "$pkgdir"/usr/lib/pkgconfig/LLVMSPIRVLib.pc "$srcdir"/spirv/usr/lib/pkgconfig
+  
+  # spirv-llvm-translator files go to a separate package
+  mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
+  mv "$pkgdir"/usr/bin/llvm-spirv "$srcdir"/spirv/usr/bin
+  mv "$pkgdir"/usr/include/LLVMSPIRVLib/* "$srcdir"/spirv/usr/include/LLVMSPIRVLib/
+  mv "$pkgdir"/usr/lib/libLLVMSPIRVLib.a "$srcdir"/spirv/usr/lib
+  mv "$pkgdir"/usr/lib/pkgconfig/LLVMSPIRVLib.pc "$srcdir"/spirv/usr/lib/pkgconfig
 
   install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
   install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
@@ -338,13 +335,8 @@ package_spirv-llvm-translator-minimal-git(){
   conflicts=(spirv-llvm-translator)
   provides=(spirv-llvm-translator)
 
-  # Instead of moving out we can use DESTDIR="$pkgdir" ninja $NINJAFLAGS install llvm-spirv since
-  # we use DESTDIR="$pkgdir" ninja $NINJAFLAGS install-distribution for LLVM/CLANG/compiler-rt
-  # but keep the command here
-  #  cp --preserve --recursive "$srcdir"/spirv/* "$pkgdir"/
+  cp --preserve --recursive "$srcdir"/spirv/* "$pkgdir"/
 
-  cd ${srcdir}/llvm-project/llvm/build/
-  DESTDIR="$pkgdir" ninja $NINJAFLAGS install llvm-spirv
   install -Dm644 ${srcdir}/SPIRV-LLVM-Translator/LICENSE.TXT -t "${pkgdir}"/usr/share/licenses/${pkgname}/
 }
 
