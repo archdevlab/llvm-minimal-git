@@ -12,7 +12,7 @@
 pkgbase=llvm-minimal-git
 pkgname=(llvm-minimal-git clang-minimal-git llvm-libs-minimal-git clang-libs-minimal-git spirv-llvm-translator-minimal-git)
 url='https://llvm.org/'
-pkgver=17.0.0.r457923.g842dc35fc932
+pkgver=17.0.0
 pkgrel=1
 _pkgver=17.0.0
 llvmcommit=842dc35fc93203751047490f2989360b15ea67d1
