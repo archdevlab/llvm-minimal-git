@@ -1,4 +1,6 @@
-![image](https://user-images.githubusercontent.com/68618182/188527035-385752e7-fbd3-4865-abda-fdba4a804d99.png)![image](https://user-images.githubusercontent.com/68618182/213734198-0cf50021-1f02-4c80-9a48-6f20ad42ce04.png)
+![image](https://user-images.githubusercontent.com/68618182/188527035-385752e7-fbd3-4865-abda-fdba4a804d99.png)
+
+![image](https://user-images.githubusercontent.com/68618182/213734198-0cf50021-1f02-4c80-9a48-6f20ad42ce04.png)
 
 # llvm-minimal-git
 
@@ -11,6 +13,10 @@ This repo contain spirv-headers-git and spirv-tools-git package. Why so? Because
 ### glslang
 
 This repo contain glslang-git package. Why so? Because glslang depends on SPIRV-Headers and SPIRV-Tools. So it feel more natural to have this package in this repo.
+
+### Directx-Headers
+
+This repo contain directx-headers-git package. Why so? Because Mesa depends on it at build time. Mesa is the only package that depends on Directx-Headers at build time on Archlinux.
 
 ### Mesa
 
@@ -51,6 +57,12 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 - 12.1.0
 
 - commit : 68f073b19569b580ecc7ba13fa96be3ecf65a0f6
+
+### Directx-Headers
+
+- 1.6.10
+
+- commit : 
 
 ### Mesa
 
