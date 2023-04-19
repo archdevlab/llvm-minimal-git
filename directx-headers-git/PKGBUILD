@@ -11,15 +11,16 @@
 
 pkgname=directx-headers-git
 pkgdesc="DirectX headers for using D3D12"
-pkgver=1.606.3.r1.r0.ga435bb3
+pkgver=1.610.0
 pkgrel=1
+commit=53f49957acbfa6521aa5818b307f38a3f35ec27d
 arch=(x86_64)
 url='https://github.com/microsoft/DirectX-Headers'
 license=(MIT)
 makedepends=(meson git ninja)
 conflicts=(directx-headers)
 provides=(directx-headers directx-headers-git)
-source=(git+https://github.com/microsoft/DirectX-Headers.git)
+source=(git+https://github.com/microsoft/DirectX-Headers.git#commit=$commit)
 md5sums=(SKIP)
 
 
