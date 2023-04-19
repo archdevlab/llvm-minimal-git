@@ -13,7 +13,7 @@
 pkgname=lib32-mesa-git
 pkgver=23.2.0_devel
 pkgrel=1
-commit=4aab6bd456de2e1b9c9af836c7212ef41638d400
+commit=24555f5462e97e80ffe20f47a279d3c344fa6ea2
 arch=(i686 x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
