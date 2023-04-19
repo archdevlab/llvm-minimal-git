@@ -212,6 +212,7 @@ package_llvm-minimal-git(){
   mv "$pkgdir"/usr/lib/pkgconfig/LLVMSPIRVLib.pc "$srcdir"/spirv/usr/lib/pkgconfig
   # Remove pkgconfig dir from llvm-minimal-git
   rm -rf "$pkgdir"/usr/lib/pkgconfig/
+  rm -rf "$pkgdir"/usr/include/LLVMSPIRVLib/
 
   if [[ $CARCH == x86_64 ]]; then
     # Needed for multilib (https://bugs.archlinux.org/task/29951)
