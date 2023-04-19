@@ -331,7 +331,7 @@ package_spirv-llvm-translator-minimal-git(){
 
   cp --preserve --recursive "$srcdir"/spirv/* "$pkgdir"/
 
-  install -Dm644 ${srcdir}/SPIRV-LLVM-Translator/LICENSE.TXT -t "${pkgdir}"/usr/share/licenses/${pkgname}/
+  install -Dm644 "${srcdir}/SPIRV-LLVM-Translator/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/spirv-llvm-translator/LICENSE"
 }
 
 sha256sums=('SKIP'
