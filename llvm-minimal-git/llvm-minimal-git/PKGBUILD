@@ -160,14 +160,12 @@ _python_optimize(){
 
 package_llvm-minimal-git(){
   pkgdesc='Collection of modular and reusable compiler and toolchain technologies (git version)'
-  depends=(llvm-libs-minimal-git clang-libs-minimal-git perl)
+  depends=(llvm-libs-minimal-git perl)
   optdepends=('python: for using lit (LLVM Integrated Tester)'
-              'python: for scan-view, scan-build, git-clang-format, clang-rename and python bindings'
               'python-setuptools: for using lit')
-  conflicts=(llvm compiler-rt clang)
-  provides=(llvm compiler-rt clang clang-analyzer clang-tools-extra)
-  provides+=(llvm-minimal-git compiler-rt-minimal-git clang-minimal-git llvm-git compiler-rt-git clang-git)
-  replaces=(clang-analyzer clang-tools-extra)
+  conflicts=(llvm)
+  provides=(llvm)
+  provides+=(llvm-minimal-git llvm-git)
 
   cd ${srcdir}/llvm-project/llvm/build/
 
@@ -205,14 +203,7 @@ package_llvm-minimal-git(){
   mv -f "$pkgdir"/usr/libexec "$srcdir"/clang/usr/
   mv -f "$pkgdir"/usr/bin/{analyze-build,c-index-test,clang*,diagtool,find-all-symbols,git-clang-format,hmaptool,intercept-build,modularize,pp-trace,run-clang-tidy,scan-build,scan-build-py,scan-view} "$srcdir"/clang/usr/bin/
   mv -f "$pkgdir"/usr/share/{clang,man,opt-viewer,scan-build,scan-view} "$srcdir"/clang/usr/share/
-
-  if [[ $CARCH == x86_64 ]]; then
-    # Needed for multilib (https://bugs.archlinux.org/task/29951)
-    # Header stub is taken from Fedora
-    mv "$pkgdir/usr/include/llvm/Config/llvm-config"{,-64}.h
-    cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
-  fi
-
+  
   # spirv-llvm-translator files go to a separate package
   mkdir -p "$srcdir"/spirv/usr/{bin,include/LLVMSPIRVLib/,lib/pkgconfig}
   mv "$pkgdir"/usr/bin/llvm-spirv "$srcdir"/spirv/usr/bin
@@ -221,6 +212,13 @@ package_llvm-minimal-git(){
   mv "$pkgdir"/usr/lib/pkgconfig/LLVMSPIRVLib.pc "$srcdir"/spirv/usr/lib/pkgconfig
   # Remove pkgconfig dir from llvm-minimal-git
   rm -rf "$pkgdir"/usr/lib/pkgconfig/
+
+  if [[ $CARCH == x86_64 ]]; then
+    # Needed for multilib (https://bugs.archlinux.org/task/29951)
+    # Header stub is taken from Fedora
+    mv "$pkgdir/usr/include/llvm/Config/llvm-config"{,-64}.h
+    cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
+  fi
 
   install -Dm644 "$srcdir/llvm-project/llvm/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/LICENSE"
   install -Dm644 "$srcdir/llvm-project/llvm/CREDITS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CREDITS"
