@@ -204,7 +204,7 @@ package_lib32-clang-minimal-git(){
   depends=(lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git gcc-multilib)
   conflicts=(lib32-clang)
   provides=(lib32-clang)
-  provides+=(lib32-clang-libs-minimal-git lib32-clang-git)
+  provides+=(lib32-clang-minimal-git lib32-clang-git)
 
   cp --preserve --recursive "$srcdir"/clang/* "$pkgdir"/
 
@@ -253,7 +253,7 @@ package_lib32-clang-libs-minimal-git(){
   # TODO: Once repo lib32-clang-libs comes into existence, verify if changes are needed to this package
   conflicts=(lib32-clang-libs)
   provides=(lib32-clang-libs)
-  provides=(lib32-clang-libs-minimal-git lib32-clang-git)
+  provides+=(lib32-clang-libs-minimal-git lib32-clang-libs-git)
 
   install -d "$pkgdir/usr/lib32"
   cp -P \
