@@ -10,9 +10,9 @@
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgbase=lib32-llvm-minimal-git
-pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git)
+pkgname=(lib32-llvm-minimal-git lib32-clang-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=17.0.0
+pkgver=17.0.0.r457923.g842dc35fc932
 pkgrel=1
 _pkgver=17.0.0
 commit=842dc35fc93203751047490f2989360b15ea67d1
@@ -129,8 +129,7 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
     -DLLVM_ENABLE_OCAMLDOC=OFF
     -DLLVM_ENABLE_DOXYGEN=OFF
     -DLLVM_ENABLE_BINDINGS=OFF
-    -DLLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
-    -DCOMPILER_RT_INSTALL_PATH=/usr/lib/clang/$_pkgver
+    -DLLVM_ENABLE_PROJECTS="clang"
     -DLLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
     -Wno-dev
   )
@@ -146,19 +145,18 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
 package_lib32-llvm-minimal-git(){
   pkgdesc='Collection of modular and reusable compiler and toolchain technologies (32-bit) (git version)'
-  depends=(lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git llvm-minimal-git)
-  conflicts=(lib32-llvm lib32-clang)
-  provides=(lib32-llvm lib32-clang)
-  provides+=(lib32-llvm-minimal-git lib32-compiler-rt-minimal-git lib32-clang-minimal-git lib32-llvm-git lib32-compiler-rt-git lib32-clang-git 
-             lib32-clang-analyzer lib32-clang-tools-extra)
+  depends=(lib32-llvm-libs-minimal-git llvm-minimal-git)
+  conflicts=(lib32-llvm)
+  provides=(lib32-llvm)
+  provides+=(lib32-llvm-minimal-git lib32-llvm-git)
 
-  # Remove this one since wee use LLVM_DISTRIBUTION_COMPONENTS for llvm 
+  # Remove this one since wee use LLVM_DISTRIBUTION_COMPONENTS for llvm
   # Taken from llvm package https://github.com/archlinux/svntogit-packages/commit/bc5ab1d4b61a7d2221cfdd9154e01ccd14073333
   # But keep the below if wee want to revert it
   #  DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/llvm/build install
-  
+
   DESTDIR="$pkgdir" ninja $NINJAFLAGS -C ${srcdir}/llvm-project/llvm/build/ install-distribution
-  
+
   # This is when we want lib32-llvm-libs-minimal-git to conflict with lib32-llvm-libs
   #  # The runtime libraries go into llvm-libs
   #  mv -f "$pkgdir"/usr/lib32/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
@@ -170,10 +168,15 @@ package_lib32-llvm-minimal-git(){
   rm "$pkgdir"/usr/lib32/libRemarks.so
   # The llvm runtime libraries go into llvm-libs-minimal-git
   mv -f "$pkgdir"/usr/lib32/lib{LLVM-*.so,LTO.so.*,Remarks.so.*} "$srcdir"
-  
+
   # The clang runtime libraries go into lib32-clang-libs-minimal-git
   # https://bugs.archlinux.org/task/72588?project=1&string=clang
   mv -f "$pkgdir"/usr/lib32/libclang{,-cpp}.so* "$srcdir"
+
+  # lib32-clang-minimal-git files go to a separate package
+  mkdir -p "$srcdir"/clang/usr/{lib32,lib32/cmake}
+  mv -f "$pkgdir"/usr/lib32/clang "$srcdir"/clang/usr/lib32
+  mv -f "$pkgdir"/usr/lib32/cmake/clang "$srcdir"/clang/usr/lib32/cmake/
 
   # Fix permissions of static libs
   chmod -x "$pkgdir"/usr/lib32/*.a
@@ -181,7 +184,7 @@ package_lib32-llvm-minimal-git(){
   mv "$pkgdir/usr/bin/llvm-config" "$pkgdir/usr/lib32/llvm-config"
   mv "$pkgdir/usr/include/llvm/Config/llvm-config.h" "$pkgdir/usr/lib32/llvm-config-32.h"
 
-  rm -rf "$pkgdir"/usr/{bin,include,lib,libexec,share/{doc,man,llvm,opt-viewer,clang,scan-build,scan-view}}
+  rm -rf "$pkgdir"/usr/{bin,include,lib,lib32/{libear,libscanbuild},libexec,share/{doc,clang,man,llvm,opt-viewer,clang,scan-build,scan-view}}
 
   # Needed for multilib (https://bugs.archlinux.org/task/29951)
   # Header stub is taken from Fedora
@@ -196,9 +199,19 @@ package_lib32-llvm-minimal-git(){
   install -Dm644 "$srcdir/llvm-project/llvm/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/llvm/CODE_OWNERS"
   install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/LICENSE"
   install -Dm644 "$srcdir/llvm-project/clang/CodeOwners.rst" "$pkgdir/usr/share/licenses/$pkgname/clang/CodeOwners.rst"
-  install -Dm644 "$srcdir/llvm-project/clang-tools-extra/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/LICENSE"
-  install -Dm644 "$srcdir/llvm-project/clang-tools-extra/CODE_OWNERS.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra/CODE_OWNERS"
-  install -Dm644 "${srcdir}/llvm-project/compiler-rt/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/compiler-rt/LICENSE"
+}
+
+package_lib32-clang-minimal-git(){
+  pkgdesc='C language family frontend for LLVM (32-bit) (git version)'
+  depends=(lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git gcc-multilib)
+  conflicts=(lib32-clang)
+  provides=(lib32-clang)
+  provides+=(lib32-clang-libs-minimal-git lib32-clang-git)
+
+  cp --preserve --recursive "$srcdir"/clang/* "$pkgdir"/
+
+  install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/LICENSE"
+  install -Dm644 "$srcdir/llvm-project/clang/CodeOwners.rst" "$pkgdir/usr/share/licenses/$pkgname/clang/CodeOwners.rst"
 }
 
 package_lib32-llvm-libs-minimal-git(){
