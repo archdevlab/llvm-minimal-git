@@ -13,10 +13,10 @@ pkgdesc='Library requirements of the OpenCL C programming language (git version)
 url='https://libclc.llvm.org/'
 pkgver=17.0.0
 pkgrel=1
-commit=842dc35fc93203751047490f2989360b15ea67d1
+commit=0acb639fd2350d831f149035e078654a655c209b
 arch=(x86_64)
 license=(MIT)
-# Added llvm-libs because llvm-libs-minimal-git and llvm-libs can now coexist in the same system 
+# Added llvm-libs because llvm-libs-minimal-git and llvm-libs can now coexist in the same system
 # and libclc need LLVMgold.so at build time
 makedepends=(llvm-minimal-git cmake ninja python spirv-llvm-translator-minimal-git git 'llvm-libs<16')
 conflicts=(libclc)
