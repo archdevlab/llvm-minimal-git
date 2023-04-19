@@ -230,7 +230,7 @@ package_clang-minimal-git(){
   depends=(llvm-libs-minimal-git clang-libs-minimal-git gcc)
   optdepends=('openmp: OpenMP support in clang with -fopenmp'
               'python: for scan-view, scan-build, git-clang-format, clang-rename and python bindings'
-              'llvm: referenced by some clang headers')
+              'llvm-minimal-git: referenced by some clang headers')
   conflicts=(compiler-rt clang)
   provides=(compiler-rt clang clang-analyzer clang-tools-extra)
   provides+=(compiler-rt-minimal-git clang-minimal-git compiler-rt-git clang-git)
