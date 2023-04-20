@@ -16,10 +16,10 @@ pkgbase=lib32-mesa-git
 # So remove lib32-mesa-opencl-git
 #pkgname=(lib32-vulkan-mesa-layers-git lib32-opencl-mesa-git lib32-vulkan-intel-git lib32-vulkan-radeon-git
 #         lib32-vulkan-virtio-git lib32-libva-mesa-driver-git lib32-mesa-vdpau-git lib32-vulkan-swrast-git
-#         lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git lib32-mesa-git)
+#         lib32-vulkan-imagination-git lib32-mesa-git)
 pkgname=(lib32-vulkan-mesa-layers-git lib32-vulkan-intel-git lib32-vulkan-radeon-git
          lib32-vulkan-virtio-git lib32-libva-mesa-driver-git lib32-mesa-vdpau-git lib32-vulkan-swrast-git
-         lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git lib32-mesa-git)
+         lib32-vulkan-imagination-git lib32-mesa-git)
 pkgver=23.2.0_devel.169973.24555f5462e
 pkgrel=1
 commit=a71f79fb457b3b428f4d3ccf3dc4758bab6e2598
@@ -220,9 +220,10 @@ package_lib32-vulkan-intel-git(){
   conflicts=(lib32-vulkan-intel)
   provides=(lib32-vulkan-driver lib32-vulkan-intel)
   provides+=(lib32-vulkan-intel-git)
+  replaces=(lib32-vulkan-intel-hasvk-git)
 
-  _install fakeinstall/usr/share/vulkan/icd.d/intel_icd*.json
-  _install fakeinstall/usr/lib32/libvulkan_intel.so
+  _install fakeinstall/usr/share/vulkan/icd.d/intel_*.json
+  _install fakeinstall/usr/lib32/libvulkan_intel*.so
 
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
@@ -291,18 +292,6 @@ package_lib32-vulkan-swrast-git(){
 
   _install fakeinstall/usr/share/vulkan/icd.d/lvp_icd*.json
   _install fakeinstall/usr/lib32/libvulkan_lvp.so
-
-  install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
-}
-
-package_lib32-vulkan-intel-hasvk-git(){
-  pkgdesc="Intel's Vulkan mesa driver for Older Gen7/Gen8 Graphics (32-bit) (git release)"
-  depends=(lib32-wayland lib32-libx11 lib32-libxshmfence lib32-libdrm lib32-zstd lib32-systemd systemd-libs)
-  optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
-  provides=(lib32-vulkan-driver)
-
-  _install fakeinstall/usr/share/vulkan/icd.d/intel_hasvk_icd*.json
-  _install fakeinstall/usr/lib32/libvulkan_intel_hasvk.so
 
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
