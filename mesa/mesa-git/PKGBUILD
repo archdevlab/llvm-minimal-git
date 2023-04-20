@@ -312,7 +312,7 @@ package_mesa-git(){
   conflicts=(mesa-libgl mesa)
   replaces=(mesa-libgl)
   provides=(mesa-libgl opengl-driver mesa)
-  provides=(mesa-git)
+  provides+=(mesa-git)
 
   _install fakeinstall/usr/share/drirc.d/00-mesa-defaults.conf
   _install fakeinstall/usr/share/glvnd/egl_vendor.d/50_mesa.json
