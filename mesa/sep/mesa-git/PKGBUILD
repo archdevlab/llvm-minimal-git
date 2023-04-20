@@ -13,7 +13,7 @@
 pkgbase=mesa-git
 pkgname=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git
          mesa-vdpau-git vulkan-intel-hasvk-git vulkan-imagination-git mesa-git)
-pkgver=23.2.0_devel
+pkgver=23.2.0_devel.169973.24555f5462e
 pkgrel=1
 commit=24555f5462e97e80ffe20f47a279d3c344fa6ea2
 arch=(x86_64)
@@ -23,6 +23,7 @@ makedepends=(meson ninja bison flex python python-mako valgrind cmake xorgproto 
              libarchive libconfig compiler-rt libxcb wayland libxml2 libx11 libvdpau libelf libglvnd ncurses libva libxrandr
              expat libdrm libxv libxshmfence libxxf86vm libxdamage zstd lm_sensors libunwind vulkan-icd-loader llvm clang llvm-libs
              glibc gcc gcc-libs libomxil-bellagio directx-headers systemd patch)
+makedepends+=(python-ply) # intel-clc Ray tracing
 makedepends+=(rust rust-bindgen spirv-tools spirv-llvm-translator) # rusticl dependencies
 options=(!debug !lto)
 source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit=$commit
@@ -68,6 +69,9 @@ build(){
   rm -rf -v build_64
 
   mkdir -p -v build_64
+
+  # gallium-opencl is disabled since this issue in mesa
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
 
   meson setup build_64/ \
   -D b_ndebug=true \
@@ -157,6 +161,7 @@ package_vulkan-mesa-layers-git(){
   conflicts=(vulkan-mesa-layer vulkan-mesa-layers)
   replaces=(vulkan-mesa-layer)
   provides=(vulkan-mesa-layers)
+  provides+=(vulkan-mesa-layers-git)
 
   _install fakeinstall/usr/share/vulkan/explicit_layer.d
   _install fakeinstall/usr/share/vulkan/implicit_layer.d
@@ -172,10 +177,13 @@ package_opencl-mesa-git(){
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   conflicts=(opencl-mesa)
   provides=(opencl-driver opencl-mesa)
+  provides+=(opencl-mesa-git)
 
   _install fakeinstall/etc/OpenCL
   _install fakeinstall/usr/lib/lib*OpenCL*
-  _install fakeinstall/usr/lib/gallium-pipe
+  # Remove gallium-pipe sine gallium-opencl is disabled
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
+  #  _install fakeinstall/usr/lib/gallium-pipe
 
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
@@ -186,6 +194,7 @@ package_vulkan-intel-git(){
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
   conflicts=(vulkan-intel)
   provides=(vulkan-driver vulkan-intel)
+  provides+=(vulkan-intel-git)
 
   _install fakeinstall/usr/share/vulkan/icd.d/intel_icd*.json
   _install fakeinstall/usr/lib/libvulkan_intel.so
@@ -199,6 +208,7 @@ package_vulkan-radeon-git(){
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
   conflicts=(vulkan-radeon)
   provides=(vulkan-driver vulkan-radeon)
+  provides+=(vulkan-radeon-git)
 
   _install fakeinstall/usr/share/drirc.d/00-radv-defaults.conf
   _install fakeinstall/usr/share/vulkan/icd.d/radeon_icd*.json
@@ -214,6 +224,7 @@ package_vulkan-swrast-git(){
   conflicts=(vulkan-mesa vulkan-swrast)
   replaces=(vulkan-mesa)
   provides=(vulkan-driver vulkan-swrast)
+  provides+=(vulkan-swrast-git)
 
   _install fakeinstall/usr/share/vulkan/icd.d/lvp_icd*.json
   _install fakeinstall/usr/lib/libvulkan_lvp.so
@@ -227,6 +238,7 @@ package_vulkan-virtio-git(){
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
   conflicts=(vulkan-virtio)
   provides=(vulkan-driver vulkan-virtio)
+  provides+=(vulkan-virtio-git)
 
   _install fakeinstall/usr/share/vulkan/icd.d/virtio_icd*.json
   _install fakeinstall/usr/lib/libvulkan_virtio.so
@@ -240,6 +252,7 @@ package_libva-mesa-driver-git(){
   depends+=(libexpat.so)
   conflicts=(libva-mesa-driver)
   provides=(libva-driver libva-mesa-driver)
+  provides+=(libva-mesa-driver-git)
 
   _install fakeinstall/usr/lib/dri/*_drv_video.so
 
@@ -252,6 +265,7 @@ package_mesa-vdpau-git(){
   depends+=(libexpat.so)
   conflicts=(mesa-vdpau)
   provides=(vdpau-driver mesa-vdpau)
+  provides+=(mesa-vdpau-git)
 
   _install fakeinstall/usr/lib/vdpau
 
@@ -298,6 +312,7 @@ package_mesa-git(){
   conflicts=(mesa-libgl mesa)
   replaces=(mesa-libgl)
   provides=(mesa-libgl opengl-driver mesa)
+  provides=(mesa-git)
 
   _install fakeinstall/usr/share/drirc.d/00-mesa-defaults.conf
   _install fakeinstall/usr/share/glvnd/egl_vendor.d/50_mesa.json

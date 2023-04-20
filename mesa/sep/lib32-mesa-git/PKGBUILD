@@ -11,10 +11,16 @@
 #Credits: Reza Jahanbakhshi <reza.jahanbakhshi at gmail dot com
 
 pkgbase=lib32-mesa-git
-pkgname=(lib32-vulkan-mesa-layers-git lib32-opencl-mesa-git lib32-vulkan-intel-git lib32-vulkan-radeon-git
+# gallium-opencl is disabled since this issue in mesa
+# https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
+# So remove lib32-mesa-opencl-git
+#pkgname=(lib32-vulkan-mesa-layers-git lib32-opencl-mesa-git lib32-vulkan-intel-git lib32-vulkan-radeon-git
+#         lib32-vulkan-virtio-git lib32-libva-mesa-driver-git lib32-mesa-vdpau-git lib32-vulkan-swrast-git
+#         lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git lib32-mesa-git)
+pkgname=(lib32-vulkan-mesa-layers-git lib32-vulkan-intel-git lib32-vulkan-radeon-git
          lib32-vulkan-virtio-git lib32-libva-mesa-driver-git lib32-mesa-vdpau-git lib32-vulkan-swrast-git
          lib32-vulkan-intel-hasvk-git lib32-vulkan-imagination-git lib32-mesa-git)
-pkgver=23.2.0_devel
+pkgver=23.2.0_devel.169973.24555f5462e
 pkgrel=1
 commit=24555f5462e97e80ffe20f47a279d3c344fa6ea2
 arch=(i686 x86_64)
@@ -82,6 +88,9 @@ END
   rm -rf -v build_32
 
   mkdir -p -v build_32
+
+  # gallium-opencl is disabled since this issue in mesa
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
 
   meson setup build_32/ \
   --native-file crossfile.ini \
@@ -173,6 +182,7 @@ package_lib32-vulkan-mesa-layers-git(){
   conflicts=(lib32-vulkan-mesa-layer lib32-vulkan-mesa-layers)
   replaces=(lib32-vulkan-mesa-layer)
   provides=(lib32-vulkan-mesa-layers)
+  provides+=(lib32-vulkan-mesa-layers-git)
 
   rm -rv fakeinstall/usr/share/vulkan/explicit_layer.d
   rm -rv fakeinstall/usr/share/vulkan/implicit_layer.d
@@ -183,20 +193,24 @@ package_lib32-vulkan-mesa-layers-git(){
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
 
-package_lib32-opencl-mesa-git(){
-  pkgdesc="OpenCL support for AMD/ATI Radeon mesa drivers (32-bit) (git release)"
-  depends=(lib32-expat lib32-libdrm lib32-libelf lib32-clang lib32-zstd)
-  depends+=(opencl-mesa)
-  optdepends=('opencl-headers: headers necessary for OpenCL development')
-  conflicts=(lib32-opencl-mesa)
-  provides=(lib32-opencl-driver lib32-opencl-mesa)
-
-  rm -rv fakeinstall/etc/OpenCL
-  _install fakeinstall/usr/lib32/lib*OpenCL*
-  _install fakeinstall/usr/lib32/gallium-pipe
-
-  install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
-}
+# gallium-opencl is disabled since this issue in mesa
+# https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
+# So remove lib32-mesa-opencl-git
+#package_lib32-opencl-mesa-git(){
+#  pkgdesc="OpenCL support for AMD/ATI Radeon mesa drivers (32-bit) (git release)"
+#  depends=(lib32-expat lib32-libdrm lib32-libelf lib32-clang lib32-zstd)
+#  depends+=(opencl-mesa)
+#  optdepends=('opencl-headers: headers necessary for OpenCL development')
+#  conflicts=(lib32-opencl-mesa)
+#  provides=(lib32-opencl-driver lib32-opencl-mesa)
+#  provides=(lib32-opencl-mesa-git)
+#
+#  rm -rv fakeinstall/etc/OpenCL
+#  _install fakeinstall/usr/lib32/lib*OpenCL*
+#  _install fakeinstall/usr/lib32/gallium-pipe
+#
+#  install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
+#}
 
 package_lib32-vulkan-intel-git(){
   pkgdesc="Intel's Vulkan mesa driver (32-bit) (git release)"
@@ -205,6 +219,7 @@ package_lib32-vulkan-intel-git(){
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
   conflicts=(lib32-vulkan-intel)
   provides=(lib32-vulkan-driver lib32-vulkan-intel)
+  provides=(lib32-vulkan-intel-git)
 
   _install fakeinstall/usr/share/vulkan/icd.d/intel_icd*.json
   _install fakeinstall/usr/lib32/libvulkan_intel.so
@@ -220,6 +235,7 @@ package_lib32-vulkan-radeon-git(){
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
   conflicts=(lib32-vulkan-radeon)
   provides=(lib32-vulkan-driver lib32-vulkan-radeon)
+  provides=(lib32-vulkan-radeon-git)
 
   _install fakeinstall/usr/share/vulkan/icd.d/radeon_icd*.json
   _install fakeinstall/usr/lib32/libvulkan_radeon.so
@@ -233,6 +249,7 @@ package_lib32-vulkan-virtio-git(){
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
   conflicts=(lib32-vulkan-virtio)
   provides=(lib32-vulkan-driver lib32-vulkan-virtio)
+  provides=(lib32-vulkan-virtio-git)
 
   _install fakeinstall/usr/share/vulkan/icd.d/virtio_icd*.json
   _install fakeinstall/usr/lib32/libvulkan_virtio.so
@@ -246,6 +263,7 @@ package_lib32-libva-mesa-driver-git(){
            lib32-libxshmfence lib32-zstd)
   conflicts=(lib32-libva-mesa-driver)
   provides=(lib32-libva-driver lib32-libva-mesa-driver)
+  provides=(lib32-libva-mesa-driver-git)
 
   _install fakeinstall/usr/lib32/dri/*_drv_video.so
 
@@ -258,6 +276,7 @@ package_lib32-mesa-vdpau-git(){
            lib32-libxshmfence lib32-zstd)
   conflicts=(lib32-mesa-vdpau)
   provides=(lib32-vdpau-driver lib32-mesa-vdpau)
+  provides=(lib32-mesa-vdpau-git)
 
   _install fakeinstall/usr/lib32/vdpau
 
@@ -317,6 +336,7 @@ package_lib32-mesa-git(){
   conflicts=(lib32-mesa-libgl lib32-mesa)
   replaces=(lib32-mesa-libgl)
   provides=(lib32-mesa-libgl lib32-opengl-driver lib32-mesa)
+  provides=(lib32-mesa-git)
 
   rm -rv fakeinstall/usr/share/drirc.d/00-mesa-defaults.conf
   rm -rv fakeinstall/usr/share/drirc.d/00-radv-defaults.conf
