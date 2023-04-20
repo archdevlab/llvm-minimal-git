@@ -366,6 +366,7 @@ package_lib32-mesa-git(){
 }
 
 sha256sums=('SKIP'
-            'fb8e11bf581dd3e211dc893c98c2d7c641bf990052c3d2cecb00325e4548b1e8'
+            '2aa36a1678ee3940fab62e28ff07ba4177259478baf2f2afe47585f74c0f6b9a'
+            '21214974e01ee2ab1bcfe43188319905c7a457584f87f9ac2eaaddff2f276b78'
             'da367fc31bc3292f876fb540c16e5789b229da63d1e82ee916123dd00f3427ef'
             '8fbd8ba958d29ab4f7e3ec94339bf630683310a92db3d625adf14df773a60939')
