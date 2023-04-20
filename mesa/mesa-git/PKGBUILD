@@ -195,7 +195,8 @@ package_vulkan-intel-git(){
   conflicts=(vulkan-intel)
   provides=(vulkan-driver vulkan-intel)
   provides+=(vulkan-intel-git)
-  replaces=(vulkan-intel-hasvk-git)
+  conflicts+=(vulkan-intel-hasvk-git)
+  replaces+=(vulkan-intel-hasvk-git)
 
   _install fakeinstall/usr/share/vulkan/icd.d/intel_*.json
   _install fakeinstall/usr/lib/libvulkan_intel*.so
