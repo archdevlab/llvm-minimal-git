@@ -12,7 +12,7 @@
 
 pkgbase=mesa-git
 pkgname=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git
-         mesa-vdpau-git vulkan-intel-hasvk-git vulkan-imagination-git mesa-git)
+         mesa-vdpau-git vulkan-imagination-git mesa-git)
 pkgver=23.2.0_devel.169973.24555f5462e
 pkgrel=1
 commit=a71f79fb457b3b428f4d3ccf3dc4758bab6e2598
@@ -195,9 +195,10 @@ package_vulkan-intel-git(){
   conflicts=(vulkan-intel)
   provides=(vulkan-driver vulkan-intel)
   provides+=(vulkan-intel-git)
+  replaces=(vulkan-intel-hasvk-git)
 
-  _install fakeinstall/usr/share/vulkan/icd.d/intel_icd*.json
-  _install fakeinstall/usr/lib/libvulkan_intel.so
+  _install fakeinstall/usr/share/vulkan/icd.d/intel_*.json
+  _install fakeinstall/usr/lib/libvulkan_intel*.so
 
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
@@ -268,18 +269,6 @@ package_mesa-vdpau-git(){
   provides+=(mesa-vdpau-git)
 
   _install fakeinstall/usr/lib/vdpau
-
-  install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
-}
-
-package_vulkan-intel-hasvk-git(){
-  pkgdesc="Intel's Vulkan mesa driver for Older Gen7/Gen8 Graphics (git release)"
-  depends=(wayland libx11 libxshmfence libdrm zstd systemd-libs)
-  optdepends=('vulkan-mesa-layers: additional vulkan layers')
-  provides=(vulkan-driver)
-
-  _install fakeinstall/usr/share/vulkan/icd.d/intel_hasvk_icd*.json
-  _install fakeinstall/usr/lib/libvulkan_intel_hasvk.so
 
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
