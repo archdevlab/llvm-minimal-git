@@ -36,7 +36,8 @@ options=(!debug !lto)
 source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit=$commit
         # vulkan: fix builds with beta extensions
         # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21806
-        https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21806.patch
+        https://gitlab.freedesktop.org/airlied/mesa/-/commit/c3444d52a35d0a46ab186de9fc63cf6b94a666a6.patch
+        https://gitlab.freedesktop.org/airlied/mesa/-/commit/5a271b8ff8d1b1a560847718a806f652b9040e34.patch
         # https://aur.archlinux.org/cgit/aur.git/commit/?h=mesa-minimal-git&id=b9d401948dca25c70070a057e0046556bb56d9ac
         # https://aur.archlinux.org/cgit/aur.git/commit/?h=mesa-minimal-git&id=71ba1fd6b3323d64c8a9fa39b7934b8fdc1390b3
         # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/22021
