@@ -219,7 +219,7 @@ package_lib32-vulkan-intel-git(){
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
   conflicts=(lib32-vulkan-intel)
   provides=(lib32-vulkan-driver lib32-vulkan-intel)
-  provides=(lib32-vulkan-intel-git)
+  provides+=(lib32-vulkan-intel-git)
 
   _install fakeinstall/usr/share/vulkan/icd.d/intel_icd*.json
   _install fakeinstall/usr/lib32/libvulkan_intel.so
@@ -235,7 +235,7 @@ package_lib32-vulkan-radeon-git(){
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
   conflicts=(lib32-vulkan-radeon)
   provides=(lib32-vulkan-driver lib32-vulkan-radeon)
-  provides=(lib32-vulkan-radeon-git)
+  provides+=(lib32-vulkan-radeon-git)
 
   _install fakeinstall/usr/share/vulkan/icd.d/radeon_icd*.json
   _install fakeinstall/usr/lib32/libvulkan_radeon.so
@@ -249,7 +249,7 @@ package_lib32-vulkan-virtio-git(){
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
   conflicts=(lib32-vulkan-virtio)
   provides=(lib32-vulkan-driver lib32-vulkan-virtio)
-  provides=(lib32-vulkan-virtio-git)
+  provides+=(lib32-vulkan-virtio-git)
 
   _install fakeinstall/usr/share/vulkan/icd.d/virtio_icd*.json
   _install fakeinstall/usr/lib32/libvulkan_virtio.so
@@ -263,7 +263,7 @@ package_lib32-libva-mesa-driver-git(){
            lib32-libxshmfence lib32-zstd)
   conflicts=(lib32-libva-mesa-driver)
   provides=(lib32-libva-driver lib32-libva-mesa-driver)
-  provides=(lib32-libva-mesa-driver-git)
+  provides+=(lib32-libva-mesa-driver-git)
 
   _install fakeinstall/usr/lib32/dri/*_drv_video.so
 
@@ -276,7 +276,7 @@ package_lib32-mesa-vdpau-git(){
            lib32-libxshmfence lib32-zstd)
   conflicts=(lib32-mesa-vdpau)
   provides=(lib32-vdpau-driver lib32-mesa-vdpau)
-  provides=(lib32-mesa-vdpau-git)
+  provides+=(lib32-mesa-vdpau-git)
 
   _install fakeinstall/usr/lib32/vdpau
 
@@ -336,7 +336,7 @@ package_lib32-mesa-git(){
   conflicts=(lib32-mesa-libgl lib32-mesa)
   replaces=(lib32-mesa-libgl)
   provides=(lib32-mesa-libgl lib32-opengl-driver lib32-mesa)
-  provides=(lib32-mesa-git)
+  provides+=(lib32-mesa-git)
 
   rm -rv fakeinstall/usr/share/drirc.d/00-mesa-defaults.conf
   rm -rv fakeinstall/usr/share/drirc.d/00-radv-defaults.conf
