@@ -34,7 +34,7 @@ source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit=$commit
         # https://aur.archlinux.org/cgit/aur.git/commit/?h=mesa-minimal-git&id=b9d401948dca25c70070a057e0046556bb56d9ac
         # https://aur.archlinux.org/cgit/aur.git/commit/?h=mesa-minimal-git&id=71ba1fd6b3323d64c8a9fa39b7934b8fdc1390b3
         # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/22021
-        0001-gallivm-llvm17-deleted-includefiles.patch
+        https://gitlab.freedesktop.org/mesa/mesa/uploads/4a9b3996735eed47232630d3b74cebd7/0003-gallivm-llvm17-deleted-includefiles.patch
         # fix build with rust
         # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8827
         # https://aur.archlinux.org/cgit/aur.git/commit/?h=mesa-minimal-git&id=2963b245642fd87519245c6c823586d45456d160
