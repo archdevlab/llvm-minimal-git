@@ -36,19 +36,21 @@ options=(!debug !lto)
 source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit=$commit
         # vulkan: fix builds with beta extensions
         # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21806
+        # https://gitlab.freedesktop.org/airlied/mesa/-/commits/vk-fix-beta-exts
         https://gitlab.freedesktop.org/airlied/mesa/-/commit/c3444d52a35d0a46ab186de9fc63cf6b94a666a6.patch
         https://gitlab.freedesktop.org/airlied/mesa/-/commit/5a271b8ff8d1b1a560847718a806f652b9040e34.patch
+        # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/22021
+        # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/22021#note_1830551
         # https://aur.archlinux.org/cgit/aur.git/commit/?h=mesa-minimal-git&id=b9d401948dca25c70070a057e0046556bb56d9ac
         # https://aur.archlinux.org/cgit/aur.git/commit/?h=mesa-minimal-git&id=71ba1fd6b3323d64c8a9fa39b7934b8fdc1390b3
-        # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/22021
-        https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/22021
+        https://gitlab.freedesktop.org/mesa/mesa/uploads/4a9b3996735eed47232630d3b74cebd7/0003-gallivm-llvm17-deleted-includefiles.patch
         # fix build with rust
         # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8827
+        # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/22484
+        # https://gitlab.freedesktop.org/karolherbst/mesa/-/commits/rusticl/bindgen/version
         # https://aur.archlinux.org/cgit/aur.git/commit/?h=mesa-minimal-git&id=2963b245642fd87519245c6c823586d45456d160
         # https://gitlab.manjaro.org/packages/extra/mesa/-/commit/c924f4b289fac2dc6e87419e757ceba01261c9ae
-        # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/22484
-        # https://gitlab.manjaro.org/packages/extra/mesa/-/commit/c924f4b289fac2dc6e87419e757ceba01261c9ae
-        https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/22484.patch)
+        https://gitlab.freedesktop.org/karolherbst/mesa/-/commit/671dc91069c54eabd54a83776ba746c0e7f55831.patch)
 
 # ninja grabs all available cores and leaves almost nothing for other processes.
 # this package uses the environment variable NINJAFLAGS to allow the user to change this behaviour
@@ -73,7 +75,7 @@ prepare(){
     msg2 "Applying patch $src..."
     patch -Np1 < "../$src"
   done
-  
+
   # https://gitlab.manjaro.org/packages/extra/mesa/-/commit/c924f4b289fac2dc6e87419e757ceba01261c9ae
   sed -i "s/rust.bindgen_version().version_compare('< 0.65')/find_program('bindgen').version().version_compare('< 0.65')/g" \
     src/gallium/frontends/rusticl/meson.build
@@ -369,5 +371,5 @@ package_lib32-mesa-git(){
 sha256sums=('SKIP'
             '2aa36a1678ee3940fab62e28ff07ba4177259478baf2f2afe47585f74c0f6b9a'
             '21214974e01ee2ab1bcfe43188319905c7a457584f87f9ac2eaaddff2f276b78'
-            '5b63dcc65f963fe4a715bd8318d1841826722adb68275aa90f4951cd086bb0d1'
+            'da367fc31bc3292f876fb540c16e5789b229da63d1e82ee916123dd00f3427ef'
             '8fbd8ba958d29ab4f7e3ec94339bf630683310a92db3d625adf14df773a60939')
