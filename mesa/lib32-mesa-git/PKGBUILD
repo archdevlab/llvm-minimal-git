@@ -20,9 +20,9 @@ pkgbase=lib32-mesa-git
 pkgname=(lib32-vulkan-mesa-layers-git lib32-vulkan-intel-git lib32-vulkan-radeon-git
          lib32-vulkan-virtio-git lib32-libva-mesa-driver-git lib32-mesa-vdpau-git lib32-vulkan-swrast-git
          lib32-vulkan-imagination-git lib32-mesa-git)
-pkgver=23.2.0_devel.169973.24555f5462e
+pkgver=23.2.0_devel
 pkgrel=1
-commit=a71f79fb457b3b428f4d3ccf3dc4758bab6e2598
+commit=4621a6db5084c4bdaef57900d4306bd4e4bcda3a
 arch=(i686 x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
@@ -126,7 +126,7 @@ END
   -Dgallium-opencl=disabled \
   -Dgallium-rusticl=false \
   -Dopencl-spirv=false \
-  -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental,imagination-experimental \
+  -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,imagination-experimental \
   -Dimagination-srv=true \
   -Dshader-cache=enabled \
   -Dvulkan-layers=device-select,intel-nullhw,overlay \
