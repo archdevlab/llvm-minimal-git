@@ -22,7 +22,7 @@ pkgname=(lib32-vulkan-mesa-layers-git lib32-vulkan-intel-git lib32-vulkan-radeon
          lib32-vulkan-imagination-git lib32-mesa-git)
 pkgver=23.2.0_devel
 pkgrel=1
-commit=4621a6db5084c4bdaef57900d4306bd4e4bcda3a
+commit=1a89b1a3012d98586fa6e9fbd85516e2f67f6817
 arch=(i686 x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
