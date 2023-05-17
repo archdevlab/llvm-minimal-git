@@ -15,21 +15,23 @@ echo "${source}"
 
 # build
 
-cd spirv/spirv-headers-git && makepkg -si --noconfirm && cd ${source}
+cd spirv/spirv-headers-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd spirv/spirv-tools-git && makepkg -si --noconfirm && cd ${source}
+cd spirv/spirv-tools-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd glslang/glslang-git && makepkg -si --noconfirm && cd ${source}
+cd glslang/glslang-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-minimal-git/llvm-minimal-git && makepkg -si --noconfirm && cd ${source}
+cd llvm-minimal-git/llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-minimal-git/libclc-minimal-git && makepkg -si --noconfirm && cd ${source}
+cd llvm-minimal-git/libclc-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-minimal-git/lib32-llvm-minimal-git && makepkg -si --noconfirm && cd ${source}
+cd llvm-minimal-git/lib32-llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd mesa/all/mesa-git && makepkg -si --noconfirm && cd ${source}
+cd directx-headers-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd mesa/all/lib32-mesa-git && makepkg -si --noconfirm && cd ${source}
+cd mesa/mesa-git/ && makepkg -si --noconfirm && cd ${source}
+
+cd mesa/lib32-mesa-git/ && makepkg -si --noconfirm && cd ${source}
 
 # make a copy of every pkg in package/ dir
 
