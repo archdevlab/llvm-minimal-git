@@ -148,7 +148,8 @@ END
   -Dvulkan-beta=true \
   -Dintel-clc=disabled \
   -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
-  -Dgallium-d3d12-video=enabled
+  -Dgallium-d3d12-video=enabled \
+  -Dintel-xe-kmd=enabled
 
   meson configure --no-pager build_32/
   ninja $NINJAFLAGS -C build_32/
