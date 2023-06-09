@@ -32,43 +32,43 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 17.0.0
 
-- commit: 71a35f7e3d6c78f8035f2eb7d58beba3b7208f9d
+- commit: 47fd67ec34fe02b0fdf0a29de62d62e1143d97ad
 
 ### SPIRV-LLVM-Translator
 
 - 17.0.0
 
-- commit : 772c7beb3875950a3a92d999f203d389e71b76dd
+- commit : c55505a8e0979407cb01bacfc37407c64a4d2afe
 
 ### SPIRV-Headers
 
 - 1.5.4.raytracing.fixed
 
-- commit : bdbfd019be6952fd8fa9bd5606a8798a7530c853
+- commit : 8e2ad27488ed2f87c068c01a8f5e8979f7086405
 
 ### SPIRV-Tools
 
 - 2023.1
 
-- commit : e7c6084fd1d6d6f5ac393e842728d8be309688ca
+- commit : 93c13345e176f3f8bdb4b07e59c5e3365b3dbf44
 
 ### glslang
 
 - 12.1.0
 
-- commit : d1517d64cfca91f573af1bf7341dc3a5113349c0
+- commit : a6662c53ced629a9d94611276743cbcde896b6af
 
 ### Directx-Headers
 
 - 1.610.0
 
-- commit : 53f49957acbfa6521aa5818b307f38a3f35ec27d 
+- commit : f2fbc5c353e0c452ae0861b816f759c6cbe613da
 
 ### Mesa
 
 - 23.2.0
 
-- commit : 1a89b1a3012d98586fa6e9fbd85516e2f67f6817
+- commit : c2251b8e13e7903d917cc81baeff192b36b08413
 
 # Build
 

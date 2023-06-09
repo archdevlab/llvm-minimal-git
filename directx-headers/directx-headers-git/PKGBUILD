@@ -13,7 +13,7 @@ pkgname=directx-headers-git
 pkgdesc="DirectX headers for using D3D12"
 pkgver=1.610.0
 pkgrel=1
-commit=53f49957acbfa6521aa5818b307f38a3f35ec27d
+commit=f2fbc5c353e0c452ae0861b816f759c6cbe613da
 arch=(x86_64)
 url='https://github.com/microsoft/DirectX-Headers'
 license=(MIT)
@@ -49,7 +49,7 @@ export CXXFLAGS="$CXXFLAGS -fno-lto"
   -Dbuild-test=false
 
   #meson configure build/
-  
+
   ninja -C build/
 
   meson compile -C build/
