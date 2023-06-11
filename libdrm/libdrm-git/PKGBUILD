@@ -1,0 +1,84 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Credits: Jan de Groot <jgc@archlinux.org>
+#Credits: Eric Engestrom <eric@engestrom.ch>
+#Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
+
+pkgname=libdrm-git
+pkgdesc='Userspace interface to kernel DRM services (git version)'
+pkgver=2.4.107.r19.g02ac4a0a
+pkgrel=1
+arch=(x86_64)
+url='http://dri.freedesktop.org/'
+license=(custom)
+makedepends=(libxslt docbook-xsl meson git ninja gcc gcc-libs)
+checkdepends=(cairo cunit)
+depends=(libpciaccess)
+conflicts=(libdrm)
+provides=(libdrm libdrm-git)
+source=(git+https://gitlab.freedesktop.org/mesa/drm.git
+        COPYING)
+md5sums=(SKIP
+         SKIP)
+
+pkgver(){
+  cd ${srcdir}/drm
+
+  # cutting off 'foo-' prefix that presents in the git tag
+  git describe --long --tags --abbrev=7 | sed 's/^libdrm.//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+
+build(){
+  cd ${srcdir}/drm
+
+  if dir build_64; then
+    rm -rf -v build_64
+  fi
+
+  mkdir build_64
+
+  meson setup build_64 \
+  -D b_ndebug=true \
+  -D buildtype=plain \
+  --wrap-mode=nofallback \
+  -Dprefix=/usr \
+  -D sysconfdir=/etc \
+  -Dintel=enabled \
+  -Dradeon=enabled \
+  -Damdgpu=enabled \
+  -Dnouveau=enabled \
+  -Dvmwgfx=enabled \
+  -Domap=enabled \
+  -Dexynos=enabled \
+  -Dfreedreno=enabled \
+  -Dtegra=enabled \
+  -Dvc4=enabled \
+  -Detnaviv=enabled \
+  -Dcairo-tests=disabled \
+  -Dman-pages=disabled \
+  -Dvalgrind=disabled \
+  -Dfreedreno-kgsl=true \
+  -Dinstall-test-programs=true \
+  -Dudev=true \
+  -Dtests=true
+
+  #meson configure build_64/
+  
+  ninja -C build_64
+
+  meson compile -C build_64
+}
+
+package_libdrm-git(){
+  DESTDIR="$pkgdir" ninja -C ${srcdir}/drm/build_64/ install
+
+  # installing license
+  install -Dt "$pkgdir"/usr/share/licenses/"$pkgname" -m644 COPYING
+}
