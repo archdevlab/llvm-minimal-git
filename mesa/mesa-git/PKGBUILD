@@ -15,7 +15,7 @@ pkgname=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-g
          mesa-vdpau-git vulkan-imagination-git mesa-git)
 pkgver=23.2.0_devel
 pkgrel=1
-commit=c2251b8e13e7903d917cc81baeff192b36b08413
+commit=08e95f8f8e9eb3020a564db1bf364289fa1b138c
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
@@ -127,7 +127,7 @@ build(){
   -Dperfetto=false \
   -Dvmware-mks-stats=false \
   -Dvulkan-beta=true \
-  -Dintel-clc=enabled \
+  -Dintel-clc=disabled \
   -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
   -Dgallium-d3d12-video=enabled \
   -Dintel-xe-kmd=enabled
