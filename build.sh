@@ -49,5 +49,5 @@ cp -v */*/*.pkg.tar.zst package/
 
 # clean build dir
 
-rm -rf */*/*/src/
-rm -rf */*/*/pkg/
+rm -rf */*/src/
+rm -rf */*/pkg/
