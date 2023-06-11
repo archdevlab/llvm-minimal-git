@@ -14,6 +14,7 @@ pkgname=libdrm-git
 pkgdesc='Userspace interface to kernel DRM services (git version)'
 pkgver=2.4.107.r19.g02ac4a0a
 pkgrel=1
+commit=98e1db501173303e58ef6a1def94ab7a2d84afc1
 arch=(x86_64)
 url='http://dri.freedesktop.org/'
 license=(custom)
@@ -22,7 +23,7 @@ checkdepends=(cairo cunit)
 depends=(libpciaccess)
 conflicts=(libdrm)
 provides=(libdrm libdrm-git)
-source=(git+https://gitlab.freedesktop.org/mesa/drm.git
+source=(git+https://gitlab.freedesktop.org/mesa/drm.git#commit=$commit
         COPYING)
 md5sums=(SKIP
          SKIP)
