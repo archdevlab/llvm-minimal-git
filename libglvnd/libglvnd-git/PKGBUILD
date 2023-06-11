@@ -1,0 +1,78 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Credits: Felix Yan <felixonmars@archlinux.org>
+#Credits: Rafał Kozdrój <kozeid2@gmail.com>
+#Credits: Laurent Carlier <lordheavym@gmail.com>
+
+pkgname=libglvnd-git
+pkgdesc='The GL Vendor-Neutral Dispatch library (git version)'
+pkgver=1.3.4.r11.gef718bb
+pkgrel=1
+arch=(x86_64)
+url='https://gitlab.freedesktop.org/glvnd/libglvnd'
+license=(custom:BSD-like)
+makedepends=(libxext libx11 xorgproto python meson git ninja gcc gcc-libs)
+depends=(libxext mesa opengl-driver)
+conflicts=(libglvnd)
+provides=(libglvnd libgl libegl libgles)
+provides+=(libEGL.so libGL.so libGLESv2.so libGLX.so libGLdispatch.so libOpenGL.so)
+source=(git+https://gitlab.freedesktop.org/glvnd/libglvnd.git
+        LICENSE)
+md5sums=('SKIP'
+         '9a2662ebb15bd62239d50523abce4f4a')
+
+pkgver(){
+  cd ${srcdir}/libglvnd
+
+  # cutting off 'foo-' prefix that presents in the git tag
+  git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd ${srcdir}/libglvnd
+
+  # Fix for build error
+  sed -i "s/subdir('tests')/ /" meson.build
+
+  if dir build_64; then
+    rm -rf -v build_64
+  fi
+
+  mkdir build_64
+
+  meson setup build_64 \
+  -D b_ndebug=true \
+  -D buildtype=plain \
+  --wrap-mode=nofallback \
+  -Dprefix=/usr \
+  -D sysconfdir=/etc \
+  -Dasm=enabled \
+  -Dx11=enabled \
+  -Degl=true \
+  -Dglx=enabled \
+  -Dgles1=true \
+  -Dgles2=true \
+  -Dtls=true \
+  -Ddispatch-tls=true \
+  -Dheaders=true \
+  -Dentrypoint-patching=enabled
+
+  #meson configure build_64/
+  
+  ninja -C build_64
+
+  meson compile -C build_64
+}
+
+package_libglvnd-git(){
+  DESTDIR="$pkgdir" ninja -C ${srcdir}/libglvnd/build_64/ install
+
+  # installing license
+  install -Dt "$pkgdir"/usr/share/licenses/"$pkgname" -m644 LICENSE
+}
