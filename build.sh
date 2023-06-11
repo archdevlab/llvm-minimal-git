@@ -29,6 +29,14 @@ cd llvm-minimal-git/lib32-llvm-minimal-git/ && makepkg -si --noconfirm && cd ${s
 
 cd directx-headers/directx-headers-git/ && makepkg -si --noconfirm && cd ${source}
 
+cd libdrm/libdrm-git/ && makepkg -si --noconfirm && cd ${source}
+
+cd libdrm/lib32-libdrm-git/ && makepkg -si --noconfirm && cd ${source}
+
+cd libglvnd/libglvnd-git/ && makepkg -si --noconfirm && cd ${source}
+
+cd libglvnd/lib32-libglvnd-git/ && makepkg -si --noconfirm && cd ${source}
+
 cd mesa/mesa-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd mesa/lib32-mesa-git/ && makepkg -si --noconfirm && cd ${source}
