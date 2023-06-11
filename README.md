@@ -4,7 +4,7 @@
 
 # llvm-minimal-git
 
-LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no test) (Less build time) Also included in this repo spirv-headers, spirv-tools, glslang and mesa (mesa,lib32-mesa)
+LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no test) (Less build time) Also included in this repo spirv-headers, spirv-tools, glslang, directx-headers, libdrm, libglvnd and mesa
 
 ### SPIRV-Headers and SPIRV-Tools
 
