@@ -12,7 +12,7 @@
 
 pkgname=libglvnd-git
 pkgdesc='The GL Vendor-Neutral Dispatch library (git version)'
-pkgver=1.3.4.r11.gef718bb
+pkgver=1.6.0
 pkgrel=1
 commit=179d7278d7485ceea2d440807be9d677d32aedc4
 arch=(x86_64)
