@@ -7,8 +7,9 @@
 
 #Maintainer: blacksky3 <https://github.com/blacksky3>
 #Credits: Laurent Carlier <lordheavym@gmail.com>
-#Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
-#Credits: Reza Jahanbakhshi <reza.jahanbakhshi at gmail dot com
+#Credits: Felix Yan <felixonmars@archlinux.org>
+#Credits: Jan de Groot <jgc@archlinux.org>
+#Credits: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=lib32-mesa-git
 # gallium-opencl is disabled since this issue in mesa
