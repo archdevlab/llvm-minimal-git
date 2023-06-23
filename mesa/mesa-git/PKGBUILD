@@ -7,8 +7,9 @@
 
 #Maintainer: blacksky3 <https://github.com/blacksky3>
 #Credits: Laurent Carlier <lordheavym@gmail.com>
-#Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
-#Credits: Reza Jahanbakhshi <reza.jahanbakhshi at gmail dot com
+#Credits: Felix Yan <felixonmars@archlinux.org>
+#Credits: Jan de Groot <jgc@archlinux.org>
+#Credits: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=mesa-git
 pkgname=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git
