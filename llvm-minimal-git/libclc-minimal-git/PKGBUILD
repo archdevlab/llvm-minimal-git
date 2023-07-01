@@ -13,7 +13,7 @@ pkgdesc='Library requirements of the OpenCL C programming language (git version)
 url='https://libclc.llvm.org/'
 pkgver=17.0.0
 pkgrel=1
-commit=47fd67ec34fe02b0fdf0a29de62d62e1143d97ad
+commit=4a5b5bf318a858e07d1916e798adc2a1aebd56d3
 arch=(x86_64)
 license=(MIT)
 # Added llvm-libs because llvm-libs-minimal-git and llvm-libs can now coexist in the same system
