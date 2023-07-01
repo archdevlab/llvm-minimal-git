@@ -90,7 +90,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 23.2.0
 
-- commit : 08e95f8f8e9eb3020a564db1bf364289fa1b138c
+- commit : ee69c56c8ca99b678258c06748c47cd1d58c6a66
 
 # Build
 
