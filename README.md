@@ -52,7 +52,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 1.5.4.raytracing.fixed
 
-- commit : 8e2ad27488ed2f87c068c01a8f5e8979f7086405
+- commit : 3469b164e25cee24435029a569933cb42578db5d
 
 ### SPIRV-Tools
 
