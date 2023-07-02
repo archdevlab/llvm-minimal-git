@@ -90,3 +90,5 @@ package_lib32-libglvnd-git(){
   # installing license
   install -Dt "$pkgdir"/usr/share/licenses/"$pkgname" -m644 LICENSE
 }
+
+# vim:set ts=8 sts=2 sw=2 et:
