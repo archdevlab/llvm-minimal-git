@@ -23,7 +23,7 @@ license=(MIT)
 makedepends=(meson ninja bison flex python python-mako valgrind cmake xorgproto wayland-protocols glslang libclc elfutils
              libarchive libconfig compiler-rt libxcb wayland libxml2 libx11 libvdpau libelf libglvnd ncurses libva libxrandr
              expat libdrm libxv libxshmfence libxxf86vm libxdamage zstd lm_sensors libunwind vulkan-icd-loader llvm clang llvm-libs
-             glibc gcc gcc-libs libomxil-bellagio directx-headers systemd patch)
+             glibc gcc gcc-libs libomxil-bellagio directx-headers systemd)
 makedepends+=(python-ply) # intel-clc Ray tracing
 makedepends+=(rust rust-bindgen spirv-tools spirv-llvm-translator) # rusticl dependencies
 options=(!debug !lto)
