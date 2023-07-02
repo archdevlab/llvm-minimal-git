@@ -17,7 +17,7 @@ commit=3469b164e25cee24435029a569933cb42578db5d
 arch=(x86_64)
 url='https://github.com/KhronosGroup/SPIRV-Headers.git'
 license=(MIT)
-makedepends=(make cmake git gcc gcc-libs ninja)
+makedepends=(cmake ninja git)
 conflicts=(spirv-headers)
 provides=(spirv-headers spirv-headers-git)
 source=(git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit=$commit)
