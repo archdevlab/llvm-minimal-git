@@ -16,8 +16,8 @@ commit=58459c2b1adb43c9e8705823b78a12e95e8c430f
 arch=(x86_64)
 url='https://github.com/KhronosGroup/SPIRV-Tools.git'
 license=(Apache-2.0)
-makedepends=(make cmake git python ninja gcc gcc-libs spirv-headers)
-depends=(gcc-libs)
+depends=(gcc-libs sh)
+makedepends=(cmake python git ninja spirv-headers)
 conflicts=(spirv-tools)
 provides=(spirv-tools spirv-tools-git)
 source=(git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit=$commit)
