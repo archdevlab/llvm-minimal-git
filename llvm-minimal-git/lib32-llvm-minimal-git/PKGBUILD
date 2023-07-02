@@ -266,3 +266,5 @@ package_lib32-clang-libs-minimal-git(){
 }
 
 sha256sums=('SKIP')
+
+# vim:set ts=8 sts=2 sw=2 et:
