@@ -19,8 +19,9 @@ llvmcommit=4a5b5bf318a858e07d1916e798adc2a1aebd56d3
 spirvcommit=e4dfa92a3b1bd57ebfdcfeed4d48dfe260387032
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
-makedepends=(cmake ninja zlib zstd libffi libedit ncurses libxml2 python-setuptools python-psutil python-sphinx python-recommonmark
-             spirv-headers-git spirv-tools-git git patch)
+makedepends=(cmake ninja zlib zstd libffi libedit ncurses
+             libxml2 python-setuptools python-psutil python-sphinx
+             python-recommonmark spirv-headers-git)
 options=(staticlibs !lto) # Getting thousands of test failures with LTO
 source=(git+https://github.com/llvm/llvm-project.git#commit=$llvmcommit
         git+https://github.com/KhronosGroup/SPIRV-LLVM-Translator.git#commit=$spirvcommit
