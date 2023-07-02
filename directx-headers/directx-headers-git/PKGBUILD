@@ -17,7 +17,7 @@ commit=b765bddaae815dc8a619cce0ea5553fc4de1796d
 arch=(x86_64)
 url='https://github.com/microsoft/DirectX-Headers'
 license=(MIT)
-makedepends=(meson git ninja)
+makedepends=(meson git)
 conflicts=(directx-headers)
 provides=(directx-headers directx-headers-git)
 source=(git+https://github.com/microsoft/DirectX-Headers.git#commit=$commit)
@@ -61,3 +61,5 @@ package(){
   # install licence
   install -Dm644 "${srcdir}"/DirectX-Headers/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
+
+# vim:set ts=8 sts=2 sw=2 et:
