@@ -18,9 +18,10 @@ commit=98e1db501173303e58ef6a1def94ab7a2d84afc1
 arch=(x86_64)
 url='http://dri.freedesktop.org/'
 license=(custom)
-makedepends=(libxslt docbook-xsl meson git ninja gcc gcc-libs)
-checkdepends=(cairo cunit)
 depends=(libpciaccess)
+makedepends=(python-docutils meson)
+checkdepends=(cairo)
+replaces=(libdrm-new libdrm-nouveau)
 conflicts=(libdrm)
 provides=(libdrm libdrm-git)
 source=(git+https://gitlab.freedesktop.org/mesa/drm.git#commit=$commit
