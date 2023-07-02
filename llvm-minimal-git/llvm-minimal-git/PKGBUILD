@@ -339,3 +339,5 @@ package_spirv-llvm-translator-minimal-git(){
 sha256sums=('SKIP'
             'SKIP'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
+
+# vim:set ts=8 sts=2 sw=2 et:
