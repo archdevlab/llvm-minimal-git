@@ -18,6 +18,8 @@ commit=179d7278d7485ceea2d440807be9d677d32aedc4
 arch=(x86_64)
 url='https://gitlab.freedesktop.org/glvnd/libglvnd'
 license=(custom:BSD-like)
+# libglvnd needs mesa for indirect rendering
+depends=(libxext mesa opengl-driver)
 makedepends=(libxext libx11 xorgproto python meson git)
 conflicts=(libglvnd)
 provides=(libglvnd libgl libegl libgles)
