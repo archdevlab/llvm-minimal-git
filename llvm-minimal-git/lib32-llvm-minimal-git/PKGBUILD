@@ -18,7 +18,8 @@ _pkgver=17.0.0
 commit=4a5b5bf318a858e07d1916e798adc2a1aebd56d3
 arch=(i686 x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
-makedepends=(cmake ninja lib32-libffi lib32-zlib lib32-zstd python gcc-multilib lib32-libxml2 git patch)
+makedepends=(cmake ninja lib32-libffi lib32-zlib lib32-zstd python
+             gcc-multilib lib32-libxml2)
 options=(staticlibs !lto ) # extra/llvm has many test failures with LTO
 source=(git+https://github.com/llvm/llvm-project.git#commit=$commit)
 
