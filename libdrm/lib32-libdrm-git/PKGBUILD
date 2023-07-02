@@ -19,7 +19,7 @@ arch=(i686 x86_64)
 url='http://dri.freedesktop.org/'
 license=(custom)
 depends=(lib32-libpciaccess libdrm)
-makedepends=(meson)
+makedepends=(meson git)
 checkdepends=(lib32-cairo)
 conflicts=(lib32-libdrm)
 provides=(lib32-libdrm lib32-libdrm-git)
@@ -94,3 +94,5 @@ package_lib32-libdrm-git(){
   # installing license
   install -Dt "$pkgdir"/usr/share/licenses/"$pkgname" -m644 COPYING
 }
+
+# vim:set ts=8 sts=2 sw=2 et:
