@@ -247,10 +247,6 @@ package_clang-minimal-git(){
   install -d "$pkgdir/$site_packages"
   mv "$pkgdir"/usr/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
   cp -a ${srcdir}/llvm-project/clang/bindings/python/clang "$pkgdir/$site_packages/"
-  # Install LLVM Python Bindings but keep this command removed since its llvm-minimal-git
-  # We can use this command in a llvm-git spirit
-  #  # (taken from llvm-git aur)
-  #  cp -a ${srcdir}/llvm-project/llvm/bindings/python/llvm "$pkgdir/$site_packages/"
 
   # Move analyzer scripts out of /usr/libexec
   mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
