@@ -263,7 +263,7 @@ package_clang-minimal-git(){
   _python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
 
   # (taken from llvm-git aur)
-  #optimize other python files except 2 problem cases
+  # optimize other python files except 2 problem cases
   _python_optimize "$pkgdir"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
 
   install -Dm644 "$srcdir/llvm-project/clang/LICENSE.TXT" "$pkgdir/usr/share/licenses/$pkgname/clang/LICENSE"
