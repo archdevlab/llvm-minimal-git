@@ -202,7 +202,7 @@ package_llvm-minimal-git(){
   mv -f "$pkgdir"/usr/lib/cmake/clang "$srcdir"/clang/usr/lib/cmake/
   mv -f "$pkgdir"/usr/include/{clang,clang-tidy,clang-c} "$srcdir"/clang/usr/include/
   mv -f "$pkgdir"/usr/libexec "$srcdir"/clang/usr/
-  mv -f "$pkgdir"/usr/bin/{analyze-build,c-index-test,clang*,diagtool,find-all-symbols,git-clang-format,hmaptool,intercept-build,modularize,pp-trace,run-clang-tidy,scan-build,scan-build-py,scan-view} "$srcdir"/clang/usr/bin/
+  mv -f "$pkgdir"/usr/bin/{amdgpu-arch,analyze-build,c-index-test,clang*,diagtool,find-all-symbols,git-clang-format,hmaptool,intercept-build,modularize,pp-trace,run-clang-tidy,scan-build,scan-build-py,scan-view} "$srcdir"/clang/usr/bin/
   mv -f "$pkgdir"/usr/share/{clang,man,opt-viewer,scan-build,scan-view} "$srcdir"/clang/usr/share/
 
   # spirv-llvm-translator files go to a separate package
