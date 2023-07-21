@@ -214,7 +214,7 @@ package_llvm-minimal-git(){
   mv "$pkgdir"/usr/include/LLVMSPIRVLib/* "$srcdir"/spirv/usr/include/LLVMSPIRVLib/
   mv "$pkgdir"/usr/lib/libLLVMSPIRVLib.a "$srcdir"/spirv/usr/lib
   mv "$pkgdir"/usr/lib/pkgconfig/LLVMSPIRVLib.pc "$srcdir"/spirv/usr/lib/pkgconfig
-  # Remove pkgconfig dir from llvm-minimal-git
+  # Remove empty dir from spirv-llvm-translator-git
   rm -rf "$pkgdir"/usr/lib/pkgconfig/
   rm -rf "$pkgdir"/usr/include/LLVMSPIRVLib/
 
