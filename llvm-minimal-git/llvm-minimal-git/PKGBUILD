@@ -8,6 +8,9 @@
 #Maintainer: blacksky3 <https://github.com/blacksky3>
 #Credits: Evangelos Foutras <evangelos@foutrelis.com>
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
+#Credits: Daniel Bermond <dbermond@archlinux.org>
+#Credits: Bruno Pagani <archange@archlinux.org>
+#Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
 pkgbase=llvm-minimal-git
 pkgname=(llvm-minimal-git clang-minimal-git llvm-libs-minimal-git clang-libs-minimal-git spirv-llvm-translator-minimal-git)
