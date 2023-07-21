@@ -7,6 +7,7 @@
 
 #Maintainer: blacksky3 <https://github.com/blacksky3>
 #Credits: Laurent Carlier <lordheavym@gmail.com>
+#Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
 pkgname=libclc-minimal-git
 pkgdesc='Library requirements of the OpenCL C programming language (git version)'
