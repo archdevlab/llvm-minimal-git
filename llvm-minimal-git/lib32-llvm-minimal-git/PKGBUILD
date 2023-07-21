@@ -8,6 +8,7 @@
 #Maintainer: blacksky3 <https://github.com/blacksky3>
 #Credits: Evangelos Foutras <evangelos@foutrelis.com>
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
+#Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
 pkgbase=lib32-llvm-minimal-git
 pkgname=(lib32-llvm-minimal-git lib32-clang-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git)
