@@ -274,7 +274,10 @@ package_clang-minimal-git(){
 
 package_llvm-libs-minimal-git(){
   pkgdesc='LLVM runtime libraries (git version)'
-  depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2)
+  #depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2)
+  depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2 llvm-libs)
+  # some applications expect llvmgold.so to be present and fail badly if it isn't.
+  # adding llvm-libs as depend is the easiest solution
   #conflicts=(llvm-libs)
   provides=(llvm-libs)
   provides+=(llvm-libs-minimal-git llvm-libs-git)
