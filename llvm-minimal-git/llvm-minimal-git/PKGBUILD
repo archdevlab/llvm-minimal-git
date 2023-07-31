@@ -15,11 +15,11 @@
 pkgbase=llvm-minimal-git
 pkgname=(llvm-minimal-git clang-minimal-git llvm-libs-minimal-git clang-libs-minimal-git spirv-llvm-translator-minimal-git)
 url='https://llvm.org/'
-pkgver=17.0.0
+pkgver=18.0.0.r469627.g75f770a68f70
 pkgrel=1
-_pkgver=17.0.0
-llvmcommit=4a5b5bf318a858e07d1916e798adc2a1aebd56d3
-spirvcommit=e4dfa92a3b1bd57ebfdcfeed4d48dfe260387032
+_pkgver=18.0.0
+llvmcommit=75f770a68f70498f0b5229597f70dd8204c66e7c
+spirvcommit=d498f485cbcb242ff19c74b8fcd8ef28a6328b53
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja zlib zstd libffi libedit ncurses
@@ -93,6 +93,8 @@ pkgver(){
 }
 
 prepare(){
+  sed -i s'/17.0.0/18.0.0/' "$srcdir"/SPIRV-LLVM-Translator/CMakeLists.txt
+
   # Attempt to convert script to Python 3
   2to3 -wn --no-diffs \
     ${srcdir}/llvm-project/clang-tools-extra/clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py

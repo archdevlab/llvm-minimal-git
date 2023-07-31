@@ -14,7 +14,7 @@ pkgname=libdrm-git
 pkgdesc='Userspace interface to kernel DRM services (git version)'
 pkgver=2.4.115
 pkgrel=1
-commit=98e1db501173303e58ef6a1def94ab7a2d84afc1
+commit=c6013245ce9ce287bb86d327f9b6420a320a08e6
 arch=(x86_64)
 url='http://dri.freedesktop.org/'
 license=(custom)
@@ -72,7 +72,7 @@ build(){
   -Dtests=true
 
   #meson configure build_64/
-  
+
   ninja -C build_64
 
   meson compile -C build_64
