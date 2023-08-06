@@ -14,7 +14,7 @@
 pkgbase=mesa-git
 pkgname=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git
          mesa-vdpau-git vulkan-imagination-git vulkan-nouveau-git mesa-git)
-pkgver=23.3.0_devel.176078.8088d73fd1c
+pkgver=23.3.0
 pkgrel=1
 commit=8088d73fd1c6c8d52975e8f7551a030242e2b256
 arch=(x86_64)
