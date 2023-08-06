@@ -20,7 +20,7 @@
 
 pkgname=glslang-git
 pkgdesc='OpenGL and OpenGL ES shader front end and validator. (git version)'
-pkgver=12.2.0
+pkgver=12.3.1.r18.g54726b3
 pkgrel=1
 commit=54726b3c1c5cb70043174365750ab0f1b7e1a6a0
 arch=(x86_64)
@@ -31,7 +31,8 @@ makedepends=(cmake ninja git spirv-tools spirv-headers python)
 conflicts=(glslang)
 provides=(glslang glslang-git)
 options=(staticlibs)
-source=(git+https://github.com/KhronosGroup/glslang.git#commit=$commit)
+source=(git+https://github.com/KhronosGroup/glslang.git#commit=$commit
+        https://patch-diff.githubusercontent.com/raw/KhronosGroup/glslang/pull/3283.patch)
 
 pkgver(){
   cd ${srcdir}/glslang
@@ -42,6 +43,7 @@ pkgver(){
 prepare(){
   cd ${srcdir}/glslang
   #./update_glslang_sources.py
+  patch -Np1 -i "$srcdir"/3283.patch
 }
 
 build(){
@@ -58,7 +60,7 @@ export CXXFLAGS+=" -ffat-lto-objects"
   -DCMAKE_INSTALL_LIBDIR=lib \
   -DCMAKE_BUILD_TYPE=Release \
   -DBUILD_EXTERNAL=OFF \
-  -DBUILD_SHARED_LIBS=OFF \
+  -DBUILD_SHARED_LIBS=ON \
   -DENABLE_SPVREMAPPER=ON \
   -DENABLE_GLSLANG_BINARIES=ON \
   -DENABLE_GLSLANG_JS=ON \
@@ -76,7 +78,7 @@ export CXXFLAGS+=" -ffat-lto-objects"
   -DCMAKE_INSTALL_LIBDIR=lib \
   -DCMAKE_BUILD_TYPE=Release \
   -DBUILD_EXTERNAL=OFF \
-  -DBUILD_SHARED_LIBS=ON \
+  -DBUILD_SHARED_LIBS=OFF \
   -DENABLE_SPVREMAPPER=ON \
   -DENABLE_GLSLANG_BINARIES=ON \
   -DENABLE_GLSLANG_JS=ON \
@@ -110,6 +112,7 @@ package_glslang-git(){
   #mv spirv-remap "${pkgdir}"/usr/bin/spirv-remap
 }
 
-sha256sums=('SKIP')
+sha256sums=('SKIP'
+            '267b65a5205315e980f077f5fa401223003fdb5a38162e6ae697d38f68115137')
 
 # vim:set ts=8 sts=2 sw=2 et:
