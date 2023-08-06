@@ -21,7 +21,7 @@ pkgbase=lib32-mesa-git
 pkgname=(lib32-vulkan-mesa-layers-git lib32-vulkan-intel-git lib32-vulkan-radeon-git
          lib32-vulkan-virtio-git lib32-libva-mesa-driver-git lib32-mesa-vdpau-git lib32-vulkan-swrast-git
          lib32-vulkan-imagination-git lib32-vulkan-nouveau-git lib32-mesa-git)
-pkgver=23.3.0_devel.176078.8088d73fd1c
+pkgver=23.3.0
 pkgrel=1
 commit=8088d73fd1c6c8d52975e8f7551a030242e2b256
 arch=(i686 x86_64)
