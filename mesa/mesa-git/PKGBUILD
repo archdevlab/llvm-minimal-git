@@ -13,8 +13,8 @@
 
 pkgbase=mesa-git
 pkgname=(vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git
-         mesa-vdpau-git vulkan-imagination-git mesa-git)
-pkgver=23.3.0_devel
+         mesa-vdpau-git vulkan-imagination-git vulkan-nouveau-git mesa-git)
+pkgver=23.3.0_devel.176078.8088d73fd1c
 pkgrel=1
 commit=8088d73fd1c6c8d52975e8f7551a030242e2b256
 arch=(x86_64)
@@ -283,6 +283,18 @@ package_vulkan-imagination-git(){
   # imagination-srv
   # Services backend for Imagination Technologies vulkan driver
   _install fakeinstall/usr/lib/libpowervr_rogue.so
+
+  install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
+}
+
+package_vulkan-nouveau-git(){
+  pkgdesc="Invidia's Vulkan mesa driver (git release)"
+  depends=(wayland libx11 libxshmfence libdrm zstd systemd-libs)
+  optdepends=('vulkan-mesa-layers: additional vulkan layers')
+  provides=(vulkan-driver)
+
+  _install fakeinstall/usr/share/vulkan/icd.d/nouveau_icd*.json
+  _install fakeinstall/usr/lib/libvulkan_nouveau.so
 
   install -Dm644 "$srcdir"/mesa/docs/license.rst "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
