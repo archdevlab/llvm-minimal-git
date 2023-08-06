@@ -111,7 +111,7 @@ END
   -Dgallium-rusticl=false \
   -Dopencl-spirv=false \
   -Dopencl-external-clang-headers=enabled \
-  -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,imagination-experimental \
+  -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,imagination-experimental,nouveau-experimental \
   -Dimagination-srv=true \
   -Dshader-cache=enabled \
   -Dvulkan-layers=device-select,intel-nullhw,overlay \
