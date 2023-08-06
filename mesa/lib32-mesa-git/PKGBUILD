@@ -310,7 +310,7 @@ package_lib32-vulkan-imagination-git(){
 }
 
 package_lib32-vulkan-nouveau-git(){
-  pkgdesc="Invidia's Vulkan mesa driver (32-bit) (git release)"
+  pkgdesc="Nvidia's Vulkan mesa driver (32-bit) (git release)"
   depends=(lib32-wayland lib32-libx11 lib32-libxshmfence lib32-libdrm lib32-zstd lib32-systemd systemd-libs)
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
   provides=(lib32-vulkan-driver)
