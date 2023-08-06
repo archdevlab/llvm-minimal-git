@@ -288,7 +288,7 @@ package_vulkan-imagination-git(){
 }
 
 package_vulkan-nouveau-git(){
-  pkgdesc="Invidia's Vulkan mesa driver (git release)"
+  pkgdesc="Nvidia's Vulkan mesa driver (git release)"
   depends=(wayland libx11 libxshmfence libdrm zstd systemd-libs)
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
   provides=(vulkan-driver)
