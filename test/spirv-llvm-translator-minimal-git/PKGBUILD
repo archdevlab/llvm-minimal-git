@@ -1,0 +1,58 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Credits: Daniel Bermond <dbermond@archlinux.org>
+#Credits: Bruno Pagani <archange@archlinux.org>
+#Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
+
+pkgname=spirv-llvm-translator-minimal-git
+pkgdesc='Tool and a library for bi-directional translation between SPIR-V and LLVM IR (git version)'
+url='https://github.com/KhronosGroup/SPIRV-LLVM-Translator'
+pkgver=18.0.0
+_pkgver=18.0.0
+pkgrel=1
+commit=8d8c66bb3790180c20b4cdae527b6c6ffe667f20
+arch=(x86_64)
+license=(custom)
+depends=(llvm-libs-minimal-git spirv-tools-git)
+makedepends=(git cmake llvm-minimal-git spirv-headers-git)
+checkdepends=(python python-setuptools clang-minimal-git)
+source=(git+https://github.com/KhronosGroup/SPIRV-LLVM-Translator.git#commit="${commit}")
+
+pkgver(){
+  cd "${srcdir}"/SPIRV-LLVM-Translator
+  printf "${_pkgver}"."r%s.g%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build(){
+  rm -rf "${srcdir}"/build
+
+  cmake -B build -S "${srcdir}"/SPIRV-LLVM-Translator \
+    -DBUILD_SHARED_LIBS=ON \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DLLVM_INCLUDE_TESTS=ON \
+    -DLLVM_EXTERNAL_LIT=/usr/bin/lit \
+    -DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=/usr/include/spirv/ \
+    -Wno-dev
+  make -j$(nproc) -C "${srcdir}"/build
+}
+
+check(){
+  LD_LIBRARY_PATH="${srcdir}"/build/lib/SPIRV make -j$(nproc) -C "${srcdir}"/build test
+}
+
+package(){
+  make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install
+  install -Dm755 "${srcdir}"/build/tools/llvm-spirv/llvm-spirv -t "${pkgdir}"/usr/bin
+  install -Dm644 "${srcdir}"/SPIRV-LLVM-Translator/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+}
+
+sha256sums=('SKIP')
