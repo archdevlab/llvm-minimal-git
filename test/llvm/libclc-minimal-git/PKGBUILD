@@ -41,7 +41,7 @@ build(){
   rm -rf "${srcdir}"/build
 
     cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/libclc  \
-      -G "Unix Makefiles"
+      -G "Unix Makefiles" \
       -D CMAKE_BUILD_TYPE=Release \
       -D CMAKE_INSTALL_PREFIX=/usr \
       -Wno-dev
