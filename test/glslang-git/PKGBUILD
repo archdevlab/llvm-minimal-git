@@ -51,7 +51,7 @@ export CXXFLAGS+=" -ffat-lto-objects"
   rm -rf "${srcdir}"/{build-shared,build-static}
 
   cmake -B "${srcdir}"/build-shared -S "${srcdir}"/glslang \
-    -G "Unix Makefiles"
+    -G "Unix Makefiles" \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr \
     -D CMAKE_INSTALL_LIBDIR=lib \
@@ -59,7 +59,7 @@ export CXXFLAGS+=" -ffat-lto-objects"
     -Wno-dev
 
   cmake -B "${srcdir}"/build-static -S "${srcdir}"/glslang \
-    -G "Unix Makefiles"
+    -G "Unix Makefiles" \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr \
     -D CMAKE_INSTALL_LIBDIR=lib \
