@@ -1,0 +1,91 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Credits: Jan de Groot <jgc@archlinux.org>
+#Credits: Eric Engestrom <eric@engestrom.ch>
+#Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
+
+pkgname=lib32-libdrm-git
+pkgdesc='Userspace interface to kernel DRM services (32-bit) (git version)'
+pkgver=2.4.115
+pkgrel=1
+commit=18644eb64f4e4da583b9f0a43c9f97756cd5aef0
+arch=(i686 x86_64)
+url='http://dri.freedesktop.org/'
+license=(custom)
+depends=(lib32-libpciaccess libdrm)
+makedepends=(meson git)
+checkdepends=(lib32-cairo)
+conflicts=(lib32-libdrm)
+provides=(lib32-libdrm lib32-libdrm-git)
+source=(git+https://gitlab.freedesktop.org/mesa/drm.git#commit=$"${commit}"
+        COPYING)
+
+pkgver(){
+  cd "${srcdir}"/drm
+
+  # cutting off 'foo-' prefix that presents in the git tag
+  git describe --long --tags --abbrev=7 | sed 's/^libdrm.//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+export CC='gcc -m32'
+export CXX='g++ -m32'
+export ASFLAGS=--32
+export CFLAGS=-m32
+export CXXFLAGS=-m32
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+  rm -rf "${srcdir}"/build
+
+  local meson options=(
+    -D b_ndebug=true
+    -D b_lto=false
+    -D buildtype=plain
+    --wrap-mode=nofallback
+    -D prefix=/usr
+    -D sysconfdir=/etc
+    --libdir=/usr/lib32
+    -D intel=enabled
+    -D radeon=enabled
+    -D amdgpu=enabled
+    -D nouveau=enabled
+    -D vmwgfx=enabled
+    -D omap=enabled
+    -D exynos=enabled
+    -D freedreno=enabled
+    -D tegra=enabled
+    -D vc4=enabled
+    -D etnaviv=enabled
+    -D cairo-tests=disabled
+    -D man-pages=disabled
+    -D valgrind=disabled
+    -D freedreno-kgsl=true
+    -D install-test-programs=true
+    -D udev=true
+    -D tests=true
+  )
+
+  meson "${srcdir}"/drm "${srcdir}"/build "${meson_options[@]}"
+  meson configure "${srcdir}"/build
+  meson compile -C "${srcdir}"/build
+}
+
+package_lib32-libdrm-git(){
+  DESTDIR="${pkgdir}" meson -C "${srcdir}"/build install
+
+  rm -rf "${pkgdir}"/usr/{include,share,bin}
+
+  # installing license
+  install -Dt "${pkgdir}"/usr/share/licenses/"${pkgname}"/ -m644 "${srcdir}"/COPYING
+}
+
+sha256sums=('SKIP'
+            '9631d4f694952e3e6ae5a05534c2e93e994e47d3413677a3a00e45c8cef6db93')
+
+# vim:set ts=8 sts=2 sw=2 et:
