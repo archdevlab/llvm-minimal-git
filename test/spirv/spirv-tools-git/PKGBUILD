@@ -34,7 +34,7 @@ build(){
   rm -rf "${srcdir}"/build
 
   cmake -B "${srcdir}"/build -S "${srcdir}"/SPIRV-Tools \
-    -G "Unix Makefiles"
+    -G "Unix Makefiles" \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr \
     -D CMAKE_INSTALL_LIBDIR=lib \
