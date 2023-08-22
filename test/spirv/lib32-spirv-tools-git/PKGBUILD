@@ -43,7 +43,7 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
   cmake -B "${srcdir}"/build -S "${srcdir}"/SPIRV-Tools \
     -D CMAKE_CXX_FLAGS:STRING=-m32 \
     -D CMAKE_C_FLAGS:STRING=-m32 \
-    -G "Unix Makefiles"
+    -G "Unix Makefiles"\
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr \
     -D CMAKE_INSTALL_LIBDIR=lib32 \
