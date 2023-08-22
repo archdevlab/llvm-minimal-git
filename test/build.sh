@@ -35,7 +35,7 @@ cd lib32-llvm/lib32-spirv-llvm-translator-minimal-git/ && makepkg -si --noconfir
 
 cd directx-headers-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd mesa/ && makepkg -si --noconfirm && cd ${source}
+cd mesa/mesa/ && makepkg -si --noconfirm && cd ${source}
 
 # make a copy of every pkg in package/ dir
 
