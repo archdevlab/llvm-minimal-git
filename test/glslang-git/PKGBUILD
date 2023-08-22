@@ -1,0 +1,89 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Credits: Sven-Hendrik Haase <svenstaro@archlinux.org>
+
+# Careful when upgrading this package! It usually breaks ABI without bumping
+# soname. Also, be very mindful of the version of spirv-tools that this links
+# to. Upstream actually expects the uae of the particular commits of
+# spirv-tools and spirv-headers that are provided in known_good.json. However,
+# if we went that route, we'd have to vendor the resulting spirv-tools libs
+# from this glslang build and they would be incompatible with system libs,
+# resulting in us having to ship both. Instead, I recommend just waiting until
+# upstream releases a compatible version of spirv-tools, then updating the
+# spriv-tools system package and only then building glslang against that.
+
+pkgname=glslang-git
+pkgdesc='OpenGL and OpenGL ES shader front end and validator (git version)'
+pkgver=12.3.1
+pkgrel=1
+commit=db8719ae079665ffab564c614b8614e56f325aea
+arch=(x86_64)
+url='https://github.com/KhronosGroup/glslang'
+license=(BSD)
+depends=(gcc-libs)
+makedepends=(cmake ninja git spirv-tools-git spirv-headers-git python)
+conflicts=(glslang)
+provides=(glslang glslang-git)
+options=(staticlibs)
+source=(git+https://github.com/KhronosGroup/glslang.git#commit="${commit}")
+
+pkgver(){
+  cd "${srcdir}"/glslang
+
+  git describe --long --tags --abbrev=7 --exclude master-tot --exclude main-tot --exclude sdk-* --exclude SDK-candidate\* --exclude untagged\* | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare(){
+  cd "${srcdir}"/glslang
+  #./update_glslang_sources.py
+}
+
+build(){
+# we need fat LTO objects to not break consumers during linking
+export CXXFLAGS+=" -ffat-lto-objects"
+
+  rm -rf "${srcdir}"/{build-shared,build-static}
+
+  cmake -B "${srcdir}"/build-shared -S "${srcdir}"/glslang \
+    -G "Unix Makefiles"
+    -D CMAKE_BUILD_TYPE=Release \
+    -D CMAKE_INSTALL_PREFIX=/usr \
+    -D CMAKE_INSTALL_LIBDIR=lib \
+    -D BUILD_SHARED_LIBS=ON \
+    -Wno-dev
+
+  cmake -B "${srcdir}"/build-static -S "${srcdir}"/glslang \
+    -G "Unix Makefiles"
+    -D CMAKE_BUILD_TYPE=Release \
+    -D CMAKE_INSTALL_PREFIX=/usr \
+    -D CMAKE_INSTALL_LIBDIR=lib \
+    -D BUILD_SHARED_LIBS=OFF \
+    -Wno-dev
+
+  make -j$(nproc) -C "${srcdir}"/build-shared
+  make -j$(nproc) -C "${srcdir}"/build-static
+}
+
+package_glslang-git(){
+  make -j$(nproc) -C "${srcdir}"/build-shared DESTDIR="${pkgdir}" install
+  make -j$(nproc) -C "${srcdir}"/build-static DESTDIR="${pkgdir}" install
+
+  # install licence
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/glslang/LICENSE.txt "${pkgdir}"/usr/share/licenses/"${pkgname}"/
+
+  cd "${pkgdir}"/usr/lib
+  for lib in *.so; do
+    ln -sf "${lib}" "${lib}.0"
+  done
+}
+
+sha256sums=('SKIP')
+
+# vim:set ts=8 sts=2 sw=2 et:

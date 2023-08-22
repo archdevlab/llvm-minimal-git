@@ -1,0 +1,61 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Credits: Laurent Carlier <lordheavym@archlinux.org>
+#Credits: Cyano Hao <c@cyano.cn>
+
+pkgname=directx-headers-git
+pkgdesc='DirectX headers for using D3D12 (git version)'
+pkgver=1.610.2
+pkgrel=1
+commit=3a57ee119e546006914d41470fbdabbc735d80ec
+arch=(x86_64)
+url='https://github.com/microsoft/DirectX-Headers'
+license=(MIT)
+makedepends=(meson git)
+conflicts=(directx-headers)
+provides=(directx-headers directx-headers-git)
+source=(git+https://github.com/microsoft/DirectX-Headers.git#commit="${commit}")
+
+pkgver(){
+  cd "${srcdir}"/DirectX-Headers
+  # cutting off 'foo-' prefix that presents in the git tag
+  git describe --long --tags --abbrev=7 --exclude *preview --exclude *mesa* --exclude *-r1 --exclude *2b | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build(){
+# LTO breaks mesa...
+export CXXFLAGS="$CXXFLAGS -fno-lto"
+
+  rm -rf "${srcdir}"/build
+
+  local meson_options=(
+    -D b_ndebug=true
+    -D b_lto=false
+    -D buildtype=plain
+    --wrap-mode=nofallback
+    -D prefix=/usr
+    -D sysconfdir=/etc
+    -D build-test=false
+  )
+
+  meson "${srcdir}"/DirectX-Headers "${srcdir}"/build "${meson_options[@]}"
+  meson configure "${srcdir}"/build
+  meson compile -C "${srcdir}"/build
+}
+
+package(){
+  DESTDIR="${pkgdir}" meson -C "${srcdir}"/build install
+
+  # install licence
+  install -Dm644 "${srcdir}"/DirectX-Headers/LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+}
+
+sha256sums=('SKIP')
+
+# vim:set ts=8 sts=2 sw=2 et:
