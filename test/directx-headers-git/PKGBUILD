@@ -45,12 +45,12 @@ export CXXFLAGS="$CXXFLAGS -fno-lto"
   )
 
   meson "${srcdir}"/DirectX-Headers "${srcdir}"/build "${meson_options[@]}"
-  meson configure "${srcdir}"/build
+  meson configure --no-pager "${srcdir}"/build
   meson compile -C "${srcdir}"/build
 }
 
 package(){
-  DESTDIR="${pkgdir}" meson -C "${srcdir}"/build install
+  DESTDIR="${pkgdir}" meson insstall -C "${srcdir}"/build
 
   # install licence
   install -Dm644 "${srcdir}"/DirectX-Headers/LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
