@@ -66,12 +66,12 @@ build(){
   )
 
   meson "${srcdir}"/drm "${srcdir}"/build "${meson_options[@]}"
-  meson configure "${srcdir}"/build
+  meson configure --no-pager "${srcdir}"/build
   meson compile -C "${srcdir}"/build
 }
 
 package_libdrm-git(){
-  DESTDIR="${pkgdir}" meson -C "${srcdir}"/build install
+  DESTDIR="${pkgdir}" meson install -C "${srcdir}"/build
 
   # installing license
   install -Dt "${pkgdir}"/usr/share/licenses/"${pkgname}"/ -m644 "${srcdir}"/COPYING
