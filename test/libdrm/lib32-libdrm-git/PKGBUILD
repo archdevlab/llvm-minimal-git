@@ -72,12 +72,12 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
   )
 
   meson "${srcdir}"/drm "${srcdir}"/build "${meson_options[@]}"
-  meson configure "${srcdir}"/build
+  meson configure --no-pager "${srcdir}"/build
   meson compile -C "${srcdir}"/build
 }
 
 package_lib32-libdrm-git(){
-  DESTDIR="${pkgdir}" meson -C "${srcdir}"/build install
+  DESTDIR="${pkgdir}" meson install -C "${srcdir}"/build
 
   rm -rf "${pkgdir}"/usr/{include,share,bin}
 
