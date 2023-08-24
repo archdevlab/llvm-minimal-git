@@ -38,7 +38,7 @@ pkgver(){
 build(){
   rm -rf "${srcdir}"/build
 
-  local meson options=(
+  local meson_options=(
     -D b_ndebug=true
     -D b_lto=false
     -D buildtype=plain
