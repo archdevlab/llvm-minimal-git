@@ -43,7 +43,7 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
   rm -rf "${srcdir}"/build
 
-  local meson options=(
+  local meson_options=(
     -D b_ndebug=true
     -D b_lto=false
     -D buildtype=plain
