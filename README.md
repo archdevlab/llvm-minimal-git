@@ -50,7 +50,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 ### SPIRV-Headers
 
-- 1.3.250.0
+- 1.3.261.0
 
 - commit : b8b9eb8640c8c0107ba580fbcb10f969022ca32c
 
@@ -75,7 +75,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 ### libdrm
 
-- 2.4.115
+- 2.4.116
 
 - commit : 7bdb135f0c8e6ae2c0ed6d4bd6a8423eb1df5c26
 
