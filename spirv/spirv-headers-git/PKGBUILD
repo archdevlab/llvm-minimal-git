@@ -12,48 +12,44 @@
 pkgname=spirv-headers-git
 pkgdesc='SPIR-V Headers (git version)'
 epoch=1
-pkgver=1.3.250.0
+pkgver=1.3.261.0
 pkgrel=1
-commit=ae89923fa781650569ca15e5b498a9e4e46ee9c9
+commit=b8b9eb8640c8c0107ba580fbcb10f969022ca32c
 arch=(x86_64)
 url='https://github.com/KhronosGroup/SPIRV-Headers.git'
 license=(MIT)
-makedepends=(cmake ninja git)
+makedepends=(cmake ninja git make)
 conflicts=(spirv-headers)
 provides=(spirv-headers spirv-headers-git)
-source=(git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit=$commit)
-md5sums=(SKIP)
+source=(git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit="$commit")
 
 pkgver(){
-  cd ${srcdir}/SPIRV-Headers
+  cd "${srcdir}"/SPIRV-Headers
 
   #git describe --long --tags --abbrev=7 --exclude sdk-* | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
   git describe --long --tags --abbrev=7 --exclude '*raytracing*' | sed 's/^sdk.//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build(){
-  cd ${srcdir}/SPIRV-Headers
+  rm -rf "${srcdir}"/build
 
-  rm -rf build
+  cmake -B "${srcdir}"/build -S "${srcdir}"/SPIRV-Headers \
+    -G "Unix Makefiles" \
+    -D CMAKE_BUILD_TYPE=Release \
+    -D CMAKE_INSTALL_PREFIX=/usr \
+    -Wno-dev
 
-  cmake -H. -G Ninja -Bbuild \
-  -DCMAKE_C_FLAGS=-m64 \
-  -DCMAKE_CXX_FLAGS=-m64 \
-  -DCMAKE_INSTALL_PREFIX=/usr \
-  -DSPIRV_HEADERS_SKIP_EXAMPLES=ON \
-  -DSPIRV_HEADERS_SKIP_INSTALL=OFF \
-  -DSPIRV_HEADERS_ENABLE_INSTALL=ON \
-  -DUSE_CCACHE=OFF
-
-  ninja -C build
+  make -j$(nproc) -C "${srcdir}"/build
 }
 
 package(){
-  DESTDIR="$pkgdir" ninja -C ${srcdir}/SPIRV-Headers/build/ install
+  make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install
 
   # install licence
-  install -dm755 "${pkgdir}"/usr/share/licenses/${pkgname}
-  install -m644 "${srcdir}"/SPIRV-Headers/LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/SPIRV-Headers/LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/
 }
+
+sha256sums=('SKIP')
 
 # vim:set ts=8 sts=2 sw=2 et:
