@@ -27,13 +27,13 @@ source=(git+https://github.com/llvm/llvm-project.git#commit=$commit)
 
 # Utilizing LLVM_DISTRIBUTION_COMPONENTS to avoid
 # installing static libraries; inspired by Gentoo
-_get_distribution_components() {
+_get_distribution_components(){
 local target
 local include
 
 make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
     case $target in
-        llvm-libraries|clang-libraries|clang-tidy-headers|distribution )
+        llvm-libraries|distribution )
             include=0
             ;;
         # shared libraries
@@ -52,12 +52,6 @@ make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
         llvm-exegesis )
             include=0
             ;;
-        clang|clangd|clang-* )
-            include=1
-            ;;
-        clang*|findAllSymbols|scan-build-py )
-            include=0
-            ;;
         # Anything not covered above is included
         * )
             include=1
@@ -69,7 +63,7 @@ done
 }
 
 pkgver(){
-  cd ${srcdir}/llvm-project/llvm
+  cd ${srcdir}/llvm-project/llvm/
 
   # This will almost match the output of `llvm-config --version` when the
   # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
@@ -79,7 +73,7 @@ pkgver(){
   /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \
   END { print "\n" }' \
   CMakeLists.txt).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
-  echo "${_pkgver}"
+  echo "$_pkgver"
 }
 
 build(){

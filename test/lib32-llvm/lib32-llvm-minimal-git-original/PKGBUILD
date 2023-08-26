@@ -14,7 +14,7 @@
 pkgbase=lib32-llvm-minimal-git
 pkgname=(lib32-llvm-minimal-git lib32-clang-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=18.0.0
+pkgver=18.0.0.r472057.g7c4e8c6a273f
 pkgrel=1
 _pkgver=18.0.0
 commit=7c4e8c6a273f25b3ef33e9c123b3969632ab59bb
@@ -27,7 +27,7 @@ source=(git+https://github.com/llvm/llvm-project.git#commit=$commit)
 
 # Utilizing LLVM_DISTRIBUTION_COMPONENTS to avoid
 # installing static libraries; inspired by Gentoo
-_get_distribution_components() {
+_get_distribution_components(){
 local target
 local include
 
@@ -69,7 +69,7 @@ done
 }
 
 pkgver(){
-  cd ${srcdir}/llvm-project/llvm
+  cd ${srcdir}/llvm-project/llvm/
 
   # This will almost match the output of `llvm-config --version` when the
   # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
@@ -79,7 +79,7 @@ pkgver(){
   /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \
   END { print "\n" }' \
   CMakeLists.txt).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
-  echo "${_pkgver}"
+  echo "$_pkgver"
 }
 
 build(){

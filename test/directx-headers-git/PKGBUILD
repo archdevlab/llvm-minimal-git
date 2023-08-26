@@ -50,7 +50,7 @@ export CXXFLAGS="$CXXFLAGS -fno-lto"
 }
 
 package(){
-  DESTDIR="${pkgdir}" meson insstall -C "${srcdir}"/build
+  DESTDIR="${pkgdir}" meson install -C "${srcdir}"/build
 
   # install licence
   install -Dm644 "${srcdir}"/DirectX-Headers/LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
