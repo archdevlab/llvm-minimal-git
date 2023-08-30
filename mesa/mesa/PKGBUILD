@@ -14,7 +14,7 @@
 pkgbase=mesa-git
 pkgname=(
    vulkan-mesa-layers-git
-   #opencl-clover-mesa-git
+   opencl-clover-mesa-git
    opencl-rusticl-mesa-git
    vulkan-intel-git
    vulkan-radeon-git
@@ -87,7 +87,10 @@ makedepends+=(
    llvm-libs
 )
 options=(!debug !lto)
-source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit="${commit}")
+source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit="${commit}"
+        # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
+        # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591#note_2058098
+        https://gitlab.freedesktop.org/mesa/mesa/uploads/93cb11dc97f845e08e157ac6f6f25726/clover-llvm-17.patch)
 
 pkgver(){
   cd "${srcdir}"/mesa
@@ -114,6 +117,7 @@ build(){
 
   # gallium-opencl is disabled since this issue in mesa
   # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
+  # Now we can re-enable gallium-opencl : https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591#note_2058098
 
   local meson_options=(
     -D b_ndebug=true
@@ -135,7 +139,7 @@ build(){
     -D gallium-xa=enabled
     -D gallium-nine=true
     -D gallium-d3d10umd=false
-    -D gallium-opencl=disabled
+    -D gallium-opencl=icd
     -D gallium-rusticl=true
     -D rust_std=2021
     -D opencl-spirv=false
@@ -231,6 +235,7 @@ package_vulkan-mesa-layers-git(){
 }
 
 # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
+# Now we can re-enable gallium-opencl : https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591#note_2058098
 package_opencl-clover-mesa-git(){
   pkgdesc="OpenCL support with clover for mesa drivers (git version)"
   depends=(
@@ -543,4 +548,5 @@ package_mesa-git(){
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
 
-sha256sums=('SKIP')
+sha256sums=('SKIP'
+            '6e6aeedf513e94a968c25b7cc9c46fdd21b67a829f41c8761f887ecf9fa32918')
