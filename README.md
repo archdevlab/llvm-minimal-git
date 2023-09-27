@@ -110,13 +110,13 @@ After a succeful build of the toolchain you'll need to recompile mesa package, b
 
 # Prebuild package
 
-Prebuild package are available at https://repo.blacksky3.com/x86_64/llvm-minimal-git
+Prebuild package are available at https://repo.ardevlab.xyz/x86_64/llvm-minimal-git
 
 You can add this repo to your pacman.conf
 
     [llvm-minimal-git]
     SigLevel = Optional TrustAll
-    Server = https://repo.blacksky3.com/$arch/$repo
+    Server = https://repo.ardevlab.xyz/$arch/$repo
 
     sudo pacman -S llvm-minimal-git clang-minimal-git llvm-libs-minimal-git clang-libs-minimal-git spirv-llvm-translator-minimal-git libclc-minimal-git lib32-llvm-minimal-git lib32-clang-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git spirv-headers-git spirv-tools-git glslang-git directx-headers-git libdrm-git lib32-libdrm-git libglvnd-git lib32-libglvnd-git vulkan-mesa-layers-git opencl-mesa-git vulkan-intel-git vulkan-radeon-git vulkan-swrast-git vulkan-virtio-git libva-mesa-driver-git mesa-vdpau-git vulkan-imagination-git mesa-git lib32-vulkan-mesa-layers-git lib32-vulkan-intel-git lib32-vulkan-radeon-git lib32-vulkan-virtio-git lib32-libva-mesa-driver-git lib32-mesa-vdpau-git lib32-vulkan-swrast-git lib32-vulkan-imagination-git lib32-mesa-git
 
