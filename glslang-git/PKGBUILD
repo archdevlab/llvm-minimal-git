@@ -1,4 +1,4 @@
-#Maintainer: ardevlab <https://github.com/ardevlab>
+#Maintainer: archdevlab <https://github.com/ardevlab>
 #Credits: Sven-Hendrik Haase <svenstaro@archlinux.org>
 
 # Careful when upgrading this package! It usually breaks ABI without bumping
