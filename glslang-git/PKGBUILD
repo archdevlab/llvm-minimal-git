@@ -13,9 +13,9 @@
 
 pkgname=glslang-git
 pkgdesc='OpenGL and OpenGL ES shader front end and validator (git version)'
-pkgver=12.3.1
+pkgver=13.0.0
 pkgrel=1
-commit=db8719ae079665ffab564c614b8614e56f325aea
+commit=5ff0c048b7242e173357bf28024cdee79edbcea8
 arch=(x86_64)
 url='https://github.com/KhronosGroup/glslang'
 license=(BSD)
@@ -49,6 +49,7 @@ export CXXFLAGS+=" -ffat-lto-objects"
     -D CMAKE_INSTALL_PREFIX=/usr \
     -D CMAKE_INSTALL_LIBDIR=lib \
     -D BUILD_SHARED_LIBS=ON \
+    -D ENABLE_OPT=OFF \
     -Wno-dev
 
   cmake -B "${srcdir}"/build-static -S "${srcdir}"/glslang \
@@ -57,6 +58,7 @@ export CXXFLAGS+=" -ffat-lto-objects"
     -D CMAKE_INSTALL_PREFIX=/usr \
     -D CMAKE_INSTALL_LIBDIR=lib \
     -D BUILD_SHARED_LIBS=OFF \
+    -D ENABLE_OPT=OFF \
     -Wno-dev
 
   make -j$(nproc) -C "${srcdir}"/build-shared

@@ -7,10 +7,10 @@
 pkgbase=lib32-llvm-minimal-git
 pkgname=(lib32-llvm-minimal-git lib32-clang-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=18.0.0.r472057.g7c4e8c6a273f
+pkgver=18.0.0
 pkgrel=1
 _pkgver=18.0.0
-commit=7c4e8c6a273f25b3ef33e9c123b3969632ab59bb
+commit=78502251f4019953e462bb8bc886381589e9d257
 arch=(i686 x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja lib32-libffi lib32-zlib lib32-zstd python

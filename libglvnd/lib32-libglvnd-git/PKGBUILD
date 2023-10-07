@@ -5,9 +5,9 @@
 
 pkgname=lib32-libglvnd-git
 pkgdesc='The GL Vendor-Neutral Dispatch library (32-bit) (git version)'
-pkgver=1.6.0
+pkgver=1.7.0
 pkgrel=1
-commit=179d7278d7485ceea2d440807be9d677d32aedc4
+commit=62176c235ceca2c20f30777f5bc4195bd70391c4
 arch=(i686 x86_64)
 url='https://gitlab.freedesktop.org/glvnd/libglvnd'
 license=(custom:BSD-like)
@@ -69,7 +69,7 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
   -Dentrypoint-patching=enabled
 
   #meson configure build_32/
-  
+
   ninja -C build_32
 
   meson compile -C build_32

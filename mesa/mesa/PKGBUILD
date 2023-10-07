@@ -16,10 +16,11 @@ pkgname=(
    libva-mesa-driver-git
    mesa-vdpau-git
    vulkan-imagination-git
-   vulkan-nouveau-git mesa-git)
+   vulkan-nouveau-git mesa-git
+)
 pkgver=23.3.0_devel
 pkgrel=1
-commit=ca987c0dfb97d22d3cf2632f38d9d749162767b0
+commit=348eee9c974ee24dee2362b8a2b7d30d6db69091
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
@@ -46,6 +47,7 @@ makedepends=(
    systemd
    vulkan-icd-loader
    wayland
+   xcb-util-keysyms
    zstd
    # shared between mesa and lib32-mesa
    clang
@@ -81,9 +83,7 @@ makedepends+=(
 )
 options=(!debug !lto)
 source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit="${commit}"
-        # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
-        # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591#note_2058098
-        https://gitlab.freedesktop.org/mesa/mesa/uploads/93cb11dc97f845e08e157ac6f6f25726/clover-llvm-17.patch)
+)
 
 pkgver(){
   cd "${srcdir}"/mesa
@@ -124,6 +124,7 @@ build(){
     -D android-stub=false
     -D android-libbacktrace=disabled
     -D dri3=enabled
+    -D expat=auto
     -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,swrast,i915,iris,zink,crocus,d3d12
     -D gallium-extra-hud=true
     -D gallium-vdpau=enabled
@@ -136,10 +137,12 @@ build(){
     -D gallium-rusticl=true
     -D rust_std=2021
     -D opencl-spirv=false
+    -D static-libclc=all
     -D opencl-external-clang-headers=enabled
     -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,imagination-experimental,nouveau-experimental
     -D imagination-srv=true
     -D shader-cache=enabled
+    -D shader-cache-default=true
     -D vulkan-layers=device-select,intel-nullhw,overlay
     -D shared-glapi=enabled
     -D gles1=enabled
@@ -151,6 +154,7 @@ build(){
     -D glvnd=true
     -D microsoft-clc=disabled
     -D spirv-to-dxil=false
+    -D glvnd-vendor-name=mesa
     -D glx-read-only-text=false
     -D llvm=enabled
     -D shared-llvm=enabled
@@ -166,6 +170,7 @@ build(){
     -D execmem=true
     -D osmesa=true
     -D tools=[]
+    -D power8=disabled
     -D xlib-lease=enabled
     -D glx-direct=true
     -D zstd=enabled
@@ -179,7 +184,6 @@ build(){
     -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc
     -D gallium-d3d12-video=enabled
     -D intel-xe-kmd=enabled
-    -D nvk-legacy-uapi=false
   )
 
   meson "${srcdir}"/mesa "${srcdir}"/build "${meson_options[@]}"
@@ -238,7 +242,8 @@ package_opencl-clover-mesa-git(){
      libelf
      spirv-llvm-translator
      zstd
-     libclc)
+     libclc
+  )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=(
      opencl-driver
@@ -270,7 +275,8 @@ package_opencl-rusticl-mesa-git(){
      lm_sensors
      spirv-llvm-translator
      zstd
-     libclc)
+     libclc
+  )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=(
      opencl-driver
@@ -299,7 +305,9 @@ package_vulkan-intel-git(){
      libxshmfence
      systemd
      wayland
-     zstd)
+     xcb-util-keysyms
+     zstd
+  )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
   conflicts=(
      vulkan-intel
@@ -324,7 +332,9 @@ package_vulkan-radeon-git(){
      llvm-libs
      systemd
      wayland
-     zstd)
+     xcb-util-keysyms
+     zstd
+  )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
   conflicts=(vulkan-radeon)
   provides=(
@@ -349,7 +359,9 @@ package_vulkan-swrast-git(){
      llvm-libs
      systemd
      wayland
-     zstd)
+     xcb-util-keysyms
+     zstd
+  )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
   conflicts=(
      vulkan-mesa
@@ -375,7 +387,9 @@ package_vulkan-virtio-git(){
      libxshmfence
      systemd
      wayland
-     zstd)
+     xcb-util-keysyms
+     zstd
+  )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
   conflicts=(vulkan-virtio)
   provides=(
@@ -398,7 +412,8 @@ package_libva-mesa-driver-git(){
      libx11
      libxshmfence
      llvm-libs
-     zstd)
+     zstd
+  )
   conflicts=(libva-mesa-driver)
   provides=(
      libva-driver
@@ -443,6 +458,7 @@ package_vulkan-imagination-git(){
      systemd
      llvm-libs
      wayland
+     xcb-util-keysyms
      zstd
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -469,6 +485,7 @@ package_vulkan-nouveau-git(){
      systemd
      llvm-libs
      wayland
+     xcb-util-keysyms
      zstd
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -499,8 +516,6 @@ package_mesa-git(){
   )
   optdepends=(
      'opengl-man-pages: for the OpenGL API man pages'
-     'mesa-vdpau: for accelerated video playback'
-     'libva-mesa-driver: for accelerated video playback'
   )
   provides=(
      mesa-libgl
@@ -541,5 +556,4 @@ package_mesa-git(){
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
 
-sha256sums=('SKIP'
-            '6e6aeedf513e94a968c25b7cc9c46fdd21b67a829f41c8761f887ecf9fa32918')
+sha256sums=('SKIP')

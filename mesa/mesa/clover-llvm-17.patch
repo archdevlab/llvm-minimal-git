@@ -1,0 +1,36 @@
+diff -up mesa-main/src/gallium/frontends/clover/llvm/invocation.cpp.omv~ mesa-main/src/gallium/frontends/clover/llvm/invocation.cpp
+--- mesa-main/src/gallium/frontends/clover/llvm/invocation.cpp.omv~	2023-08-24 21:40:35.305425912 +0200
++++ mesa-main/src/gallium/frontends/clover/llvm/invocation.cpp	2023-08-24 21:44:35.576915150 +0200
+@@ -28,7 +28,9 @@
+ #include <llvm/IR/DiagnosticInfo.h>
+ #include <llvm/IR/LLVMContext.h>
+ #include <llvm/Support/raw_ostream.h>
++#if LLVM_VERSION_MAJOR < 17
+ #include <llvm/Transforms/IPO/PassManagerBuilder.h>
++#endif
+ #include <llvm-c/Target.h>
+ #ifdef HAVE_CLOVER_SPIRV
+ #include <LLVMSPIRVLib/LLVMSPIRVLib.h>
+@@ -438,6 +440,7 @@ clover::llvm::compile_program(const std:
+ }
+ 
+ namespace {
++#if LLVM_VERSION_MAJOR < 17
+    void
+    optimize(Module &mod, unsigned optimization_level,
+             bool internalize_symbols) {
+@@ -472,6 +475,14 @@ namespace {
+       pmb.populateModulePassManager(pm);
+       pm.run(mod);
+    }
++#else
++   void
++   optimize(Module &mod, unsigned optimization_level,
++            bool internalize_symbols) {
++#warning optimize() needs to be rewritten for LLVM >= 17
++     return;
++   }
++#endif
+ 
+    std::unique_ptr<Module>
+    link(LLVMContext &ctx, const clang::CompilerInstance &c,
