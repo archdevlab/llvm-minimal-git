@@ -36,18 +36,6 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 # Version
 
-### LLVM
-
-- 18.0.0
-
-- commit: 78502251f4019953e462bb8bc886381589e9d257
-
-### SPIRV-LLVM-Translator
-
-- 18.0.0
-
-- commit : deb6ee9ec4c28382ec1ff7827b8fa454b7a79b6a
-
 ### SPIRV-Headers
 
 - 1.3.261.0
@@ -65,6 +53,18 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 - 13.0.0
 
 - commit : 5ff0c048b7242e173357bf28024cdee79edbcea8
+
+### LLVM
+
+- 18.0.0
+
+- commit: 78502251f4019953e462bb8bc886381589e9d257
+
+### SPIRV-LLVM-Translator
+
+- 18.0.0
+
+- commit : deb6ee9ec4c28382ec1ff7827b8fa454b7a79b6a
 
 ### Directx-Headers
 
