@@ -58,7 +58,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 2023.2
 
-- commit : 714966003d58fd6338c7db64bbd8d24fffb2f6ad
+- commit : 933db564ca660477b360480b8a1d7589d7c6694e
 
 ### glslang
 
