@@ -26,42 +26,42 @@ arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
 makedepends=(
-  lib32-clang
-  lib32-expat
-  lib32-libdrm
-  lib32-libelf
-  lib32-libglvnd
-  lib32-libunwind
-  lib32-libva
-  lib32-libvdpau
-  lib32-libx11
-  lib32-libxdamage
-  lib32-libxml2
-  lib32-libxrandr
-  lib32-libxshmfence
-  lib32-libxxf86vm
-  lib32-llvm
-  lib32-lm_sensors
-  lib32-rust-libs
-  lib32-spirv-llvm-translator
-  lib32-spirv-tools
-  lib32-systemd
-  lib32-vulkan-icd-loader
-  lib32-wayland
-  lib32-xcb-util-keysyms
-  lib32-zstd
-  # shared between mesa and lib32-mesa
-  clang
-  cmake
-  elfutils
-  glslang
-  libclc
-  meson
-  python-mako
-  python-ply
-  rust-bindgen
-  wayland-protocols
-  xorgproto
+   lib32-clang
+   lib32-expat
+   lib32-libdrm
+   lib32-libelf
+   lib32-libglvnd
+   lib32-libunwind
+   lib32-libva
+   lib32-libvdpau
+   lib32-libx11
+   lib32-libxdamage
+   lib32-libxml2
+   lib32-libxrandr
+   lib32-libxshmfence
+   lib32-libxxf86vm
+   lib32-llvm
+   lib32-lm_sensors
+   lib32-rust-libs
+   lib32-spirv-llvm-translator
+   lib32-spirv-tools
+   lib32-systemd
+   lib32-vulkan-icd-loader
+   lib32-wayland
+   lib32-xcb-util-keysyms
+   lib32-zstd
+   # shared between mesa and lib32-mesa
+   clang
+   cmake
+   elfutils
+   glslang
+   libclc
+   meson
+   python-mako
+   python-ply
+   rust-bindgen
+   wayland-protocols
+   xorgproto
 )
 options=(!debug !lto)
 source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit="${commit}")
@@ -205,10 +205,10 @@ _libdir=usr/lib32
 package_lib32-vulkan-mesa-layers-git(){
   pkgdesc="Mesa's Vulkan layers (32-bit) (git version)"
   depends=(
-    lib32-libdrm
-    lib32-libxcb
-    lib32-wayland
-    vulkan-mesa-layers
+     lib32-libdrm
+     lib32-libxcb
+     lib32-wayland
+     vulkan-mesa-layers
   )
   conflicts=(
      lib32-vulkan-mesa-layer
@@ -231,14 +231,14 @@ package_lib32-vulkan-mesa-layers-git(){
 package_lib32-opencl-clover-mesa-git(){
   pkgdesc="OpenCL support with clover for mesa drivers (32-bit) (git version)"
   depends=(
-    lib32-clang
-    lib32-expat
-    lib32-libdrm
-    lib32-libelf
-    lib32-spirv-llvm-translator
-    lib32-zstd
-    libclc
-    opencl-clover-mesa
+     lib32-clang
+     lib32-expat
+     lib32-libdrm
+     lib32-libelf
+     lib32-spirv-llvm-translator
+     lib32-zstd
+     libclc
+     opencl-clover-mesa
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=(
@@ -264,15 +264,15 @@ package_lib32-opencl-clover-mesa-git(){
 package_lib32-opencl-rusticl-mesa-git(){
   pkgdesc="OpenCL support with rusticl for mesa drivers (32-bit) (git version)"
   depends=(
-    lib32-clang
-    lib32-expat
-    lib32-libdrm
-    lib32-libelf
-    lib32-lm_sensors
-    lib32-spirv-llvm-translator
-    lib32-zstd
-    libclc
-    opencl-rusticl-mesa
+     lib32-clang
+     lib32-expat
+     lib32-libdrm
+     lib32-libelf
+     lib32-lm_sensors
+     lib32-spirv-llvm-translator
+     lib32-zstd
+     libclc
+     opencl-rusticl-mesa
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=(
@@ -297,13 +297,13 @@ package_lib32-opencl-rusticl-mesa-git(){
 package_lib32-vulkan-intel-git(){
   pkgdesc="Intel's Vulkan mesa driver (32-bit) (git version)"
   depends=(
-    lib32-libdrm
-    lib32-libx11
-    lib32-libxshmfence
-    lib32-systemd
-    lib32-wayland
-    lib32-xcb-util-keysyms
-    lib32-zstd
+     lib32-libdrm
+     lib32-libx11
+     lib32-libxshmfence
+     lib32-systemd
+     lib32-wayland
+     lib32-xcb-util-keysyms
+     lib32-zstd
   )
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
   conflicts=(
@@ -322,16 +322,16 @@ package_lib32-vulkan-intel-git(){
 package_lib32-vulkan-radeon-git(){
   pkgdesc="Radeon's Vulkan mesa driver (32-bit) (git version)"
   depends=(
-    lib32-libdrm
-    lib32-libelf
-    lib32-libx11
-    lib32-libxshmfence
-    lib32-llvm-libs
-    lib32-systemd
-    lib32-wayland
-    lib32-xcb-util-keysyms
-    lib32-zstd
-    vulkan-radeon
+     lib32-libdrm
+     lib32-libelf
+     lib32-libx11
+     lib32-libxshmfence
+     lib32-llvm-libs
+     lib32-systemd
+     lib32-wayland
+     lib32-xcb-util-keysyms
+     lib32-zstd
+     vulkan-radeon
   )
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
   conflicts=(lib32-vulkan-radeon)
@@ -350,15 +350,15 @@ package_lib32-vulkan-radeon-git(){
 package_lib32-vulkan-swrast-git(){
   pkgdesc='Vulkan software rasteriser driver (32-bit) (git version)'
   depends=(
-    lib32-libdrm
-    lib32-libunwind
-    lib32-libx11
-    lib32-libxshmfence
-    lib32-llvm-libs
-    lib32-systemd
-    lib32-wayland
-    lib32-xcb-util-keysyms
-    lib32-zstd
+     lib32-libdrm
+     lib32-libunwind
+     lib32-libx11
+     lib32-libxshmfence
+     lib32-llvm-libs
+     lib32-systemd
+     lib32-wayland
+     lib32-xcb-util-keysyms
+     lib32-zstd
   )
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
   conflicts=(
@@ -380,13 +380,13 @@ package_lib32-vulkan-swrast-git(){
 package_lib32-vulkan-virtio-git(){
   pkgdesc='Venus Vulkan mesa driver for Virtual Machines (32-bit) (git version)'
   depends=(
-    lib32-libdrm
-    lib32-libx11
-    lib32-libxshmfence
-    lib32-systemd
-    lib32-wayland
-    lib32-xcb-util-keysyms
-    lib32-zstd
+     lib32-libdrm
+     lib32-libx11
+     lib32-libxshmfence
+     lib32-systemd
+     lib32-wayland
+     lib32-xcb-util-keysyms
+     lib32-zstd
   )
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
   conflicts=(lib32-vulkan-virtio)
@@ -404,13 +404,13 @@ package_lib32-vulkan-virtio-git(){
 package_lib32-libva-mesa-driver-git(){
   pkgdesc='VA-API drivers (32-bit) (git version)'
   depends=(
-    lib32-expat
-    lib32-libdrm
-    lib32-libelf
-    lib32-libx11
-    lib32-libxshmfence
-    lib32-llvm-libs
-    lib32-zstd
+     lib32-expat
+     lib32-libdrm
+     lib32-libelf
+     lib32-libx11
+     lib32-libxshmfence
+     lib32-llvm-libs
+     lib32-zstd
   )
   conflicts=(lib32-libva-mesa-driver)
   provides=(
@@ -426,13 +426,13 @@ package_lib32-libva-mesa-driver-git(){
 package_lib32-mesa-vdpau-git(){
   pkgdesc='VDPAU drivers (32-bit) (git version)'
   depends=(
-    lib32-expat
-    lib32-libdrm
-    lib32-libelf
-    lib32-libx11
-    lib32-libxshmfence
-    lib32-llvm-libs
-    lib32-zstd
+     lib32-expat
+     lib32-libdrm
+     lib32-libelf
+     lib32-libx11
+     lib32-libxshmfence
+     lib32-llvm-libs
+     lib32-zstd
   )
   conflicts=(lib32-mesa-vdpau)
   provides=(
@@ -498,19 +498,19 @@ package_lib32-vulkan-nouveau-git(){
 package_lib32-mesa-git(){
   pkgdesc='An open-source implementation of the OpenGL specification (32-bit) (git version)'
   depends=(
-    lib32-libdrm
-    lib32-libelf
-    lib32-libglvnd
-    lib32-libunwind
-    lib32-libxdamage
-    lib32-libxshmfence
-    lib32-libxxf86vm
-    lib32-llvm-libs
-    lib32-lm_sensors
-    lib32-vulkan-icd-loader
-    lib32-wayland
-    lib32-zstd
-    mesa
+     lib32-libdrm
+     lib32-libelf
+     lib32-libglvnd
+     lib32-libunwind
+     lib32-libxdamage
+     lib32-libxshmfence
+     lib32-libxxf86vm
+     lib32-llvm-libs
+     lib32-lm_sensors
+     lib32-vulkan-icd-loader
+     lib32-wayland
+     lib32-zstd
+     mesa
   )
   optdepends=(
      'opengl-man-pages: for the OpenGL API man pages'
