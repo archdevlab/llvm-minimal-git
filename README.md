@@ -94,7 +94,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 # Build
 
-    git clone https://github.com/blacksky3/llvm-minimal-git.git
+    git clone https://github.com/archdevlab/llvm-minimal-git.git
     cd llvm-git
     ./build.sh
 
