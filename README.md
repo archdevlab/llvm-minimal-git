@@ -77,7 +77,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 2.4.116
 
-- commit : 7bdb135f0c8e6ae2c0ed6d4bd6a8423eb1df5c26
+- commit : 6abc164052e4902f67213baa279d743cf46227d4
 
 
 ### libglvnd
