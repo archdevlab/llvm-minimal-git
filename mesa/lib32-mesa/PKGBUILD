@@ -95,11 +95,6 @@ export CXXFLAGS=-m32
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 export BINDGEN_EXTRA_CLANG_ARGS="-m32"
 
-cat >crossfile.ini <<END
-[binaries]
-llvm-config = '/usr/bin/llvm-config32'
-END
-
   rm -rf "${srcdir}"/build
 
   local meson_options=(
