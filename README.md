@@ -110,7 +110,7 @@ After a succeful build of the toolchain you'll need to recompile mesa package, b
 
 # Prebuild package
 
-Prebuild package are available at https://repo.ardevlab.xyz/x86_64/llvm-minimal-git
+Prebuild package are available at https://repo.archdevlab.org/x86_64/llvm-minimal-git
 
 You can add this repo to your pacman.conf
 
