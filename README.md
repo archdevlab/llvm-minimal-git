@@ -62,9 +62,9 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 ### glslang
 
-- 12.3.1
+- 13.0.0
 
-- commit : db8719ae079665ffab564c614b8614e56f325aea
+- commit : 5ff0c048b7242e173357bf28024cdee79edbcea8
 
 ### Directx-Headers
 
