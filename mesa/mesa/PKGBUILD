@@ -215,12 +215,16 @@ package_vulkan-mesa-layers-git(){
      wayland
      python
   )
+  provides=(
+     vulkan-mesa-layers
+  )
   conflicts=(
      vulkan-mesa-layer
      vulkan-mesa-layers
   )
-  replaces=(vulkan-mesa-layer)
-  provides=(vulkan-mesa-layers)
+  replaces=(
+     vulkan-mesa-layer
+  )
 
   _install fakeinstall/usr/share/vulkan/explicit_layer.d
   _install fakeinstall/usr/share/vulkan/implicit_layer.d
@@ -249,12 +253,12 @@ package_opencl-clover-mesa-git(){
      opencl-driver
      opencl-clover-mesa
   )
-  replaces=(
-     "opencl-mesa<=23.1.4-1"
-     opencl-mesa-git
-  )
   conflicts=(
      opencl-mesa
+     opencl-mesa-git
+  )
+  replaces=(
+     "opencl-mesa<=23.1.4-1"
      opencl-mesa-git
   )
 
@@ -282,12 +286,12 @@ package_opencl-rusticl-mesa-git(){
      opencl-driver
      opencl-rusticl-mesa
   )
-  replaces=(
-     "opencl-mesa<=23.1.4-1"
-     opencl-mesa-git
-  )
   conflicts=(
      opencl-mesa
+     opencl-mesa-git
+  )
+  replaces=(
+     "opencl-mesa<=23.1.4-1"
      opencl-mesa-git
   )
 
@@ -309,13 +313,13 @@ package_vulkan-intel-git(){
      zstd
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
+  provides=(
+     vulkan-driver
+     vulkan-intel
+  )
   conflicts=(
      vulkan-intel
      vulkan-intel-hasvk-git
-  )
-  provides=(
-     vulkan-driver 
-     vulkan-intel
   )
   replaces=(
      vulkan-intel-hasvk-git
@@ -341,9 +345,11 @@ package_vulkan-radeon-git(){
      zstd
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
-  conflicts=(vulkan-radeon)
   provides=(
      vulkan-driver
+     vulkan-radeon
+  )
+  conflicts=(
      vulkan-radeon
   )
 
@@ -368,14 +374,16 @@ package_vulkan-swrast-git(){
      zstd
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
+  provides=(
+     vulkan-driver
+     vulkan-swrast
+  )
   conflicts=(
      vulkan-mesa
      vulkan-swrast
   )
-  replaces=(vulkan-mesa)
-  provides=(
-     vulkan-driver
-     vulkan-swrast
+  replaces=(
+     vulkan-mesa
   )
 
   _install fakeinstall/usr/share/vulkan/icd.d/lvp_icd*.json
@@ -396,9 +404,11 @@ package_vulkan-virtio-git(){
      zstd
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
-  conflicts=(vulkan-virtio)
   provides=(
      vulkan-driver
+     vulkan-virtio
+  )
+  conflicts=(
      vulkan-virtio
   )
 
@@ -419,9 +429,11 @@ package_libva-mesa-driver-git(){
      llvm-libs
      zstd
   )
-  conflicts=(libva-mesa-driver)
   provides=(
      libva-driver
+     libva-mesa-driver
+  )
+  conflicts=(
      libva-mesa-driver
   )
 
@@ -441,12 +453,13 @@ package_mesa-vdpau-git(){
      llvm-libs
      zstd
   )
-  conflicts=(mesa-vdpau)
   provides=(
      vdpau-driver
      mesa-vdpau
   )
-
+  conflicts=(
+     mesa-vdpau
+  )
   _install fakeinstall/"${_libdir}"/vdpau
 
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
@@ -467,7 +480,9 @@ package_vulkan-imagination-git(){
      zstd
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
-  provides=(vulkan-driver)
+  provides=(
+     vulkan-driver
+  )
 
   _install fakeinstall/usr/share/vulkan/icd.d/powervr_mesa_icd*.json
   _install fakeinstall/"${_libdir}"/libvulkan_powervr_mesa.so
@@ -494,7 +509,9 @@ package_vulkan-nouveau-git(){
      zstd
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
-  provides=(vulkan-driver)
+  provides=(
+     vulkan-driver
+  )
 
   _install fakeinstall/usr/share/vulkan/icd.d/nouveau_icd*.json
   _install fakeinstall/"${_libdir}"/libvulkan_nouveau.so
@@ -531,7 +548,9 @@ package_mesa-git(){
      mesa-libgl
      mesa
   )
-  replaces=(mesa-libgl)
+  replaces=(
+     mesa-libgl
+  )
 
   _install fakeinstall/usr/share/drirc.d/00-mesa-defaults.conf
   _install fakeinstall/usr/share/glvnd/egl_vendor.d/50_mesa.json
