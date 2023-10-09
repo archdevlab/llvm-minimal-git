@@ -313,8 +313,13 @@ package_vulkan-intel-git(){
      vulkan-intel
      vulkan-intel-hasvk-git
   )
-  provides=(vulkan-driver vulkan-intel)
-  replaces=(vulkan-intel-hasvk-git)
+  provides=(
+     vulkan-driver 
+     vulkan-intel
+  )
+  replaces=(
+     vulkan-intel-hasvk-git
+  )
 
   _install fakeinstall/usr/share/vulkan/icd.d/intel_*.json
   _install fakeinstall/"${_libdir}"/libvulkan_intel*.so
