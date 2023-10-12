@@ -185,7 +185,7 @@ package_lib32-clang-minimal-git(){
   provides=(lib32-clang)
   provides+=(lib32-clang-minimal-git lib32-clang-git)
 
-  cp --preserve --recursive "${srcdir}"/clang/* "${pkgdir}"/
+  cp --preserve --recursive "${srcdir}"/lib32-clang/* "${pkgdir}"/
 
   install -Dm644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
   install -Dm644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners.rst
