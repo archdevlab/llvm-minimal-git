@@ -39,6 +39,7 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
   sed -i "s/subdir('tests')/ /" "${srcdir}"/libglvnd/meson.build
 
   local meson_options=(
+    --cross-file lib32
     -D b_ndebug=true
     -D b_lto=false
     -D buildtype=plain
