@@ -87,9 +87,10 @@ prepare(){
 }
 
 build(){
-export ASFLAGS=" --32"
 export CFLAGS+=" -m32"
 export CXXFLAGS+=" -m32"
+export LDFLAGS+=" -m32"
+export ASFLAGS+=" --32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 export BINDGEN_EXTRA_CLANG_ARGS=" -m32"
 
