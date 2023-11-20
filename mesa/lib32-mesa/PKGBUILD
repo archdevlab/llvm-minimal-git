@@ -16,12 +16,12 @@ pkgname=(
    lib32-libva-mesa-driver-git
    lib32-mesa-vdpau-git
    lib32-vulkan-imagination-git
-   lib32-vulkan-nouveau-git 
+   lib32-vulkan-nouveau-git
    lib32-mesa-git
 )
 pkgver=23.3.0_devel.178641.348eee9c974
 pkgrel=1
-commit=348eee9c974ee24dee2362b8a2b7d30d6db69091
+commit=898700ca647b2de0eecff864b6b0a4cbeb935840
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT)
@@ -174,7 +174,7 @@ export BINDGEN_EXTRA_CLANG_ARGS=" -m32"
 
   meson "${srcdir}"/mesa "${srcdir}"/build "${meson_options[@]}"
   meson configure --no-pager "${srcdir}"/build
-  
+
   # Evil: Hack build to make proc-macro crate native
   # Should become unnecessary with Meson 1.3
   sed -e '/^rule rust_COMPILER$/irule rust_HACK\n command = rustc -C linker=gcc $ARGS $in\n deps = gcc\n depfile = $targetdep\n description = Compiling native Rust source $in\n' \
