@@ -20,7 +20,7 @@ pkgver(){
   cd "${srcdir}"/SPIRV-Headers
 
   #git describe --long --tags --abbrev=7 --exclude sdk-* | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
-  git describe --long --tags --abbrev=7 --exclude '*raytracing*' | sed 's/^sdk.//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags --abbrev=7 --exclude '*raytracing*' --exclude '*vulkan*' | sed 's/^sdk.//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build(){
