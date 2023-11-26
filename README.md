@@ -50,9 +50,9 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 ### glslang
 
-- 13.0.0
+- 13.1.1
 
-- commit : 5ff0c048b7242e173357bf28024cdee79edbcea8
+- commit : 854db99ff1371995e015a65dfd88556c5af01027
 
 ### LLVM
 
