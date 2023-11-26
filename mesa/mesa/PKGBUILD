@@ -16,9 +16,10 @@ pkgname=(
    libva-mesa-driver-git
    mesa-vdpau-git
    vulkan-imagination-git
-   vulkan-nouveau-git mesa-git
+   #vulkan-nouveau-git
+   mesa-git
 )
-pkgver=23.3.0_devel
+pkgver=24.0.0_devel
 pkgrel=1
 commit=898700ca647b2de0eecff864b6b0a4cbeb935840
 arch=(x86_64)
@@ -139,7 +140,7 @@ build(){
     -D opencl-spirv=false
     -D static-libclc=all
     -D opencl-external-clang-headers=enabled
-    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,imagination-experimental,nouveau-experimental
+    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,imagination-experimental
     -D imagination-srv=true
     -D shader-cache=enabled
     -D shader-cache-default=true
