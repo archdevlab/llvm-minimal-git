@@ -70,7 +70,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 1.610.2
 
-- commit : 3a57ee119e546006914d41470fbdabbc735d80ec
+- commit : 48f23952bc08a6dce0727339c07cedbc4797356c
 
 
 ### libdrm
