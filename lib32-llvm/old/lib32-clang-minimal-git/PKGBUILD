@@ -7,10 +7,10 @@
 pkgbase=lib32-clang-minimal-git
 pkgname=(lib32-clang-minimal-git lib32-clang-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=18.0.0
+pkgver=18.0.0.r481209.g0f8406858afd
 pkgrel=1
 _pkgver=18.0.0
-commit=78502251f4019953e462bb8bc886381589e9d257
+commit=0f8406858afd758f60bd6a9873309a67a0ac5123
 arch=(i686 x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja lib32-libffi lib32-zlib lib32-zstd python
@@ -60,9 +60,10 @@ pkgver(){
 }
 
 build(){
-export ASFLAGS+=" --32"
 export CFLAGS+=" -m32"
 export CXXFLAGS+=" -m32"
+export LDFLAGS+=" -m32"
+export ASFLAGS+=" --32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
   local cmake_args=(

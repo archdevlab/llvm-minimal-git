@@ -7,7 +7,7 @@
 pkgbase=lib32-llvm-minimal-git
 pkgname=(lib32-llvm-minimal-git lib32-clang-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=18.0.0
+pkgver=18.0.0.r481209.g0f8406858afd
 pkgrel=1
 _pkgver=18.0.0
 commit=0f8406858afd758f60bd6a9873309a67a0ac5123
@@ -48,7 +48,7 @@ make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
         clang|clangd|clang-* )
             include=1
             ;;
-        clang*|findAllSymbols|scan-build-py )
+        clang*|findAllSymbols|scan-build-py|clang-ast-dump )
             include=0
             ;;
         # Anything not covered above is included
@@ -76,8 +76,8 @@ pkgver(){
 }
 
 build(){
-export CFLAGS+=" -m32"
-export CXXFLAGS+=" -m32"
+export CFLAGS+=" -fno-diagnostics-color -fdiagnostics-color=never -m32"
+export CXXFLAGS+=" -fno-diagnostics-color -fdiagnostics-color=never -m32"
 export LDFLAGS+=" -m32"
 export ASFLAGS+=" --32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
