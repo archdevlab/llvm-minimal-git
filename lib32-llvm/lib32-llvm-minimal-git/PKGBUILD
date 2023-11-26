@@ -76,8 +76,8 @@ pkgver(){
 }
 
 build(){
-export CFLAGS+=" -fno-diagnostics-color -fdiagnostics-color=never -m32"
-export CXXFLAGS+=" -fno-diagnostics-color -fdiagnostics-color=never -m32"
+export CFLAGS+=" -m32"
+export CXXFLAGS+=" -m32"
 export LDFLAGS+=" -m32"
 export ASFLAGS+=" --32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
