@@ -153,7 +153,6 @@ export BINDGEN_EXTRA_CLANG_ARGS=" -m32"
     -D build-aco-tests=false
     -D install-intel-gpu-tests=false
     -D selinux=false
-    -D execmem=true
     -D osmesa=true
     -D tools=[]
     -D power8=disabled
@@ -167,8 +166,8 @@ export BINDGEN_EXTRA_CLANG_ARGS=" -m32"
     -D vmware-mks-stats=false
     -D vulkan-beta=true
     -D intel-clc=disabled
-    -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc,av1dec,av1enc,vp9dec
     -D gallium-d3d12-video=enabled
+    -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc,av1dec,av1enc,vp9dec
     -D intel-xe-kmd=enabled
   )
 
