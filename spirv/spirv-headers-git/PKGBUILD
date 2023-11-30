@@ -30,6 +30,9 @@ build(){
     -G "Unix Makefiles" \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr \
+    -D CMAKE_INSTALL_LIBDIR=lib \
+    -D CMAKE_INSTALL_SYSCONFDIR=/etc \
+    -D CMAKE_INSTALL_DATADIR=/share \
     -Wno-dev
 
   make -j$(nproc) -C "${srcdir}"/build
