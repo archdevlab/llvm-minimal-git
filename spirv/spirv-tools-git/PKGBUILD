@@ -4,9 +4,9 @@
 
 pkgname=spirv-tools-git
 pkgdesc='API and commands for processing SPIR-V modules (git version)'
-pkgver=2023.2
+pkgver=2023.5.r27.g2a238ed
 pkgrel=1
-commit=2a238ed24dffd84fe3ed2e60d7aa5c28e2acf45a
+commit=01ee1bf317611f52c8d3f2eb0fc451d266f826ee
 arch=(x86_64)
 url='https://github.com/KhronosGroup/SPIRV-Tools.git'
 license=(Apache-2.0)
@@ -20,7 +20,8 @@ pkgver(){
   cd "${srcdir}"/SPIRV-Tools
 
   # cutting off 'foo-' prefix that presents in the git tag
-  git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *.rc* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  #git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *.rc* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' | sed 's/rc1.//g'
 }
 
 build(){
