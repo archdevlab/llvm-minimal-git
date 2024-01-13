@@ -139,7 +139,7 @@ build(){
     -D rust_std=2021
     -D opencl-spirv=false
     -D static-libclc=all
-    -D opencl-external-clang-headers=enabled
+    -D opencl-external-clang-headers=disabled
     -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,imagination-experimental,nouveau-experimental
     -D imagination-srv=true
     -D shader-cache=enabled
