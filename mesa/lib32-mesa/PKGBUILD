@@ -102,6 +102,7 @@ export BINDGEN_EXTRA_CLANG_ARGS=" -m32"
     -D b_lto=false
     -D buildtype=plain
     --wrap-mode=nofallback
+    --force-fallback-for=syn
     -D prefix=/usr
     --libdir=/usr/lib32
     -D sysconfdir=/etc
