@@ -96,6 +96,12 @@ export BINDGEN_EXTRA_CLANG_ARGS=" -m32"
 
   rm -rf "${srcdir}"/build
 
+  # gallium-opencl is disabled since this issue in mesa
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
+  # Now we can re-enable gallium-opencl : https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591#note_2058098
+
+  # use --force-fallback-for=syn to download syn required for lib32-vulkan-nouveau-git
+
   local meson_options=(
     --cross-file lib32
     -D b_ndebug=true
