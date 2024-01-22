@@ -33,7 +33,8 @@ build(){
     -D CMAKE_INSTALL_PREFIX=/usr \
     -D CMAKE_INSTALL_LIBDIR=lib \
     -D CMAKE_INSTALL_SYSCONFDIR=/etc \
-    -D CMAKE_INSTALL_DATADIR=/share \
+    -D CMAKE_INSTALL_DATADIR=share \
+    -D CMAKE_INSTALL_INCLUDEDIR=include \
     -Wno-dev
 
   make -j$(nproc) -C "${srcdir}"/build
