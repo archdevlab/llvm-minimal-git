@@ -19,7 +19,7 @@ pkgname=(
    vulkan-nouveau-git
    mesa-git
 )
-pkgver=24.0.0_devel
+pkgver=24.1.0_devel
 pkgrel=1
 commit=93b29cd40a2d3e02234c0f1d5d78a24a70a3913d
 arch=(x86_64)
