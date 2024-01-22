@@ -44,9 +44,9 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 ### SPIRV-Tools
 
-- 2023.2
+- 2023.6
 
-- commit : 2a238ed24dffd84fe3ed2e60d7aa5c28e2acf45a
+- commit : 01ee1bf317611f52c8d3f2eb0fc451d266f826ee
 
 ### glslang
 
