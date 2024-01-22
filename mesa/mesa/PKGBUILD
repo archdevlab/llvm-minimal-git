@@ -122,6 +122,10 @@ build(){
     --wrap-mode=nofallback
     --force-fallback-for=syn
     -D prefix=/usr
+    -D bindir=bin
+    -D datadir=share
+    -D includedir=include
+    -D libdir=lib
     -D sysconfdir=/etc
     -D platforms=x11,wayland
     -D egl-native-platform=auto
