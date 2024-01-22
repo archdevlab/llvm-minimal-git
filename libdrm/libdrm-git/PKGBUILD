@@ -37,6 +37,10 @@ build(){
     -D buildtype=plain
     --wrap-mode=nofallback
     -D prefix=/usr
+    -D bindir=bin
+    -D datadir=share
+    -D includedir=include
+    -D libdir=lib
     -D sysconfdir=/etc
     -D intel=enabled
     -D radeon=enabled
