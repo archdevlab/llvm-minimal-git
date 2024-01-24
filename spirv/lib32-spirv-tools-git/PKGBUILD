@@ -4,9 +4,9 @@
 
 pkgname=lib32-spirv-tools-git
 pkgdesc='API and commands for processing SPIR-V modules (32-bit) (git version)'
-pkgver=2023.2
+pkgver=2023.6
 pkgrel=1
-commit=2a238ed24dffd84fe3ed2e60d7aa5c28e2acf45a
+commit=01ee1bf317611f52c8d3f2eb0fc451d266f826ee
 arch=(x86_64)
 url='https://github.com/KhronosGroup/SPIRV-Tools.git'
 license=(Apache-2.0)
@@ -20,7 +20,8 @@ pkgver(){
   cd "${srcdir}"/SPIRV-Tools
 
   # cutting off 'foo-' prefix that presents in the git tag
-  git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *.rc* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  #git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *.rc* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' | sed 's/rc1.//g'
 }
 
 build(){
@@ -38,9 +39,11 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
     -G "Unix Makefiles"\
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr \
+    -D CMAKE_INSTALL_BINDIR=bin \
     -D CMAKE_INSTALL_LIBDIR=lib32 \
+    -D CMAKE_INSTALL_INCLUDEDIR=include \
     -D CMAKE_INSTALL_SYSCONFDIR=/etc \
-    -D CMAKE_INSTALL_DATADIR=/share \
+    -D CMAKE_INSTALL_DATADIR=share \
     -D SPIRV_WERROR=OFF \
     -D BUILD_SHARED_LIBS=ON \
     -D SPIRV_TOOLS_BUILD_STATIC=OFF \

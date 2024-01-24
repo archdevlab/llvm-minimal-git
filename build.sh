@@ -38,6 +38,8 @@ cd libglvnd/lib32-libglvnd-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd mesa/mesa/ && makepkg -si --noconfirm && cd ${source}
 
+cd mesa/lib32-mesa/ && makepkg -si --noconfirm && cd ${source}
+
 # make a copy of every pkg in package/ dir
 
 mkdir package
