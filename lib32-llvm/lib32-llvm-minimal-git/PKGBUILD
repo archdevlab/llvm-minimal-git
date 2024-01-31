@@ -5,12 +5,12 @@
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
 pkgbase=lib32-llvm-minimal-git
-pkgname=(lib32-llvm-minimal-git lib32-clang-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git)
+pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=18.0.0
+pkgver=19.0.0
 pkgrel=1
-_pkgver=18.0.0
-commit=ab02372c23d736390587aab141fe69c142373002
+_pkgver=19.0.0
+commit=ae46855f53b6fe39a8d17797a49b2911c08fb973
 arch=(i686 x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja lib32-libffi lib32-zlib lib32-zstd python
@@ -26,7 +26,7 @@ local include
 
 make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
     case $target in
-        llvm-libraries|clang-libraries|clang-tidy-headers|distribution )
+        llvm-libraries|distribution )
             include=0
             ;;
         # shared libraries
@@ -43,12 +43,6 @@ make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
             ;;
         # exclude llvm-exegesis (doesn't seem useful without libpfm)
         llvm-exegesis )
-            include=0
-            ;;
-        clang|clangd|clang-* )
-            include=1
-            ;;
-        clang*|findAllSymbols|scan-build-py )
             include=0
             ;;
         # Anything not covered above is included
@@ -111,7 +105,6 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
         -D LLVM_VERSION_SUFFIX=""
         -D LLVM_ENABLE_BINDINGS=OFF
         -D LLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
-        -D LLVM_ENABLE_PROJECTS="clang"
       )
 
     cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/llvm "${cmake_args[@]}" -Wno-dev
@@ -150,25 +143,12 @@ package_lib32-llvm-minimal-git(){
   # The llvm runtime libraries go into llvm-libs-minimal-git
   mv -f "${pkgdir}"/usr/lib32/lib{LLVM-*.so,LTO.so.*,Remarks.so.*} "${srcdir}"/lib32-llvm-libs/usr/lib32/
 
-  # The clang runtime libraries go into lib32-clang-libs-minimal-git
-  # https://bugs.archlinux.org/task/72588?project=1&string=clang
-  mkdir -p "${srcdir}"/lib32-clang-libs/usr/lib32
-  mv -f "${pkgdir}"/usr/lib32/libclang{,-cpp}.so* "${srcdir}"/lib32-clang-libs/usr/lib32/
-
-  # lib32-clang-minimal-git files go to a separate package
-  mkdir -p "${srcdir}"/lib32-clang/usr/{lib32,lib32/cmake}
-  mv -f "${pkgdir}"/usr/lib32/clang "${srcdir}"/lib32-clang/usr/lib32
-  mv -f "${pkgdir}"/usr/lib32/cmake/clang "${srcdir}"/lib32-clang/usr/lib32/cmake/
-
   # Fix permissions of static libs
   chmod -x "${pkgdir}"/usr/lib32/*.a
 
   mv "${pkgdir}"/usr/bin/llvm-config "${pkgdir}"/usr/lib32/llvm-config
 
-  #rm -rf "${pkgdir}"/usr/{bin,include,lib,lib32/{libear,libscanbuild},libexec,share/{doc,clang,man,llvm,opt-viewer,clang,scan-build,scan-view}}
-
   rm -rf "${pkgdir}"/usr/{bin,include,share/{doc,man,llvm,opt-viewer}}
-  rm -rf "${pkgdir}"/usr/{bin,include,lib,libexec,share}
 
   mkdir "${pkgdir}"/usr/bin
   mv "${pkgdir}"/usr/lib32/llvm-config "${pkgdir}"/usr/bin/llvm-config32
@@ -176,19 +156,6 @@ package_lib32-llvm-minimal-git(){
   install -Dm644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
   install -Dm644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
   install -Dm644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
-}
-
-package_lib32-clang-minimal-git(){
-  pkgdesc='C language family frontend for LLVM (32-bit) (git version)'
-  depends=(lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git gcc-multilib)
-  conflicts=(lib32-clang)
-  provides=(lib32-clang)
-  provides+=(lib32-clang-minimal-git lib32-clang-git)
-
-  cp --preserve --recursive "${srcdir}"/lib32-clang/* "${pkgdir}"/
-
-  install -Dm644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners.rst
 }
 
 package_lib32-llvm-libs-minimal-git(){
@@ -212,22 +179,6 @@ package_lib32-llvm-libs-minimal-git(){
   install -Dm644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
   install -Dm644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
   install -Dm644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
-}
-
-# https://bugs.archlinux.org/task/72588?project=1&string=clang
-package_lib32-clang-libs-minimal-git(){
-  pkgdesc='Clang runtime libraries (32-bit) (git version)'
-  depends=(lib32-llvm-libs-minimal-git)
-  # lib32-clang-libs doesn't exist in repos at this time, but it's cleaner to provide & conflict it.
-  # TODO: Once repo lib32-clang-libs comes into existence, verify if changes are needed to this package
-  conflicts=(lib32-clang-libs)
-  provides=(lib32-clang-libs)
-  provides+=(lib32-clang-libs-minimal-git lib32-clang-libs-git)
-
-  cp --preserve --recursive "${srcdir}"/lib32-clang-libs/* "${pkgdir}"/
-
-  install -Dm644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners.rst
 }
 
 sha256sums=('SKIP')
