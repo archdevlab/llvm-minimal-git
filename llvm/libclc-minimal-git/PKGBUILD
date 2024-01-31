@@ -5,9 +5,9 @@
 pkgname=libclc-minimal-git
 pkgdesc='Library requirements of the OpenCL C programming language (git version)'
 url='https://libclc.llvm.org/'
-pkgver=18.0.0
+pkgver=19.0.0
 pkgrel=1
-commit=ab02372c23d736390587aab141fe69c142373002
+commit=ae46855f53b6fe39a8d17797a49b2911c08fb973
 arch=(x86_64)
 license=(MIT)
 makedepends=(clang-minimal-git llvm-minimal-git cmake ninja python spirv-llvm-translator-minimal-git llvm-libs-minimal-git llvm-libs make)
