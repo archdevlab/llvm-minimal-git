@@ -56,9 +56,9 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 ### LLVM
 
-- 18.0.0
+- 19.0.0
 
-- commit: ab02372c23d736390587aab141fe69c142373002
+- commit: ae46855f53b6fe39a8d17797a49b2911c08fb973
 
 ### SPIRV-LLVM-Translator
 
