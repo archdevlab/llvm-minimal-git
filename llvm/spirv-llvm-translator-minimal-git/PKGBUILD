@@ -7,10 +7,10 @@
 pkgname=spirv-llvm-translator-minimal-git
 pkgdesc='Tool and a library for bi-directional translation between SPIR-V and LLVM IR (git version)'
 url='https://github.com/KhronosGroup/SPIRV-LLVM-Translator'
-pkgver=18.0.0
-_pkgver=18.0.0
+pkgver=19.0.0
+_pkgver=19.0.0
 pkgrel=1
-commit=9edf71445c624ab4cc6c2213cef917d2e4906e54
+commit=ba10b26a988262fb05c44c2ac983499feedc6710
 arch=(x86_64)
 license=(custom)
 depends=(llvm-libs-minimal-git spirv-tools-git)
