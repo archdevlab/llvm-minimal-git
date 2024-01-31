@@ -24,6 +24,8 @@ cd llvm/libclc-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd lib32-llvm/lib32-llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
+cd lib32-llvm/lib32-clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+
 cd lib32-llvm/lib32-spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd directx-headers-git/ && makepkg -si --noconfirm && cd ${source}
