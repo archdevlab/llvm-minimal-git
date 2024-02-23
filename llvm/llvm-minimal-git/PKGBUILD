@@ -115,8 +115,8 @@ export CXXFLAGS+=" ${CPPFLAGS}"
       -D LLVM_ENABLE_DOXYGEN=OFF
       -D LLVM_ENABLE_BINDINGS=OFF
       -D LLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
-      -D LLVM_ENABLE_DUMP=ON
       -D LLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
+      -D LLVM_ENABLE_DUMP=ON
       -D COMPILER_RT_INSTALL_PATH=/usr/lib/clang/"${_pkgver}"
     )
 
