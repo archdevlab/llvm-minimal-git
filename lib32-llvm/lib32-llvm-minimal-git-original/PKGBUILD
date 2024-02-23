@@ -110,8 +110,12 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
         -D LLVM_BINUTILS_INCDIR=/usr/include
         -D LLVM_VERSION_SUFFIX=""
         -D LLVM_ENABLE_BINDINGS=OFF
+        -D LLVM_ENABLE_DUMP=ON
         -D LLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
         -D LLVM_ENABLE_PROJECTS="clang"
+        -D CLANG_LINK_CLANG_DYLIB=ON
+        -D CLANG_DEFAULT_PIE_ON_LINUX=ON
+        -D ENABLE_LINKER_BUILD_ID=ON
       )
 
     cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/llvm "${cmake_args[@]}" -Wno-dev
@@ -218,8 +222,8 @@ package_lib32-llvm-libs-minimal-git(){
 package_lib32-clang-libs-minimal-git(){
   pkgdesc='Clang runtime libraries (32-bit) (git version)'
   depends=(lib32-llvm-libs-minimal-git)
-  # lib32-clang-libs doesn't exist in repos at this time, but it's cleaner to provide & conflict it.
-  # TODO: Once repo lib32-clang-libs comes into existence, verify if changes are needed to this package
+  # the functionality offered by this package is part of the clang repo pacakge.
+  # TODO: when/if this functionality is split off from repo clang, verify if changes are needed to this package
   conflicts=(lib32-clang-libs)
   provides=(lib32-clang-libs)
   provides+=(lib32-clang-libs-minimal-git lib32-clang-libs-git)
