@@ -265,8 +265,8 @@ package_llvm-libs-minimal-git(){
 package_clang-libs-minimal-git(){
   pkgdesc='Clang runtime libraries (git version)'
   depends=(llvm-libs-minimal-git)
-  # clang-libs doesn't exist in repos at this time, but it's cleaner to provide & conflict it.
-  # TODO: Once repo clang-libs comes into existence, verify if changes are needed to this package
+  # the functionality offered by this package is part of the clang repo pacakge.
+  # TODO: when/if this functionality is split off from repo clang, verify if changes are needed to this package
   conflicts=(clang-libs)
   provides=(clang-libs)
   provides+=(clang-libs-minimal-git clang-libs-git)
