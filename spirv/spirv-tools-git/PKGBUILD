@@ -16,13 +16,13 @@ conflicts=(spirv-tools)
 provides=(spirv-tools spirv-tools-git)
 source=(git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit="${commit}")
 
-pkgver(){
-  cd "${srcdir}"/SPIRV-Tools
-
-  # cutting off 'foo-' prefix that presents in the git tag
-  #git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *.rc* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
-  git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' | sed 's/rc1.//g'
-}
+#pkgver(){
+#  cd "${srcdir}"/SPIRV-Tools
+#
+#  # cutting off 'foo-' prefix that presents in the git tag
+#  #git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *.rc* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+#  git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' | sed 's/rc1.//g'
+#}
 
 build(){
   rm -rf "${srcdir}"/build
@@ -43,6 +43,15 @@ build(){
     -Wno-dev
 
   make -j$(nproc) -C "${srcdir}"/build
+}
+
+pkgver(){
+  local _ver1 _ver2
+  # read fails if only 1 var is used
+  IFS="," read -r _ver1 _ver2 < "${srcdir}"/build/build-version.inc || [ -n "_ver1" ]
+  
+  cd "${srcdir}"/SPIRV-Tools  
+  echo ${_ver1//v/}.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 
 package_spirv-tools-git(){
