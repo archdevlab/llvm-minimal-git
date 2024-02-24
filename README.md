@@ -38,9 +38,9 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 ### SPIRV-Headers
 
-- 1.3.275.0
+- 1.3.275
 
-- commit : bdd1b2ab1f03e616047bbcf8971157dccd50c792
+- commit : 05cc486580771e4fa7ddc89f5c9ee1e97382689a
 
 ### SPIRV-Tools
 
