@@ -64,7 +64,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 19.0.0
 
-- commit : ba10b26a988262fb05c44c2ac983499feedc6710
+- commit : 81f78d24db3662220d3c293f3ba0514fad3e0c94
 
 ### Directx-Headers
 
