@@ -51,7 +51,7 @@ pkgver(){
   IFS="," read -r _ver1 _ver2 < "${srcdir}"/build/build-version.inc || [ -n "_ver1" ]
   
   cd "${srcdir}"/SPIRV-Tools  
-  echo ${_ver1//v/}.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+  echo ${_ver1//v/}.r$(git rev-list --count HEAD).g$(git rev-parse --short --abbrev=7 HEAD)
 }
 
 package_spirv-tools-git(){
