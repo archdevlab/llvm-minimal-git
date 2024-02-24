@@ -52,7 +52,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 14.0.0
 
-- commit : 1952e63d437beb0a3ba7df27f34ced0cef656824
+- commit : 2518af09c8b39423e76db9efdf94a5a478f4e5fc
 
 ### LLVM
 
