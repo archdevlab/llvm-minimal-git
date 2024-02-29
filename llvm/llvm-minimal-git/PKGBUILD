@@ -4,10 +4,10 @@
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
 pkgbase=llvm-minimal-git
-pkgname=(llvm-minimal-git clang-minimal-git llvm-libs-minimal-git clang-libs-minimal-git)
+pkgname=(llvm-minimal-git clang-minimal-git compiler-rt-minimal-git llvm-libs-minimal-git clang-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=19.0.0
-pkgrel=1
+pkgver=19.0.0.r490664.gde3b2c293b8b
+pkgrel=2
 _pkgver=19.0.0
 commit=de3b2c293b8bf336f8e1380148cf16b54a794c0c
 arch=(x86_64)
@@ -15,9 +15,11 @@ license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja zlib zstd libffi libedit ncurses
              libxml2 python-setuptools python-psutil python-sphinx
              python-recommonmark make)
+makedepends_x86_64=(lib32-gcc-libs)
 options=(staticlibs !lto) # https://github.com/llvm/llvm-project/issues/57740
 # https://gitlab.archlinux.org/archlinux/packaging/packages/llvm/-/commit/de2e5eca3b91d3be3baff5f4310420dae9ad0944
 # source=(git+https://github.com/llvm/llvm-project.git#commit=$llvmcommit
+
 #         llvm-config.h)
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
@@ -88,6 +90,8 @@ build(){
 export CFLAGS+=" ${CPPFLAGS}"
 export CXXFLAGS+=" ${CPPFLAGS}"
 
+  rm -rf "${srcdir}"/llvm-project/.git
+
   local cmake_args=(
       -G "Unix Makefiles"
       -D CMAKE_BUILD_TYPE=Release
@@ -117,7 +121,7 @@ export CXXFLAGS+=" ${CPPFLAGS}"
       -D LLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
       -D LLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
       -D LLVM_ENABLE_DUMP=ON
-      -D COMPILER_RT_INSTALL_PATH=/usr/lib/clang/"${_pkgver}"
+      -D COMPILER_RT_INSTALL_PATH=/usr/lib/clang/19
     )
 
   cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/llvm "${cmake_args[@]}" -Wno-dev
@@ -166,12 +170,22 @@ package_llvm-minimal-git(){
   rm "${pkgdir}"/usr/lib/{LLVMgold,lib{LLVM,LTO}}.so
   rm "${pkgdir}"/usr/lib/libRemarks.so
   # The llvm runtime libraries go into llvm-libs-minimal-git
-  mv -f "${pkgdir}"/usr/lib/lib{LLVM-*.so,LTO.so.*,Remarks.so.*} "${srcdir}"/llvm-libs/usr/lib/
+  mv -f "${pkgdir}"/usr/lib/lib{LLVM-*.so,LLVM.so.*,LTO.so.*,Remarks.so.*} "${srcdir}"/llvm-libs/usr/lib/
 
   # The clang runtime libraries go into clang-libs-minimal-git
   # https://bugs.archlinux.org/task/72588?project=1&string=clang
   mkdir -p "${srcdir}"/clang-libs/usr/lib
   mv -f "${pkgdir}"/usr/lib/libclang{,-cpp}.so* "${srcdir}"/clang-libs/usr/lib/
+
+  # compiler-rt-minimal-git files go to a separate package
+  mkdir -p "${srcdir}"/compiler-rt/usr/lib/clang/19/{include,lib,share}
+  mv -f "${pkgdir}"/usr/lib/clang/19/include/fuzzer/ "${srcdir}"/compiler-rt/usr/lib/clang/19/include/
+  mv -f "${pkgdir}"/usr/lib/clang/19/include/orc/ "${srcdir}"/compiler-rt/usr/lib/clang/19/include/
+  mv -f "${pkgdir}"/usr/lib/clang/19/include/profile/ "${srcdir}"/compiler-rt/usr/lib/clang/19/include/
+  mv -f "${pkgdir}"/usr/lib/clang/19/include/sanitizer/ "${srcdir}"/compiler-rt/usr/lib/clang/19/include/
+  mv -f "${pkgdir}"/usr/lib/clang/19/include/xray/ "${srcdir}"/compiler-rt/usr/lib/clang/19/include/
+  mv -f "${pkgdir}"/usr/lib/clang/19/lib/{i386-pc-linux-gnu,x86_64-pc-linux-gnu} "${srcdir}"/compiler-rt/usr/lib/clang/19/lib/
+  mv -f "${pkgdir}"/usr/lib/clang/19/share/ "${srcdir}"/compiler-rt/usr/lib/clang/19/
 
   # clang-minimal-git files go to a separate package
   mkdir -p "${srcdir}"/clang/usr/{bin,include,lib,lib/cmake,share}
@@ -197,14 +211,15 @@ package_llvm-minimal-git(){
 
 package_clang-minimal-git(){
   pkgdesc='C language family frontend for LLVM (git version)'
-  depends=(llvm-libs-minimal-git clang-libs-minimal-git gcc)
+  depends=(llvm-libs-minimal-git clang-libs-minimal-git gcc compiler-rt-minimal-git)
   optdepends=('openmp: OpenMP support in clang with -fopenmp'
               'python: for scan-view, scan-build, git-clang-format, clang-rename and python bindings'
               'llvm-minimal-git: referenced by some clang headers')
-  conflicts=(compiler-rt clang)
-  provides=(compiler-rt clang clang-analyzer clang-tools-extra)
-  provides+=(compiler-rt-minimal-git clang-minimal-git compiler-rt-git clang-git)
+  conflicts=(clang)
+  provides=(clang clang-analyzer clang-tools-extra)
+  provides+=(clang-minimal-git clang-git)
   replaces=(clang-analyzer clang-tools-extra)
+  options=(!emptydirs)
 
   cp --preserve --recursive "${srcdir}"/clang/* "${pkgdir}"/
 
@@ -236,6 +251,20 @@ package_clang-minimal-git(){
   install -Dm644 "${srcdir}"/llvm-project/clang-tools-extra/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang-tools-extra/LICENSE
   install -Dm644 "${srcdir}"/llvm-project/clang-tools-extra/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang-tools-extra/CODE_OWNERS
   install -Dm644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/compiler-rt/LICENSE
+}
+
+package_compiler-rt-minimal-git(){
+  pkgdesc='Compiler runtime libraries for clang (git version)'
+  depends=(gcc-libs)
+  conflicts=(compiler-rt)
+  provides=(compiler-rt)
+  provides+=(compiler-rt-minimal-git)
+
+  cp --preserve --recursive "${srcdir}"/compiler-rt/* "${pkgdir}"/
+
+  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
+  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
 }
 
 package_llvm-libs-minimal-git(){

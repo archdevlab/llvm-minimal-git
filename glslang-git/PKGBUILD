@@ -13,7 +13,7 @@
 
 pkgname=glslang-git
 pkgdesc='OpenGL and OpenGL ES shader front end and validator (git version)'
-pkgver=14.0.0
+pkgver=14.0.0.r47.g2518af0
 pkgrel=1
 commit=2518af09c8b39423e76db9efdf94a5a478f4e5fc
 arch=(x86_64)

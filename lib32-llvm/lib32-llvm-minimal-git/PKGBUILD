@@ -7,10 +7,10 @@
 pkgbase=lib32-llvm-minimal-git
 pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=19.0.0
+pkgver=19.0.0.r490664.gde3b2c293b8b
 pkgrel=1
 _pkgver=19.0.0
-commit=ae46855f53b6fe39a8d17797a49b2911c08fb973
+commit=de3b2c293b8bf336f8e1380148cf16b54a794c0c
 arch=(i686 x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja lib32-libffi lib32-zlib lib32-zstd python
@@ -75,6 +75,8 @@ export CXXFLAGS+=" -m32"
 export LDFLAGS+=" -m32"
 export ASFLAGS+=" --32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+    rm -rf "${srcdir}"/llvm-project/.git
 
     local cmake_args=(
         -D CMAKE_CXX_FLAGS:STRING=-m32
@@ -141,7 +143,7 @@ package_lib32-llvm-minimal-git(){
   rm "${pkgdir}"/usr/lib32/{LLVMgold,lib{LLVM,LTO}}.so
   rm "${pkgdir}"/usr/lib32/libRemarks.so
   # The llvm runtime libraries go into llvm-libs-minimal-git
-  mv -f "${pkgdir}"/usr/lib32/lib{LLVM-*.so,LTO.so.*,Remarks.so.*} "${srcdir}"/lib32-llvm-libs/usr/lib32/
+  mv -f "${pkgdir}"/usr/lib32/lib{LLVM-*.so,LLVM.so.*,LTO.so.*,Remarks.so.*} "${srcdir}"/lib32-llvm-libs/usr/lib32/
 
   # Fix permissions of static libs
   chmod -x "${pkgdir}"/usr/lib32/*.a
