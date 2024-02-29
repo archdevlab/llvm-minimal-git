@@ -4,7 +4,7 @@
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
 pkgbase=llvm-minimal-git
-pkgname=(llvm-minimal-git clang-minimal-git compiler-rt-minimal-git llvm-libs-minimal-git clang-libs-minimal-git)
+pkgname=(llvm-minimal-git llvm-libs-minimal-git compiler-rt-minimal-git clang-minimal-git clang-libs-minimal-git)
 url='https://llvm.org/'
 pkgver=19.0.0.r490664.gde3b2c293b8b
 pkgrel=2
@@ -209,6 +209,43 @@ package_llvm-minimal-git(){
   install -Dm644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
 }
 
+package_llvm-libs-minimal-git(){
+  pkgdesc='LLVM runtime libraries (git version)'
+  #depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2)
+  #conflicts=(llvm-libs)
+  #provides=(llvm-libs)
+  # some applications expect llvmgold.so to be present and fail badly if it isn't.
+  # adding llvm-libs as depend is the easiest solution
+  depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2 llvm-libs)
+  provides+=(llvm-libs-minimal-git llvm-libs-git)
+
+  cp --preserve --recursive "${srcdir}"/llvm-libs/* "${pkgdir}"/
+
+  # This is when wee want llvm-libs-minimal-git to conflict with llvm-libs
+  #  # Symlink LLVMgold.so from /usr/lib/bfd-plugins
+  #  # https://bugs.archlinux.org/task/28479
+  #  install -d "${pkgdir}"/usr/lib/bfd-plugins
+  #  ln -s ../LLVMgold.so "${pkgdir}"/usr/lib/bfd-plugins/LLVMgold.so
+
+  install -Dm644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -Dm644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
+  install -Dm644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
+}
+
+package_compiler-rt-minimal-git(){
+  pkgdesc='Compiler runtime libraries for clang (git version)'
+  depends=(gcc-libs)
+  conflicts=(compiler-rt)
+  provides=(compiler-rt)
+  provides+=(compiler-rt-minimal-git)
+
+  cp --preserve --recursive "${srcdir}"/compiler-rt/* "${pkgdir}"/
+
+  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
+  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
+}
+
 package_clang-minimal-git(){
   pkgdesc='C language family frontend for LLVM (git version)'
   depends=(llvm-libs-minimal-git clang-libs-minimal-git gcc compiler-rt-minimal-git)
@@ -253,43 +290,6 @@ package_clang-minimal-git(){
   install -Dm644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/compiler-rt/LICENSE
 }
 
-package_compiler-rt-minimal-git(){
-  pkgdesc='Compiler runtime libraries for clang (git version)'
-  depends=(gcc-libs)
-  conflicts=(compiler-rt)
-  provides=(compiler-rt)
-  provides+=(compiler-rt-minimal-git)
-
-  cp --preserve --recursive "${srcdir}"/compiler-rt/* "${pkgdir}"/
-
-  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
-  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
-}
-
-package_llvm-libs-minimal-git(){
-  pkgdesc='LLVM runtime libraries (git version)'
-  #depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2)
-  #conflicts=(llvm-libs)
-  #provides=(llvm-libs)
-  # some applications expect llvmgold.so to be present and fail badly if it isn't.
-  # adding llvm-libs as depend is the easiest solution
-  depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2 llvm-libs)
-  provides+=(llvm-libs-minimal-git llvm-libs-git)
-
-  cp --preserve --recursive "${srcdir}"/llvm-libs/* "${pkgdir}"/
-
-  # This is when wee want llvm-libs-minimal-git to conflict with llvm-libs
-  #  # Symlink LLVMgold.so from /usr/lib/bfd-plugins
-  #  # https://bugs.archlinux.org/task/28479
-  #  install -d "${pkgdir}"/usr/lib/bfd-plugins
-  #  ln -s ../LLVMgold.so "${pkgdir}"/usr/lib/bfd-plugins/LLVMgold.so
-
-  install -Dm644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
-  install -Dm644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
-}
-
 # https://bugs.archlinux.org/task/72588?project=1&string=clang
 package_clang-libs-minimal-git(){
   pkgdesc='Clang runtime libraries (git version)'
@@ -306,6 +306,6 @@ package_clang-libs-minimal-git(){
   install -Dm644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners.rst
 }
 
-sha256sums=('SKIP')
+sha256sums=(SKIP)
 
 # vim:set ts=8 sts=2 sw=2 et:
