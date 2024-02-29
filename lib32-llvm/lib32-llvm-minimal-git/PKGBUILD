@@ -5,7 +5,7 @@
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
 pkgbase=lib32-llvm-minimal-git
-pkgname=(lib32-llvm-minimal-git lib32-clang-minimal-git lib32-compiler-rt-minimal-git lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git)
+pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git lib32-compiler-rt-minimal-git lib32-clang-minimal-git lib32-clang-libs-minimal-git)
 url='https://llvm.org/'
 pkgver=19.0.0.r490664.gde3b2c293b8b
 pkgrel=2
@@ -208,6 +208,43 @@ package_lib32-llvm-minimal-git(){
   install -Dm644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
 }
 
+package_lib32-llvm-libs-minimal-git(){
+  pkgdesc='Low Level Virtual Machine (runtime library) (32-bit) (git version)'
+  #depends=(lib32-libffi lib32-zlib lib32-zstd lib32-ncurses lib32-libxml2 lib32-gcc-libs)
+  #conflicts=(lib32-llvm-libs)
+  #provides=(lib32-llvm-libs)
+  # some applications expect llvmgold.so to be present and fail badly if it isn't.
+  # adding lib32-llvm-libs as depend is the easiest solution
+  depends=(lib32-libffi lib32-zlib lib32-zstd lib32-ncurses lib32-libxml2 lib32-gcc-libs lib32-llvm-libs)
+  provides+=(lib32-llvm-libs-minimal-git lib32-llvm-libs-git)
+
+  cp --preserve --recursive "${srcdir}"/lib32-llvm-libs/* "${pkgdir}"/
+
+  # This is when wee want lib32-llvm-libs-minimal-git to conflict with lib32-llvm-libs
+  #  # Symlink LLVMgold.so from /usr/lib/bfd-plugins
+  #  # https://bugs.archlinux.org/task/28479
+  #  install -d "${pkgdir}"/usr/lib32/bfd-plugins
+  #  ln -s ../LLVMgold.so "${pkgdir}"/usr/lib32/bfd-plugins/LLVMgold.so
+
+  install -Dm644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -Dm644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
+  install -Dm644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
+}
+
+package_lib32-compiler-rt-minimal-git(){
+  pkgdesc='Compiler runtime libraries for clang (32-bit) (git version)'
+  depends=(gcc-libs lib32-gcc-libs)
+  conflicts=(lib32-compiler-rt)
+  provides=(lib32-compiler-rt)
+  provides+=(lib32-compiler-rt-minimal-git)
+
+  cp --preserve --recursive "${srcdir}"/lib32-compiler-rt/* "${pkgdir}"/
+
+  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
+  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
+}
+
 package_lib32-clang-minimal-git(){
   pkgdesc='C language family frontend for LLVM (32-bit) (git version)'
   depends=(lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git lib32-compiler-rt-minimal-git gcc-multilib)
@@ -253,43 +290,6 @@ package_lib32-clang-minimal-git(){
   install -Dm644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/compiler-rt/LICENSE
 }
 
-package_lib32-compiler-rt-minimal-git(){
-  pkgdesc='Compiler runtime libraries for clang (32-bit) (git version)'
-  depends=(gcc-libs lib32-gcc-libs)
-  conflicts=(lib32-compiler-rt)
-  provides=(lib32-compiler-rt)
-  provides+=(compiler-rt-minimal-git)
-
-  cp --preserve --recursive "${srcdir}"/lib32-compiler-rt/* "${pkgdir}"/
-
-  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
-  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
-}
-
-package_lib32-llvm-libs-minimal-git(){
-  pkgdesc='Low Level Virtual Machine (runtime library) (32-bit) (git version)'
-  #depends=(lib32-libffi lib32-zlib lib32-zstd lib32-ncurses lib32-libxml2 lib32-gcc-libs)
-  #conflicts=(lib32-llvm-libs)
-  #provides=(lib32-llvm-libs)
-  # some applications expect llvmgold.so to be present and fail badly if it isn't.
-  # adding lib32-llvm-libs as depend is the easiest solution
-  depends=(lib32-libffi lib32-zlib lib32-zstd lib32-ncurses lib32-libxml2 lib32-gcc-libs lib32-llvm-libs)
-  provides+=(lib32-llvm-libs-minimal-git lib32-llvm-git)
-
-  cp --preserve --recursive "${srcdir}"/lib32-llvm-libs/* "${pkgdir}"/
-
-  # This is when wee want lib32-llvm-libs-minimal-git to conflict with lib32-llvm-libs
-  #  # Symlink LLVMgold.so from /usr/lib/bfd-plugins
-  #  # https://bugs.archlinux.org/task/28479
-  #  install -d "${pkgdir}"/usr/lib32/bfd-plugins
-  #  ln -s ../LLVMgold.so "${pkgdir}"/usr/lib32/bfd-plugins/LLVMgold.so
-
-  install -Dm644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
-  install -Dm644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
-}
-
 # https://bugs.archlinux.org/task/72588?project=1&string=clang
 package_lib32-clang-libs-minimal-git(){
   pkgdesc='Clang runtime libraries (32-bit) (git version)'
@@ -306,6 +306,6 @@ package_lib32-clang-libs-minimal-git(){
   install -Dm644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners.rst
 }
 
-sha256sums=('SKIP')
+sha256sums=(SKIP)
 
 # vim:set ts=8 sts=2 sw=2 et:
