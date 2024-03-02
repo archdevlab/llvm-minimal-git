@@ -9,7 +9,7 @@ url='https://llvm.org/'
 pkgver=19.0.0.r490664.gde3b2c293b8b
 pkgrel=2
 _pkgver=19.0.0
-commit=de3b2c293b8bf336f8e1380148cf16b54a794c0c
+commit=07317bbc66d1f2d7663af3c9f04d0f6c0487ac03
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja zlib zstd libffi libedit ncurses
@@ -19,7 +19,6 @@ makedepends_x86_64=(lib32-gcc-libs)
 options=(staticlibs !lto) # https://github.com/llvm/llvm-project/issues/57740
 # https://gitlab.archlinux.org/archlinux/packaging/packages/llvm/-/commit/de2e5eca3b91d3be3baff5f4310420dae9ad0944
 # source=(git+https://github.com/llvm/llvm-project.git#commit=$llvmcommit
-
 #         llvm-config.h)
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
@@ -204,9 +203,11 @@ package_llvm-minimal-git(){
   #   cp "${srcdir}"/llvm-config.h "${pkgdir}"/usr/include/llvm/Config/llvm-config.h
   # fi
 
-  install -Dm644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
-  install -Dm644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
+  install -m644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
 }
 
 package_llvm-libs-minimal-git(){
@@ -241,9 +242,11 @@ package_compiler-rt-minimal-git(){
 
   cp --preserve --recursive "${srcdir}"/compiler-rt/* "${pkgdir}"/
 
-  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
-  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/compiler-rt/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
+  install -m644 "${srcdir}"/llvm-project/compiler-rt/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
 }
 
 package_clang-minimal-git(){
@@ -283,11 +286,12 @@ package_clang-minimal-git(){
   # optimize other python files except 2 problem cases
   _python_optimize "${pkgdir}"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
 
-  install -Dm644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/CodeOwners.rst
-  install -Dm644 "${srcdir}"/llvm-project/clang-tools-extra/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang-tools-extra/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/clang-tools-extra/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang-tools-extra/CODE_OWNERS
-  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/compiler-rt/LICENSE
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/LICENSE
+  install -m644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/CodeOwners.rst
+  install -m644 "${srcdir}"/llvm-project/clang-tools-extra/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang-tools-extra/LICENSE
+  install -m644 "${srcdir}"/llvm-project/clang-tools-extra/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang-tools-extra/CODE_OWNERS
 }
 
 # https://bugs.archlinux.org/task/72588?project=1&string=clang
@@ -302,8 +306,10 @@ package_clang-libs-minimal-git(){
 
   cp --preserve --recursive "${srcdir}"/clang-libs/* "${pkgdir}"/
 
-  install -Dm644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners.rst
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners.rst
 }
 
 sha256sums=(SKIP)

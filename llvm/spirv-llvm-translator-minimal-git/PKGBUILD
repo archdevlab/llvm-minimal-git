@@ -10,7 +10,7 @@ url='https://github.com/KhronosGroup/SPIRV-LLVM-Translator'
 pkgver=19.0.0.r1984.g81f78d2
 _pkgver=19.0.0
 pkgrel=1
-commit=81f78d24db3662220d3c293f3ba0514fad3e0c94
+commit=7d7e0ac5303f93db804402b8c1f9c03da7eb2114
 arch=(x86_64)
 license=(custom)
 depends=(llvm-libs-minimal-git spirv-tools-git)
@@ -50,8 +50,12 @@ check(){
 
 package(){
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install
+
   install -Dm755 "${srcdir}"/build/tools/llvm-spirv/llvm-spirv -t "${pkgdir}"/usr/bin/
-  install -Dm644 "${srcdir}"/SPIRV-LLVM-Translator/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/SPIRV-LLVM-Translator/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
 
-sha256sums=('SKIP')
+sha256sums=(SKIP)

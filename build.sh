@@ -8,6 +8,9 @@ echo "${source}"
 
 # build
 
+# remove the .git dir. Sometimes it can create conflicts when making package version
+rm -rf .git
+
 cd spirv/spirv-headers-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd spirv/spirv-tools-git/ && makepkg -si --noconfirm && cd ${source}

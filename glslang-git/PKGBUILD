@@ -15,7 +15,7 @@ pkgname=glslang-git
 pkgdesc='OpenGL and OpenGL ES shader front end and validator (git version)'
 pkgver=14.0.0.r47.g2518af0
 pkgrel=1
-commit=2518af09c8b39423e76db9efdf94a5a478f4e5fc
+commit=bf08e1db5cc7d20530f86b1d9bdfc6a0c2da372c
 arch=(x86_64)
 url='https://github.com/KhronosGroup/glslang'
 license=(BSD)
@@ -28,7 +28,6 @@ source=(git+https://github.com/KhronosGroup/glslang.git#commit="${commit}")
 
 pkgver(){
   cd "${srcdir}"/glslang
-
   git describe --long --tags --abbrev=7 --exclude master-tot --exclude main-tot --exclude sdk-* --exclude SDK-candidate\* --exclude untagged\* | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
@@ -39,6 +38,7 @@ prepare(){
 
 build(){
 # we need fat LTO objects to not break consumers during linking
+export CFLAGS+=" -ffat-lto-objects"
 export CXXFLAGS+=" -ffat-lto-objects"
 
   rm -rf "${srcdir}"/{build-shared,build-static}
@@ -89,6 +89,6 @@ package_glslang-git(){
   done
 }
 
-sha256sums=('SKIP')
+sha256sums=(SKIP)
 
 # vim:set ts=8 sts=2 sw=2 et:

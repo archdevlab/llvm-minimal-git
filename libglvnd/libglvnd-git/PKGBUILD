@@ -22,9 +22,8 @@ source=(git+https://gitlab.freedesktop.org/glvnd/libglvnd.git#commit="${commit}"
 
 pkgver(){
   cd "${srcdir}"/libglvnd
-
-  # cutting off 'foo-' prefix that presents in the git tag
-  git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  #git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  echo $(sed -n 24p meson.build | cut -c 13- | sed 's/,//g').r$(git rev-list --count HEAD).g$(git rev-parse --short --abbrev=7 HEAD)
 }
 
 build() {
@@ -64,11 +63,12 @@ build() {
 package_libglvnd-git(){
   DESTDIR="${pkgdir}" meson install -C "${srcdir}"/build
 
-  # installing license
-  install -Dt "${pkgdir}"/usr/share/licenses/"${pkgname}"/ -m644 "${srcdir}"/LICENSE
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/
 }
 
-sha256sums=('SKIP'
-            '88cace72bc02c54c096ab825a55488a7a0fcc5ea73513a97fc16102fc07ea9b3')
+sha256sums=(SKIP
+            88cace72bc02c54c096ab825a55488a7a0fcc5ea73513a97fc16102fc07ea9b3)
 
 # vim:set ts=8 sts=2 sw=2 et:

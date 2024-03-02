@@ -7,7 +7,7 @@ pkgname=lib32-libdrm-git
 pkgdesc='Userspace interface to kernel DRM services (32-bit) (git version)'
 pkgver=2.4.119
 pkgrel=1
-commit=118addfaf8dc79b2ab4016b0d77726fc2a8e005c
+commit=1b4e04ba68d75d8215cf1a50c832d17250c9ed9c
 arch=(i686 x86_64)
 url='http://dri.freedesktop.org/'
 license=(custom)
@@ -21,9 +21,8 @@ source=(git+https://gitlab.freedesktop.org/mesa/drm.git#commit=$"${commit}"
 
 pkgver(){
   cd "${srcdir}"/drm
-
-  # cutting off 'foo-' prefix that presents in the git tag
-  git describe --long --tags --abbrev=7 | sed 's/^libdrm.//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  #git describe --long --tags --abbrev=7 | sed 's/^libdrm.//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  echo $(sed -n 24p meson.build | cut -c 13- | sed 's/,//g').r$(git rev-list --count HEAD).g$(git rev-parse --short --abbrev=7 HEAD)
 }
 
 build() {
@@ -31,7 +30,8 @@ export CFLAGS+=" -m32"
 export CXXFLAGS+=" -m32"
 export LDFLAGS+=" -m32"
 export ASFLAGS+=" --32"
-export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+export PKG_CONFIG="i686-pc-linux-gnu-pkg-config"
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
   rm -rf "${srcdir}"/build
 
@@ -77,11 +77,12 @@ package_lib32-libdrm-git(){
 
   rm -rf "${pkgdir}"/usr/{include,share,bin}
 
-  # installing license
-  install -Dt "${pkgdir}"/usr/share/licenses/"${pkgname}"/ -m644 "${srcdir}"/COPYING
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/COPYING "${pkgdir}"/usr/share/licenses/"${pkgname}"/
 }
 
-sha256sums=('SKIP'
-            '9631d4f694952e3e6ae5a05534c2e93e994e47d3413677a3a00e45c8cef6db93')
+sha256sums=(SKIP
+            9631d4f694952e3e6ae5a05534c2e93e994e47d3413677a3a00e45c8cef6db93)
 
 # vim:set ts=8 sts=2 sw=2 et:

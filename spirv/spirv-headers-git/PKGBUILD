@@ -7,7 +7,7 @@ pkgdesc='SPIR-V Headers (git version)'
 epoch=2
 pkgver=1.5.5.r633.g05cc486
 pkgrel=1
-commit=05cc486580771e4fa7ddc89f5c9ee1e97382689a
+commit=8b246ff75c6615ba4532fe4fde20f1be090c3764
 arch=(x86_64)
 url='https://github.com/KhronosGroup/SPIRV-Headers.git'
 license=(MIT)
@@ -51,6 +51,6 @@ package(){
   install -m644 "${srcdir}"/SPIRV-Headers/LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/
 }
 
-sha256sums=('SKIP')
+sha256sums=(SKIP)
 
 # vim:set ts=8 sts=2 sw=2 et:
