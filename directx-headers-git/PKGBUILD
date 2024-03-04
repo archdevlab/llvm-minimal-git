@@ -19,7 +19,7 @@ source=(git+https://github.com/microsoft/DirectX-Headers.git#commit="${commit}")
 pkgver(){
   cd "${srcdir}"/DirectX-Headers
   #git describe --long --tags --abbrev=7 --exclude *preview --exclude *mesa* --exclude *-r1 --exclude *2b | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
-  echo $(sed -n 4p meson.build | sed 's/[^0-9]*//g').r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD) | sed 's/./&./1' | sed 's/./&./5'
+  echo $(sed -n 4p meson.build | sed 's/[^0-9]*//g').r$(git rev-list --count HEAD).g$(git rev-parse --short=7 HEAD) | sed 's/./&./1' | sed 's/./&./5'
 }
 
 build(){

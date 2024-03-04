@@ -22,7 +22,7 @@ pkgver(){
   #git describe --long --tags --abbrev=7 --exclude '*raytracing*' --exclude '*vulkan*' | sed 's/^sdk.//;s/\([^-]*-g\)/r\1/;s/-/./g'
   #git describe --long --tags --abbrev=7 --exclude '*raytracing*' | sed 's/^vulkan-sdk.//;s/\([^-]*-g\)/r\1/;s/-/./g'
   #git describe --long --tags --abbrev=7 | sed -r 's,^[^0-9]+,,;s,([0-9]*-g),r\1,;s,[-_],.,g' | sed 's/.0//g'
-  echo $(sed -n 27p CMakeLists.txt | cut -c 44- | sed 's/)//g').r$(git rev-list --count HEAD).g$(git rev-parse --short --abbrev=7 HEAD)
+  echo $(sed -n 27p CMakeLists.txt | cut -c 44- | sed 's/)//g').r$(git rev-list --count HEAD).g$(git rev-parse --short=7 HEAD)
 }
 
 build(){
