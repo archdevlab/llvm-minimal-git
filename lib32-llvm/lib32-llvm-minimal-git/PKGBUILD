@@ -7,7 +7,7 @@
 pkgbase=lib32-llvm-minimal-git
 pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git lib32-compiler-rt-minimal-git lib32-clang-minimal-git lib32-clang-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=19.0.0.r490664.gde3b2c293b8b
+pkgver=19.0.0.r491349.g07317bbc66d1
 pkgrel=1
 _pkgver=19.0.0
 commit=07317bbc66d1f2d7663af3c9f04d0f6c0487ac03
@@ -26,7 +26,7 @@ local include
 
 make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
     case $target in
-        llvm-libraries|clang-libraries|clang-tidy-headers|distribution )
+        llvm-libraries|clang-libraries|distribution )
             include=0
             ;;
         # shared libraries
@@ -37,12 +37,19 @@ make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
         LLVMDemangle|LLVMSupport|LLVMTableGen )
             include=1
             ;;
+        # testing libraries
+        LLVMTestingAnnotations|LLVMTestingSupport )
+            include=1
+      	    ;;
         # exclude static libraries
         LLVM* )
             include=0
             ;;
         # exclude llvm-exegesis (doesn't seem useful without libpfm)
         llvm-exegesis )
+            include=0
+            ;;
+        clang-tidy-headers )
             include=0
             ;;
         clang|clangd|clang-* )
@@ -75,11 +82,17 @@ pkgver(){
   echo "$_pkgver"
 }
 
+prepare(){
+  # Attempt to convert script to Python 3
+  2to3 -wn --no-diffs \
+    "${srcdir}"/llvm-project/clang-tools-extra/clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
+}
+
 build(){
-export CFLAGS+=" -m32"
-export CXXFLAGS+=" -m32"
-export LDFLAGS+=" -m32"
-export ASFLAGS+=" --32"
+#export CFLAGS+=" -m32"
+#export CXXFLAGS+=" -m32"
+#export LDFLAGS+=" -m32"
+#export ASFLAGS+=" --32"
 export PKG_CONFIG="i686-pc-linux-gnu-pkg-config"
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
@@ -289,14 +302,8 @@ package_lib32-clang-minimal-git(){
 
   rm -rf "${pkgdir}"/usr/{bin,include,share}
 
-  install -Dm644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/CodeOwners.rst
-  install -Dm644 "${srcdir}"/llvm-project/clang-tools-extra/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang-tools-extra/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/clang-tools-extra/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang-tools-extra/CODE_OWNERS
-  install -Dm644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/compiler-rt/LICENSE
-
   # install license
-  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"/{clang,clang-tools-extra}
   install -m644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/LICENSE
   install -m644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/CodeOwners.rst
   install -m644 "${srcdir}"/llvm-project/clang-tools-extra/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang-tools-extra/LICENSE
@@ -317,8 +324,8 @@ package_lib32-clang-libs-minimal-git(){
 
   # install license
   install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
-  install -m644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/LICENSE
-  install -m644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/CodeOwners.rst
+  install -m644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners.rst
 }
 
 sha256sums=(SKIP)

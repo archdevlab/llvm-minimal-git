@@ -19,7 +19,7 @@ pkgname=(
    lib32-vulkan-nouveau-git
    lib32-mesa-git
 )
-pkgver=24.1.0_devel.185153.4499871e34c
+pkgver=24.1.0_devel.185734.63d2aa4eb64
 pkgrel=1
 commit=63d2aa4eb645e32ea3d5aea453a45aa6a3412e15
 arch=(x86_64)

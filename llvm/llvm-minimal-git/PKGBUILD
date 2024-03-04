@@ -6,8 +6,8 @@
 pkgbase=llvm-minimal-git
 pkgname=(llvm-minimal-git llvm-libs-minimal-git compiler-rt-minimal-git clang-minimal-git clang-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=19.0.0.r490664.gde3b2c293b8b
-pkgrel=2
+pkgver=19.0.0.r491349.g07317bbc66d1
+pkgrel=1
 _pkgver=19.0.0
 commit=07317bbc66d1f2d7663af3c9f04d0f6c0487ac03
 arch=(x86_64)
@@ -30,7 +30,7 @@ local include
 
 make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
     case $target in
-        llvm-libraries|clang-libraries|clang-tidy-headers|distribution )
+        llvm-libraries|clang-libraries|distribution )
             include=0
             ;;
         # shared libraries
@@ -41,12 +41,19 @@ make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
         LLVMDemangle|LLVMSupport|LLVMTableGen )
             include=1
             ;;
+        # testing libraries
+        LLVMTestingAnnotations|LLVMTestingSupport )
+            include=1
+      	    ;;
         # exclude static libraries
         LLVM* )
             include=0
             ;;
         # exclude llvm-exegesis (doesn't seem useful without libpfm)
         llvm-exegesis )
+            include=0
+            ;;
+        clang-tidy-headers )
             include=0
             ;;
         clang|clangd|clang-* )
@@ -192,6 +199,7 @@ package_llvm-minimal-git(){
   mv -f "${pkgdir}"/usr/lib/cmake/clang "${srcdir}"/clang/usr/lib/cmake/
   mv -f "${pkgdir}"/usr/include/{clang,clang-c} "${srcdir}"/clang/usr/include/
   mv -f "${pkgdir}"/usr/libexec "${srcdir}"/clang/usr/
+
   mv -f "${pkgdir}"/usr/bin/{amdgpu-arch,analyze-build,c-index-test,clang*,diagtool,find-all-symbols,git-clang-format,hmaptool,intercept-build,modularize,nvptx-arch,pp-trace,run-clang-tidy,scan-build,scan-build-py,scan-view} "${srcdir}"/clang/usr/bin/
   mv -f "${pkgdir}"/usr/share/{clang,man,opt-viewer,scan-build,scan-view} "${srcdir}"/clang/usr/share/
 
@@ -228,9 +236,12 @@ package_llvm-libs-minimal-git(){
   #  install -d "${pkgdir}"/usr/lib/bfd-plugins
   #  ln -s ../LLVMgold.so "${pkgdir}"/usr/lib/bfd-plugins/LLVMgold.so
 
-  install -Dm644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
-  install -Dm644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
+
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
+  install -m644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
 }
 
 package_compiler-rt-minimal-git(){
@@ -287,7 +298,7 @@ package_clang-minimal-git(){
   _python_optimize "${pkgdir}"/usr/share -x 'clang-include-fixer|run-find-all-symbols'
 
   # install license
-  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"/{clang,clang-tools-extra}
   install -m644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/LICENSE
   install -m644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang/CodeOwners.rst
   install -m644 "${srcdir}"/llvm-project/clang-tools-extra/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/clang-tools-extra/LICENSE
