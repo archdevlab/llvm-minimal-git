@@ -4,10 +4,9 @@
 
 pkgname=spirv-headers-git
 pkgdesc='SPIR-V Headers (git version)'
-epoch=1
-pkgver=1.3.275.0
+pkgver=1.5.5.r634.gb73e168
 pkgrel=1
-commit=bdd1b2ab1f03e616047bbcf8971157dccd50c792
+commit=b73e168ca5e123dcf3dea8a34b19a5130f421ae1
 arch=(x86_64)
 url='https://github.com/KhronosGroup/SPIRV-Headers.git'
 license=(MIT)
@@ -21,7 +20,9 @@ pkgver(){
 
   #git describe --long --tags --abbrev=7 --exclude sdk-* | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
   #git describe --long --tags --abbrev=7 --exclude '*raytracing*' --exclude '*vulkan*' | sed 's/^sdk.//;s/\([^-]*-g\)/r\1/;s/-/./g'
-  git describe --long --tags --abbrev=7 --exclude '*raytracing*' | sed 's/^vulkan-sdk.//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  #git describe --long --tags --abbrev=7 --exclude '*raytracing*' | sed 's/^vulkan-sdk.//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  #git describe --long --tags --abbrev=7 | sed -r 's,^[^0-9]+,,;s,([0-9]*-g),r\1,;s,[-_],.,g' | sed 's/.0//g'
+  echo $(sed -n 27p CMakeLists.txt | cut -c 44- | sed 's/)//g').r$(git rev-list --count HEAD).g$(git rev-parse --short=7 HEAD)
 }
 
 build(){
@@ -49,6 +50,6 @@ package(){
   install -m644 "${srcdir}"/SPIRV-Headers/LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/
 }
 
-sha256sums=('SKIP')
+sha256sums=(SKIP)
 
 # vim:set ts=8 sts=2 sw=2 et:

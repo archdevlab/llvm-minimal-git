@@ -17,20 +17,22 @@ pkgname=(
    mesa-vdpau-git
    vulkan-imagination-git
    vulkan-nouveau-git
+   intel_clc-git
    mesa-git
 )
-pkgver=24.1.0_devel
+pkgver=24.1.0_devel.185734.63d2aa4eb64
 pkgrel=1
-commit=e39fed5737626c36fe54e1fe2d7206598a4ae173
+commit=63d2aa4eb645e32ea3d5aea453a45aa6a3412e15
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT AND BSD-3-Clause AND SGI-B-2.0)
 makedepends=(
-   clang
+   clang-minimal-git
+   clang-libs-minimal-git
    expat
-   libdrm
+   libdrm-git
    libelf
-   libglvnd
+   libglvnd-git
    libunwind
    libva
    libvdpau
@@ -40,22 +42,23 @@ makedepends=(
    libxrandr
    libxshmfence
    libxxf86vm
-   llvm
+   llvm-minimal-git
+   llvm-libs-minimal-git
    lm_sensors
    rust
-   spirv-llvm-translator
-   spirv-tools
+   spirv-llvm-translator-minimal-git
+   spirv-tools-git
    systemd
    vulkan-icd-loader
    wayland
    xcb-util-keysyms
    zstd
    # shared between mesa and lib32-mesa
-   clang
+   clang-minimal-git
    cmake
    elfutils
-   glslang
-   libclc
+   glslang-git
+   libclc-minimal-git
    meson
    python-mako
    python-ply
@@ -65,7 +68,7 @@ makedepends=(
    # valgrind deps
    valgrind
    # d3d12 deps
-   directx-headers
+   directx-headers-git
    # gallium-omx deps
    libomxil-bellagio
 )
@@ -76,11 +79,11 @@ makedepends+=(
    python
    libarchive
    libconfig
-   compiler-rt
+   compiler-rt-minimal-git
    libxcb
    ncurses
    libxv
-   llvm-libs
+   llvm-libs-minimal-git
 )
 options=(!debug !lto)
 source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit="${commit}"
@@ -115,7 +118,16 @@ build(){
 
   # use --force-fallback-for=syn to download syn required for vulkan-nouveau-git
 
+  # enable install-intel-clc
+  # https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-util/intel_clc
+  # https://gitlab.freedesktop.org/mesa/mesa/-/commit/1e31fd5f4268b134b26cd9d82d76d406332a3d8d
+  # Install the intel-clc compiler (if needed for cross builds)
+  # We need this, beacause we build lib32-mesa and include opencl-rusticl-mesa. In native build with llvm32.native
+  # we get some error with rust. So when installing this package everything work fine
+
   local meson_options=(
+    -D c_ld='mold'
+    -D cpp_ld='mold'
     -D b_ndebug=true
     -D b_lto=false
     -D buildtype=plain
@@ -146,8 +158,7 @@ build(){
     -D rust_std=2021
     -D opencl-spirv=false
     -D static-libclc=all
-    -D opencl-external-clang-headers=disabled
-    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,imagination-experimental,nouveau-experimental
+    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,imagination-experimental,nouveau
     -D imagination-srv=true
     -D shader-cache=enabled
     -D shader-cache-default=true
@@ -184,10 +195,13 @@ build(){
     -D zlib=enabled
     -D sse2=false
     -D perfetto=false
+    -D teflon=false
     -D gpuvis=false
     -D vmware-mks-stats=false
     -D vulkan-beta=true
-    -D intel-clc=disabled
+    -D intel-clc=enabled
+    -D install-intel-clc=true
+    -D intel-rt=enabled
     -D gallium-d3d12-video=enabled
     -D video-codecs=all
     -D intel-xe-kmd=enabled
@@ -217,7 +231,7 @@ _libdir=usr/lib
 package_vulkan-mesa-layers-git(){
   pkgdesc="Mesa's Vulkan layers (git version)"
   depends=(
-     libdrm
+     libdrm-git
      libxcb
      wayland
      python
@@ -247,13 +261,14 @@ package_vulkan-mesa-layers-git(){
 package_opencl-clover-mesa-git(){
   pkgdesc="OpenCL support with clover for mesa drivers (git version)"
   depends=(
-     clang
+     clang-minimal-git
+     clang-libs-minimal-git
      expat
-     libdrm
+     libdrm-git
      libelf
-     spirv-llvm-translator
+     spirv-llvm-translator-minimal-git
      zstd
-     libclc
+     libclc-git
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=(
@@ -279,14 +294,15 @@ package_opencl-clover-mesa-git(){
 package_opencl-rusticl-mesa-git(){
   pkgdesc="OpenCL support with rusticl for mesa drivers (git version)"
   depends=(
-     clang
+     clang-minimal-git
+     clang-libs-minimal-git
      expat
-     libdrm
+     libdrm-git
      libelf
      lm_sensors
-     spirv-llvm-translator
+     spirv-llvm-translator-minimal-git
      zstd
-     libclc
+     libclc-minimal-git
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=(
@@ -311,7 +327,7 @@ package_opencl-rusticl-mesa-git(){
 package_vulkan-intel-git(){
   pkgdesc="Intel's Vulkan mesa driver (git version)"
   depends=(
-     libdrm
+     libdrm-git
      libx11
      libxshmfence
      systemd
@@ -341,11 +357,11 @@ package_vulkan-intel-git(){
 package_vulkan-radeon-git(){
   pkgdesc="Radeon's Vulkan mesa driver (git version)"
   depends=(
-     libdrm
+     libdrm-git
      libelf
      libx11
      libxshmfence
-     llvm-libs
+     llvm-libs-minimal-git
      systemd
      wayland
      xcb-util-keysyms
@@ -370,11 +386,11 @@ package_vulkan-radeon-git(){
 package_vulkan-swrast-git(){
   pkgdesc='Vulkan software rasteriser driver (git version)'
   depends=(
-     libdrm
+     libdrm-git
      libunwind
      libx11
      libxshmfence
-     llvm-libs
+     llvm-libs-minimal-git
      systemd
      wayland
      xcb-util-keysyms
@@ -402,7 +418,7 @@ package_vulkan-swrast-git(){
 package_vulkan-virtio-git(){
   pkgdesc='Venus Vulkan mesa driver for Virtual Machines (git version)'
   depends=(
-     libdrm
+     libdrm-git
      libx11
      libxshmfence
      systemd
@@ -429,11 +445,11 @@ package_libva-mesa-driver-git(){
   pkgdesc='VA-API drivers (git version)'
   depends=(
      expat
-     libdrm
+     libdrm-git
      libelf
      libx11
      libxshmfence
-     llvm-libs
+     llvm-libs-minimal-git
      zstd
   )
   provides=(
@@ -453,11 +469,11 @@ package_mesa-vdpau-git(){
   pkgdesc='VDPAU drivers (git version)'
   depends=(
      expat
-     libdrm
+     libdrm-git
      libelf
      libx11
      libxshmfence
-     llvm-libs
+     llvm-libs-minimal-git
      zstd
   )
   provides=(
@@ -475,13 +491,13 @@ package_mesa-vdpau-git(){
 package_vulkan-imagination-git(){
   pkgdesc='Imagination Rogue PowerVR Vulkan driver (git version)'
   depends=(
-     libdrm
+     libdrm-git
      libelf
      libx11
      libunwind
      libxshmfence
      systemd
-     llvm-libs
+     llvm-libs-minimal-git
      wayland
      xcb-util-keysyms
      zstd
@@ -504,13 +520,13 @@ package_vulkan-imagination-git(){
 package_vulkan-nouveau-git(){
   pkgdesc="Nvidia's Vulkan mesa driver (git version)"
   depends=(
-     libdrm
+     libdrm-git
      libelf
      libx11
      libunwind
      libxshmfence
      systemd
-     llvm-libs
+     llvm-libs-minimal-git
      wayland
      xcb-util-keysyms
      zstd
@@ -526,17 +542,43 @@ package_vulkan-nouveau-git(){
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
 
+# https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-util/intel_clc
+# https://gitlab.freedesktop.org/mesa/mesa/-/commit/1e31fd5f4268b134b26cd9d82d76d406332a3d8d
+# Install the intel-clc compiler (if needed for cross builds)
+
+# We need this, beacause we build lib32-mesa and include opencl-rusticl-mesa. In native build with llvm32.native
+# we get some error with rust. So when installing this package everything work fine
+package_intel_clc-git(){
+  pkgdesc='Intel_clc tool used for building OpenCL C to SPIR-V (git version)'
+  depends=(
+     libclc-minimal-git
+     spirv-tools-git
+     zlib
+     libdrm-git
+     spirv-llvm-translator-minimal-git
+     clang-minimal-git
+     clang-libs-minimal-git
+     llvm-minimal-git
+     llvm-libs-minimal-git
+     expat
+   )
+
+  _install fakeinstall/usr/bin/intel_clc
+
+  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+}
+
 package_mesa-git(){
   pkgdesc='An open-source implementation of the OpenGL specification (git version)'
   depends=(
-     libdrm
+     libdrm-git
      libelf
-     libglvnd
+     libglvnd-git
      libunwind
      libxdamage
      libxshmfence
      libxxf86vm
-     llvm-libs
+     llvm-libs-minimal-git
      lm_sensors
      vulkan-icd-loader
      wayland
@@ -587,4 +629,4 @@ package_mesa-git(){
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
 
-sha256sums=('SKIP')
+sha256sums=(SKIP)

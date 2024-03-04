@@ -8,6 +8,9 @@ echo "${source}"
 
 # build
 
+# remove the .git dir. Sometimes it can create conflicts when making package version
+rm -rf .git
+
 cd spirv/spirv-headers-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd spirv/spirv-tools-git/ && makepkg -si --noconfirm && cd ${source}
@@ -23,8 +26,6 @@ cd llvm/spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${so
 cd llvm/libclc-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd lib32-llvm/lib32-llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
-
-cd lib32-llvm/lib32-clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd lib32-llvm/lib32-spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
@@ -46,4 +47,12 @@ cd mesa/lib32-mesa/ && makepkg -si --noconfirm && cd ${source}
 
 mkdir package
 
+cp -v */*.pkg.tar.zst package/
 cp -v */*/*.pkg.tar.zst package/
+
+# remove src and pkg dir
+
+rm -rf */src
+rm -rf */*/src
+rm -rf */pkg
+rm -rf */*/pkg

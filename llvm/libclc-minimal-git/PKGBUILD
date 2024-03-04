@@ -5,9 +5,9 @@
 pkgname=libclc-minimal-git
 pkgdesc='Library requirements of the OpenCL C programming language (git version)'
 url='https://libclc.llvm.org/'
-pkgver=19.0.0
+pkgver=19.0.0.r491349.g07317bbc66d1
 pkgrel=1
-commit=ae46855f53b6fe39a8d17797a49b2911c08fb973
+commit=07317bbc66d1f2d7663af3c9f04d0f6c0487ac03
 arch=(x86_64)
 license=(MIT)
 makedepends=(clang-minimal-git llvm-minimal-git cmake ninja python spirv-llvm-translator-minimal-git llvm-libs-minimal-git llvm-libs make)
@@ -44,10 +44,12 @@ build(){
 package(){
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install
 
-  install -Dm644 "${srcdir}"/llvm-project/libclc/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -Dm644 "${srcdir}"/llvm-project/libclc/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/llvm-project/libclc/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/libclc/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
 }
 
-sha256sums=('SKIP')
+sha256sums=(SKIP)
 
 # vim:set ts=8 sts=2 sw=2 et:
