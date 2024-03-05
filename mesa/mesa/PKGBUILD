@@ -126,8 +126,6 @@ build(){
   # we get some error with rust. So when installing this package everything work fine
 
   local meson_options=(
-    -D c_ld='mold'
-    -D cpp_ld='mold'
     -D b_ndebug=true
     -D b_lto=false
     -D buildtype=plain
