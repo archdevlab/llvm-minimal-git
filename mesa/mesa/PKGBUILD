@@ -87,7 +87,7 @@ makedepends+=(
 )
 options=(!debug !lto)
 source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit="${commit}"
-        nouveau-add-missing-vl-lib.path::https://gitlab.freedesktop.org/mesa/mesa/-/commit/4e3f3c10e14d8778781c81f39ced659b5ec2f148.patch)
+        nouveau-add-missing-vl-lib.patch::https://gitlab.freedesktop.org/mesa/mesa/-/commit/4e3f3c10e14d8778781c81f39ced659b5ec2f148.patch)
 
 pkgver(){
   cd "${srcdir}"/mesa
@@ -110,7 +110,7 @@ prepare(){
 
   # revert commit
   # https://gitlab.freedesktop.org/mesa/mesa/-/issues/10830
-  patch --reverse --strip=1 --input="${srcdir}"/nouveau-add-missing-vl-lib.path
+  patch --reverse --strip=1 --input="${srcdir}"/nouveau-add-missing-vl-lib.patch
 }
 
 build(){
