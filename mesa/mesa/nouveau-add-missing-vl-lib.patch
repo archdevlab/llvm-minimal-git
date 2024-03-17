@@ -1,0 +1,28 @@
+From 4e3f3c10e14d8778781c81f39ced659b5ec2f148 Mon Sep 17 00:00:00 2001
+From: Eric Engestrom <eric@igalia.com>
+Date: Tue, 12 Mar 2024 16:41:41 +0000
+Subject: [PATCH] nouveau: add missing vl lib
+
+It's always been missing since the conversion to meson.
+
+Closes: https://gitlab.freedesktop.org/mesa/mesa/-/issues/10792
+Cc: mesa-stable
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/28133>
+---
+ src/gallium/drivers/nouveau/meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gallium/drivers/nouveau/meson.build b/src/gallium/drivers/nouveau/meson.build
+index ec728b364c417..c0d8a65678613 100644
+--- a/src/gallium/drivers/nouveau/meson.build
++++ b/src/gallium/drivers/nouveau/meson.build
+@@ -192,5 +192,5 @@ libnouveau = static_library(
+ driver_nouveau = declare_dependency(
+   compile_args : '-DGALLIUM_NOUVEAU',
+   dependencies : [idep_nir, idep_nouveau_codegen],
+-  link_with : [libnouveau_codegen, libnouveau],
++  link_with : [libnouveau_codegen, libnouveau, libgalliumvl],
+ )
+-- 
+GitLab
+
