@@ -54,7 +54,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - commit : 9f37ad360ea1c32162f0cc1799b1b292594fc771
 
-### LLVM/CLANG/COMPILER-RT/LIBCLC
+### LLVM/LLD/COMPILRT-RT/CLANG/LIBCLC
 
 - 19.0.0
 
