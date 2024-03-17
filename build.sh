@@ -19,15 +19,21 @@ cd spirv/lib32-spirv-tools-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd glslang-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm/llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-test/llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm/spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-test/compiler-rt-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm/libclc-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-test/clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd lib32-llvm/lib32-llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd lib32-llvm/lib32-spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-test/libclc-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+
+cd llvm-test/lib32-llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+
+cd llvm-test/lib32-clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+
+cd llvm-test/spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd directx-headers-git/ && makepkg -si --noconfirm && cd ${source}
 

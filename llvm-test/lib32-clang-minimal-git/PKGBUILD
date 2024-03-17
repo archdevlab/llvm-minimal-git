@@ -1,0 +1,158 @@
+#Maintainer: archdevlab <https://github.com/archdevlab>
+#Credits: Evangelos Foutras <evangelos@foutrelis.com>
+#Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
+#Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
+
+pkgbase=lib32-clang-minimal-git
+pkgname=(lib32-clang-minimal-git lib32-clang-libs-minimal-git)
+url='https://clang.llvm.org/'
+pkgver=19.0.0.r492923.g7c460c6205ee
+pkgrel=1
+_pkgver=19.0.0
+commit=7c460c6205eedaa24f77d5de272dfd94dc3e9a38
+arch=(i686 x86_64)
+license=('custom:Apache 2.0 with LLVM Exception')
+makedepends=(cmake ninja lib32-libffi lib32-zlib lib32-zstd python
+             gcc-multilib lib32-libxml2 make git)
+makedepends+=(lib32-llvm-minimal-git)
+options=(staticlibs !lto ) # https://github.com/llvm/llvm-project/issues/57740
+source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
+
+# Utilizing LLVM_DISTRIBUTION_COMPONENTS to avoid
+# installing static libraries; inspired by Gentoo
+_get_distribution_components(){
+local target
+local include
+
+make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
+    case $target in
+        clang-libraries|distribution )
+            include=0
+            ;;
+        clang-tidy-headers )
+            include=0
+            ;;
+        clang|clangd|clang-* )
+            include=1
+            ;;
+        clang*|findAllSymbols|scan-build-py )
+            include=0
+            ;;
+        # Anything not covered above is included
+        * )
+            include=1
+    esac
+    if [ $include -eq 1 ]; then
+        echo $target
+    fi
+done
+}
+
+pkgver(){
+  cd ${srcdir}/llvm-project/
+
+  # This will almost match the output of `llvm-config --version` when the
+  # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
+  # dash being replaced with underscore because of Pacman requirements.
+  local _pkgver=$(awk -F 'MAJOR |MINOR |PATCH |)' \
+  'BEGIN { ORS="." ; i=0 } \
+  /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \
+  END { print "\n" }' \
+  cmake/Modules/LLVMVersion.cmake).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
+  echo "$_pkgver"
+}
+
+build(){
+# https://aur.archlinux.org/cgit/aur.git/commit/?h=llvm-minimal-git&id=ae64860f523a57e2c6d0a9e65ed8af8c82d1ca73
+# build aborts with FORTIFY_SOURCE=3 , see https://github.com/llvm/llvm-project/issues/85509
+export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+export CXXFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+export CFLAGS+=" -m32"
+export CXXFLAGS+=" -m32"
+export LDFLAGS+=" -m32"
+export ASFLAGS+=" --32"
+export PKG_CONFIG="i686-pc-linux-gnu-pkg-config"
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+
+  rm -rf "${srcdir}"/llvm-project/.git/
+
+  local cmake_args=(
+      -D CMAKE_CXX_FLAGS:STRING=-m32
+      -D CMAKE_C_FLAGS:STRING=-m32
+      -G "Unix Makefiles"
+      -D CMAKE_BUILD_TYPE=Release
+      -D CMAKE_INSTALL_PREFIX=/usr
+      -D CMAKE_SKIP_RPATH=ON
+      -D LLVM_LIBDIR_SUFFIX=32
+      -D CLANG_DEFAULT_PIE_ON_LINUX=ON
+      -D CLANG_LINK_CLANG_DYLIB=ON
+      -D ENABLE_LINKER_BUILD_ID=ON
+      -D LLVM_BUILD_DOCS=OFF
+      -D LLVM_BUILD_TESTS=OFF
+      -D LLVM_CONFIG=/usr/bin/llvm-config32
+      -D LLVM_ENABLE_RTTI=ON
+      -D LLVM_ENABLE_SPHINX=OFF
+      -D LLVM_EXTERNAL_LIT=/usr/bin/lit
+      -D LLVM_INCLUDE_DOCS=OFF
+      -D LLVM_LINK_LLVM_DYLIB=ON
+      -D LLVM_MAIN_SRC_DIR="$srcdir/llvm-project/llvm"
+      -D LLVM_INCLUDE_TESTS=OFF
+    )
+
+  cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/clang "${cmake_args[@]}" -Wno-dev
+
+  pushd "${srcdir}"/build
+  local distribution_components=$(_get_distribution_components | paste -sd\;)
+  popd
+  test -n "$distribution_components"
+  cmake_args+=(-D LLVM_DISTRIBUTION_COMPONENTS="$distribution_components")
+
+  cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/clang "${cmake_args[@]}" -Wno-dev
+
+  make -j$(nproc) -C "${srcdir}"/build
+}
+
+
+package_lib32-clang-minimal-git(){
+  pkgdesc='C language family frontend for LLVM (32-bit) (git version)'
+  depends=(lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git gcc-multilib)
+  conflicts=(lib32-clang)
+  provides=(lib32-clang)
+  provides+=(lib32-clang-minimal-git lib32-clang-git)
+
+  make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
+
+  rm -rf "$pkgdir"/usr/{bin,include,lib,libexec,share}
+
+  # The clang runtime libraries go into lib32-clang-libs-minimal-git
+  # https://bugs.archlinux.org/task/72588?project=1&string=clang
+  mkdir -p "${srcdir}"/lib32-clang-libs/usr/lib32
+  mv -f "${pkgdir}"/usr/lib32/libclang{,-cpp}.so* "${srcdir}"/lib32-clang-libs/usr/lib32/
+
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners.rst
+}
+
+# https://bugs.archlinux.org/task/72588?project=1&string=clang
+package_lib32-clang-libs-minimal-git(){
+  pkgdesc='Clang runtime libraries (32-bit) (git version)'
+  depends=(lib32-llvm-libs-minimal-git)
+  # the functionality offered by this package is part of the clang repo pacakge.
+  # TODO: when/if this functionality is split off from repo clang, verify if changes are needed to this package
+  conflicts=(lib32-clang-libs)
+  provides=(lib32-clang-libs)
+  provides+=(lib32-clang-libs-minimal-git lib32-clang-libs-git)
+
+  cp --preserve --recursive "${srcdir}"/lib32-clang-libs/* "${pkgdir}"/
+
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/llvm-project/clang/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners.rst
+}
+
+sha256sums=(SKIP)
+
+# vim:set ts=8 sts=2 sw=2 et:

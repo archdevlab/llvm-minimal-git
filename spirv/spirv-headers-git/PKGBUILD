@@ -4,9 +4,9 @@
 
 pkgname=spirv-headers-git
 pkgdesc='SPIR-V Headers (git version)'
-pkgver=1.5.5.r634.gb73e168
+pkgver=1.5.5.r635.g8b246ff
 pkgrel=1
-commit=b73e168ca5e123dcf3dea8a34b19a5130f421ae1
+commit=8b246ff75c6615ba4532fe4fde20f1be090c3764
 arch=(x86_64)
 url='https://github.com/KhronosGroup/SPIRV-Headers.git'
 license=(MIT)

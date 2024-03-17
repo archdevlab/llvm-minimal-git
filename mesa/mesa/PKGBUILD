@@ -20,9 +20,9 @@ pkgname=(
    intel_clc-git
    mesa-git
 )
-pkgver=24.1.0_devel.185734.63d2aa4eb64
+pkgver=24.1.0_devel.186395.7bd1d4848cf
 pkgrel=1
-commit=63d2aa4eb645e32ea3d5aea453a45aa6a3412e15
+commit=7bd1d4848cf755257644e9b79289a364db659026
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT AND BSD-3-Clause AND SGI-B-2.0)
@@ -87,7 +87,7 @@ makedepends+=(
 )
 options=(!debug !lto)
 source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit="${commit}"
-)
+        nouveau-add-missing-vl-lib.path::https://gitlab.freedesktop.org/mesa/mesa/-/commit/4e3f3c10e14d8778781c81f39ced659b5ec2f148.patch)
 
 pkgver(){
   cd "${srcdir}"/mesa
@@ -98,15 +98,19 @@ pkgver(){
 prepare(){
   cd "${srcdir}"/mesa
 
-  # Apply any patch
-  local src
-  for src in "${source[@]}"; do
-    src="${src%%::*}"
-    src="${src##*/}"
-    [[ $src = *.patch ]] || continue
-    msg2 "Applying patch $src..."
-    patch -Np1 < "../$src"
-  done
+  # # Apply any patch
+  #local src
+  #for src in "${source[@]}"; do
+  #  src="${src%%::*}"
+  #  src="${src##*/}"
+  #  [[ $src = *.patch ]] || continue
+  #  msg2 "Applying patch $src..."
+  #  patch -Np1 < "../$src"
+  #done
+
+  # revert commit
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/10830
+  patch --reverse --strip=1 --input="${srcdir}"/nouveau-add-missing-vl-lib.path
 }
 
 build(){
@@ -126,6 +130,8 @@ build(){
   # we get some error with rust. So when installing this package everything work fine
 
   local meson_options=(
+    -D c_ld='mold'
+    -D cpp_ld='mold'
     -D b_ndebug=true
     -D b_lto=false
     -D buildtype=plain
@@ -200,9 +206,9 @@ build(){
     -D intel-clc=enabled
     -D install-intel-clc=true
     -D intel-rt=enabled
-    -D gallium-d3d12-video=enabled
     -D video-codecs=all
-    -D intel-xe-kmd=enabled
+    -D gallium-d3d12-video=enabled
+    -D gallium-d3d12-graphics=enabled
   )
 
   meson "${srcdir}"/mesa "${srcdir}"/build "${meson_options[@]}"
@@ -627,4 +633,5 @@ package_mesa-git(){
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
 
-sha256sums=(SKIP)
+sha256sums=('805a912fa0c02fc16d6b9924a01dfe900fd20782233d506d7b7f8edabb697cb5'
+            '97cb08ef32c5ccfd118cc3bd8d944bafafbad0f3e8f820b555f23c697d17a8f9')
