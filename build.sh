@@ -21,6 +21,8 @@ cd glslang-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd llvm-test/llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
+cd llvm-test/lld-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+
 cd llvm-test/compiler-rt-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd llvm-test/clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
