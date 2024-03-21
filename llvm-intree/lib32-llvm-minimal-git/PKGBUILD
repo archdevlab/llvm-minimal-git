@@ -7,7 +7,7 @@
 pkgbase=lib32-llvm-minimal-git
 pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git lib32-clang-minimal-git lib32-clang-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=19.0.0.r491349.g07317bbc66d1
+pkgver=19.0.0.r492923.g7c460c6205ee
 pkgrel=1
 _pkgver=19.0.0
 commit=7c460c6205eedaa24f77d5de272dfd94dc3e9a38
