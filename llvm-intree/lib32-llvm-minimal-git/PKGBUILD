@@ -5,7 +5,7 @@
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
 pkgbase=lib32-llvm-minimal-git
-pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git lib32-compiler-rt-minimal-git lib32-clang-minimal-git lib32-clang-libs-minimal-git)
+pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git lib32-clang-minimal-git lib32-clang-libs-minimal-git)
 url='https://llvm.org/'
 pkgver=19.0.0.r491349.g07317bbc66d1
 pkgrel=1
@@ -128,11 +128,10 @@ export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
         -D LLVM_ENABLE_BINDINGS=OFF
         -D LLVM_ENABLE_DUMP=ON
         -D LLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
-        -D LLVM_ENABLE_PROJECTS="compiler-rt;clang-tools-extra;clang"
+        -D LLVM_ENABLE_PROJECTS="clang"
         -D CLANG_LINK_CLANG_DYLIB=ON
         -D CLANG_DEFAULT_PIE_ON_LINUX=ON
         -D ENABLE_LINKER_BUILD_ID=ON
-        -D COMPILER_RT_INSTALL_PATH=/usr/lib32/clang/19
       )
 
     cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/llvm "${cmake_args[@]}" -Wno-dev
@@ -181,16 +180,6 @@ package_lib32-llvm-minimal-git(){
   # https://bugs.archlinux.org/task/72588?project=1&string=clang
   mkdir -p "${srcdir}"/lib32-clang-libs/usr/lib32
   mv -f "${pkgdir}"/usr/lib32/libclang{,-cpp}.so* "${srcdir}"/lib32-clang-libs/usr/lib32/
-
-  # compiler-rt-minimal-git files go to a separate package
-  mkdir -p "${srcdir}"/lib32-compiler-rt/usr/lib32/clang/19/{include,lib,share}
-  mv -f "${pkgdir}"/usr/lib32/clang/19/include/fuzzer/ "${srcdir}"/lib32-compiler-rt/usr/lib32/clang/19/include/
-  mv -f "${pkgdir}"/usr/lib32/clang/19/include/orc/ "${srcdir}"/lib32-compiler-rt/usr/lib32/clang/19/include/
-  mv -f "${pkgdir}"/usr/lib32/clang/19/include/profile/ "${srcdir}"/lib32-compiler-rt/usr/lib32/clang/19/include/
-  mv -f "${pkgdir}"/usr/lib32/clang/19/include/sanitizer/ "${srcdir}"/lib32-compiler-rt/usr/lib32/clang/19/include/
-  mv -f "${pkgdir}"/usr/lib32/clang/19/include/xray/ "${srcdir}"/lib32-compiler-rt/usr/lib32/clang/19/include/
-  mv -f "${pkgdir}"/usr/lib32/clang/19/lib/{i386-pc-linux-gnu,x86_64-pc-linux-gnu} "${srcdir}"/lib32-compiler-rt/usr/lib32/clang/19/lib/
-  mv -f "${pkgdir}"/usr/lib32/clang/19/share/ "${srcdir}"/lib32-compiler-rt/usr/lib32/clang/19/
 
   # clang-minimal-git files go to a separate package
   mkdir -p "${srcdir}"/lib32-clang/usr/{bin,include,lib32,lib32/cmake,share}
@@ -246,22 +235,6 @@ package_lib32-llvm-libs-minimal-git(){
   install -m644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
   install -m644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
   install -m644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
-}
-
-package_lib32-compiler-rt-minimal-git(){
-  pkgdesc='Compiler runtime libraries for clang (32-bit) (git version)'
-  depends=(gcc-libs lib32-gcc-libs)
-  conflicts=(lib32-compiler-rt)
-  provides=(lib32-compiler-rt)
-  provides+=(lib32-compiler-rt-minimal-git)
-
-  cp --preserve --recursive "${srcdir}"/lib32-compiler-rt/* "${pkgdir}"/
-
-  # install license
-  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
-  install -m644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -m644 "${srcdir}"/llvm-project/compiler-rt/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
-  install -m644 "${srcdir}"/llvm-project/compiler-rt/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
 }
 
 package_lib32-clang-minimal-git(){
