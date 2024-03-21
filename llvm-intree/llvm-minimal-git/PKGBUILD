@@ -6,7 +6,7 @@
 pkgbase=llvm-minimal-git
 pkgname=(llvm-minimal-git llvm-libs-minimal-git compiler-rt-minimal-git clang-minimal-git clang-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=19.0.0.r491349.g07317bbc66d1
+pkgver=19.0.0.r492923.g7c460c6205ee
 pkgrel=1
 _pkgver=19.0.0
 commit=7c460c6205eedaa24f77d5de272dfd94dc3e9a38
