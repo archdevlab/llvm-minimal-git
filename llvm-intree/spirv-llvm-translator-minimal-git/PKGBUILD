@@ -10,7 +10,11 @@ url='https://github.com/KhronosGroup/SPIRV-LLVM-Translator'
 pkgver=19.0.0.r1992.g7d7e0ac
 _pkgver=19.0.0
 pkgrel=1
-commit=7d7e0ac5303f93db804402b8c1f9c03da7eb2114
+# https://github.com/KhronosGroup/SPIRV-LLVM-Translator/issues/2432
+# https://github.com/KhronosGroup/SPIRV-LLVM-Translator/pull/2433
+# https://github.com/KhronosGroup/SPIRV-LLVM-Translator/pull/2433/commits
+# https://github.com/KhronosGroup/SPIRV-LLVM-Translator/pull/2433/commits/e0a1508be91faffe433038fd5e50cc87d85d02d6
+commit=e0a1508be91faffe433038fd5e50cc87d85d02d6
 arch=(x86_64)
 license=(custom)
 depends=(llvm-libs-minimal-git spirv-tools-git)
