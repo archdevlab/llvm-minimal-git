@@ -93,8 +93,10 @@ prepare(){
 }
 
 build(){
-export CFLAGS+=" ${CPPFLAGS}"
-export CXXFLAGS+=" ${CPPFLAGS}"
+# https://aur.archlinux.org/cgit/aur.git/commit/?h=llvm-minimal-git&id=ae64860f523a57e2c6d0a9e65ed8af8c82d1ca73
+# build aborts with FORTIFY_SOURCE=3 , see https://github.com/llvm/llvm-project/issues/85509
+export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+export CXXFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
   rm -rf "${srcdir}"/llvm-project/.git
 
