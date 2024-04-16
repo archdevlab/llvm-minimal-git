@@ -52,7 +52,7 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 14.1.0
 
-- commit : 9f37ad360ea1c32162f0cc1799b1b292594fc771
+- commit : 05ba15169ea4b1471e18305786f12526600a7810
 
 ### LLVM/LLD/COMPILRT-RT/CLANG/LIBCLC
 
