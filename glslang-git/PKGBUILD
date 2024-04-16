@@ -13,9 +13,9 @@
 
 pkgname=glslang-git
 pkgdesc='OpenGL and OpenGL ES shader front end and validator (git version)'
-pkgver=14.1.0.r1.g9f37ad3
+pkgver=14.1.0
 pkgrel=1
-commit=9f37ad360ea1c32162f0cc1799b1b292594fc771
+commit=05ba15169ea4b1471e18305786f12526600a7810
 arch=(x86_64)
 url='https://github.com/KhronosGroup/glslang'
 license=(BSD)
