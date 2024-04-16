@@ -5,16 +5,17 @@
 pkgname=libclc-minimal-git
 pkgdesc='Library requirements of the OpenCL C programming language (git version)'
 url='https://libclc.llvm.org/'
-pkgver=19.0.0.r492923.g7c460c6205ee
+pkgver=19.0.0
 pkgrel=1
-commit=7c460c6205eedaa24f77d5de272dfd94dc3e9a38
+commit=2e26ee9dce32d12ffa9bfb7f7d3e97778f0b7a75
 arch=(x86_64)
 license=(MIT)
 makedepends=(clang-minimal-git llvm-minimal-git cmake ninja python spirv-llvm-translator-minimal-git llvm-libs make git)
 conflicts=(libclc)
 provides=(libclc)
 provides+=(libclc-minimal-git libclc-git)
-source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
+source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}"
+        libclc_Refactor_build_system_to_allow_in-tree_builds_#87622.patch::https://github.com/llvm/llvm-project/commit/72f9881c3ffcf4be6361c3e4312d91c9c8d94a98.patch)
 
 pkgver(){
   cd "${srcdir}"/llvm-project/
@@ -28,6 +29,11 @@ pkgver(){
   END { print "\n" }' \
   cmake/Modules/LLVMVersion.cmake).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
   echo "${_pkgver}"
+}
+
+prepare(){
+  # revert change to libclc that causes build failure, see https://github.com/llvm/llvm-project/issues/88626
+  patch --directory="${srcdir}"/llvm-project --reverse --strip=1 --input=${srcdir}/libclc_Refactor_build_system_to_allow_in-tree_builds_#87622.patch
 }
 
 build(){
@@ -64,6 +70,7 @@ package(){
   install -m644 "${srcdir}"/llvm-project/libclc/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
 }
 
-sha256sums=(SKIP)
+sha256sums=(SKIP
+            SKIP)
 
 # vim:set ts=8 sts=2 sw=2 et:
