@@ -21,7 +21,7 @@ pkgname=(
 )
 pkgver=24.1.0_devel
 pkgrel=1
-commit=706691a7152d88c110068ea7bb4c3725ff6916c7
+commit=042b8a65d33d94e24ef037d0b1550ad70b6b4517
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT AND BSD-3-Clause AND SGI-B-2.0)
