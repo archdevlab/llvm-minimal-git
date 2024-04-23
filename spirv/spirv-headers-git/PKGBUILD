@@ -4,7 +4,7 @@
 
 pkgname=spirv-headers-git
 pkgdesc='SPIR-V Headers (git version)'
-pkgver=1.5.5
+pkgver=1.5.5.r638.g4f7b471
 pkgrel=1
 commit=4f7b471f1a66b6d06462cd4ba57628cc0cd087d7
 arch=(x86_64)

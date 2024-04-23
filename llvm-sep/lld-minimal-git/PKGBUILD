@@ -6,7 +6,7 @@
 pkgname=lld-minimal-git
 pkgdesc='Linker from the LLVM project (git version)'
 url='https://lld.llvm.org/'
-pkgver=19.0.0
+pkgver=19.0.0.r496211.g396cdabe47f3
 pkgrel=1
 commit=396cdabe47f3596464b289d0937c0066f50a0ac6
 arch=(x86_64)

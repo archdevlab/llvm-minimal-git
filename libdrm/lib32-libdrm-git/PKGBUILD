@@ -5,7 +5,7 @@
 
 pkgname=lib32-libdrm-git
 pkgdesc='Userspace interface to kernel DRM services (32-bit) (git version)'
-pkgver=2.4.120
+pkgver=2.4.120.r7117.g362b5b0
 pkgrel=1
 commit=362b5b0a886bdfbb92d2f78708ac7a67ee449b2d
 arch=(i686 x86_64)

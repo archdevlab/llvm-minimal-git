@@ -6,7 +6,7 @@
 pkgbase=lib32-clang-minimal-git
 pkgname=(lib32-clang-minimal-git lib32-clang-libs-minimal-git)
 url='https://clang.llvm.org/'
-pkgver=19.0.0
+pkgver=19.0.0.r496211.g396cdabe47f3
 pkgrel=1
 _pkgver=19.0.0
 commit=396cdabe47f3596464b289d0937c0066f50a0ac6
@@ -60,11 +60,6 @@ pkgver(){
   END { print "\n" }' \
   cmake/Modules/LLVMVersion.cmake).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
   echo "$_pkgver"
-}
-
-prepare(){
-  # revert change to libclc that causes build failure, see https://github.com/llvm/llvm-project/issues/88626
-  patch --directory="${srcdir}"/llvm-project --reverse --strip=1 --input=${srcdir}/libclc_Refactor_build_system_to_allow_in-tree_builds_#87622.patch
 }
 
 build(){

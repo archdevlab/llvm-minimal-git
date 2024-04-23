@@ -20,7 +20,7 @@ pkgname=(
    intel_clc-git
    mesa-git
 )
-pkgver=24.1.0_devel
+pkgver=24.1.0_devel.188112.042b8a65d33
 pkgrel=1
 commit=042b8a65d33d94e24ef037d0b1550ad70b6b4517
 arch=(x86_64)
@@ -84,10 +84,24 @@ makedepends+=(
    ncurses
    libxv
    llvm-libs-minimal-git
+   cbindgen  #rust
 )
 options=(!debug !lto)
-source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit="${commit}"
-        nouveau-add-missing-vl-lib.patch::https://gitlab.freedesktop.org/mesa/mesa/-/commit/4e3f3c10e14d8778781c81f39ced659b5ec2f148.patch)
+source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit="${commit}")
+
+# Rust crates for NVK, used as Meson subprojects
+declare -A _crates=(
+   proc-macro2    1.0.70
+   quote          1.0.33
+   syn            2.0.39
+   unicode-ident  1.0.12
+   paste          1.0.14
+)
+
+for _crate in "${!_crates[@]}"; do
+  source+=($_crate-${_crates[$_crate]}.tar.gz::https://crates.io/api/v1/crates/$_crate/${_crates[$_crate]}/download)
+done
+
 
 pkgver(){
   cd "${srcdir}"/mesa
@@ -99,18 +113,14 @@ prepare(){
   cd "${srcdir}"/mesa
 
   # # Apply any patch
-  #local src
-  #for src in "${source[@]}"; do
-  #  src="${src%%::*}"
-  #  src="${src##*/}"
-  #  [[ $src = *.patch ]] || continue
-  #  msg2 "Applying patch $src..."
-  #  patch -Np1 < "../$src"
-  #done
-
-  # revert commit
-  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/10830
-  patch --reverse --strip=1 --input="${srcdir}"/nouveau-add-missing-vl-lib.patch
+  local src
+  for src in "${source[@]}"; do
+    src="${src%%::*}"
+    src="${src##*/}"
+    [[ $src = *.patch ]] || continue
+    msg2 "Applying patch $src..."
+    patch -Np1 < "../$src"
+  done
 }
 
 build(){
@@ -130,13 +140,10 @@ build(){
   # we get some error with rust. So when installing this package everything work fine
 
   local meson_options=(
-    -D c_ld='mold'
-    -D cpp_ld='mold'
     -D b_ndebug=true
     -D b_lto=false
     -D buildtype=plain
-    --wrap-mode=nofallback
-    --force-fallback-for=syn
+    # --wrap-mode=nofallback
     -D prefix=/usr
     -D bindir=bin
     -D datadir=share
@@ -211,6 +218,9 @@ build(){
     -D gallium-d3d12-graphics=enabled
   )
 
+  # Inject subproject packages
+  export MESON_PACKAGE_CACHE_DIR="${srcdir}"
+
   meson "${srcdir}"/mesa "${srcdir}"/build "${meson_options[@]}"
   meson configure --no-pager "${srcdir}"/build
   meson compile -C "${srcdir}"/build
@@ -263,7 +273,7 @@ package_vulkan-mesa-layers-git(){
 # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591
 # Now we can re-enable gallium-opencl : https://gitlab.freedesktop.org/mesa/mesa/-/issues/8591#note_2058098
 package_opencl-clover-mesa-git(){
-  pkgdesc="OpenCL support with clover for mesa drivers (git version)"
+  pkgdesc="Open-source OpenCL drivers - Clover variant (git version)"
   depends=(
      clang-minimal-git
      clang-libs-minimal-git
@@ -296,7 +306,7 @@ package_opencl-clover-mesa-git(){
 }
 
 package_opencl-rusticl-mesa-git(){
-  pkgdesc="OpenCL support with rusticl for mesa drivers (git version)"
+  pkgdesc="Open-source OpenCL drivers - RustICL variant (git version)"
   depends=(
      clang-minimal-git
      clang-libs-minimal-git
@@ -329,7 +339,7 @@ package_opencl-rusticl-mesa-git(){
 }
 
 package_vulkan-intel-git(){
-  pkgdesc="Intel's Vulkan mesa driver (git version)"
+  pkgdesc="Open-source Vulkan driver for Intel GPUs (git version)"
   depends=(
      libdrm-git
      libx11
@@ -359,7 +369,7 @@ package_vulkan-intel-git(){
 }
 
 package_vulkan-radeon-git(){
-  pkgdesc="Radeon's Vulkan mesa driver (git version)"
+  pkgdesc="Open-source Vulkan driver for AMD GPUs (git version)"
   depends=(
      libdrm-git
      libelf
@@ -388,7 +398,7 @@ package_vulkan-radeon-git(){
 }
 
 package_vulkan-swrast-git(){
-  pkgdesc='Vulkan software rasteriser driver (git version)'
+  pkgdesc='Open-source Vulkan driver for CPUs (Software Rasterizer) (git version)'
   depends=(
      libdrm-git
      libunwind
@@ -420,7 +430,7 @@ package_vulkan-swrast-git(){
 }
 
 package_vulkan-virtio-git(){
-  pkgdesc='Venus Vulkan mesa driver for Virtual Machines (git version)'
+  pkgdesc='Open-source Vulkan driver for Virtio-GPU (Venus) (git version)'
   depends=(
      libdrm-git
      libx11
@@ -446,7 +456,7 @@ package_vulkan-virtio-git(){
 }
 
 package_libva-mesa-driver-git(){
-  pkgdesc='VA-API drivers (git version)'
+  pkgdesc='Open-source VA-API drivers (git version)'
   depends=(
      expat
      libdrm-git
@@ -470,7 +480,7 @@ package_libva-mesa-driver-git(){
 }
 
 package_mesa-vdpau-git(){
-  pkgdesc='VDPAU drivers (git version)'
+  pkgdesc='Open-source VDPAU drivers (git version)'
   depends=(
      expat
      libdrm-git
@@ -522,7 +532,7 @@ package_vulkan-imagination-git(){
 }
 
 package_vulkan-nouveau-git(){
-  pkgdesc="Nvidia's Vulkan mesa driver (git version)"
+  pkgdesc="Open-source Vulkan driver for Nvidia GPUs (git version)"
   depends=(
      libdrm-git
      libelf
@@ -573,7 +583,7 @@ package_intel_clc-git(){
 }
 
 package_mesa-git(){
-  pkgdesc='An open-source implementation of the OpenGL specification (git version)'
+  pkgdesc='Open-source OpenGL drivers (git version)'
   depends=(
      libdrm-git
      libelf
@@ -633,5 +643,9 @@ package_mesa-git(){
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
 
-sha256sums=('SKIP'
-            '97cb08ef32c5ccfd118cc3bd8d944bafafbad0f3e8f820b555f23c697d17a8f9')
+sha256sums=(SKIP
+            39278fbbf5fb4f646ce651690877f89d1c5811a3d4acb27700c1cb3cdb78fd3b
+            3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b
+            5267fca4496028628a95160fc423a33e8b2e6af8a5302579e322e4b520293cae
+            de3145af08024dea9fa9914f381a17b8fc6034dfb00f3a84013f7ff43f29ed4c
+            23e78b90f2fcf45d3e842032ce32e3f2d1545ba6636271dcbf24fa306d87be7a)

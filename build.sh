@@ -19,23 +19,23 @@ cd spirv/lib32-spirv-tools-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd glslang-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-test/llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-test/lld-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/lld-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-test/compiler-rt-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/compiler-rt-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-test/clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-test/libclc-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/libclc-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-test/lib32-llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/lib32-llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-test/lib32-clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/lib32-clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-test/spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/lib32-spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd directx-headers-git/ && makepkg -si --noconfirm && cd ${source}
 
@@ -58,9 +58,16 @@ mkdir package
 cp -v */*.pkg.tar.zst package/
 cp -v */*/*.pkg.tar.zst package/
 
-# remove src and pkg dir
+# clean
 
 rm -rf */src
 rm -rf */*/src
 rm -rf */pkg
 rm -rf */*/pkg
+rm -rf */*/*SPIRV*
+rm -rf */glslang
+rm -rf */*/llvm-project
+rm -rf */DirectX-Headers
+rm -rf */*/drm
+rm -rf */*/libglvnd
+rm -rf */*/mesa

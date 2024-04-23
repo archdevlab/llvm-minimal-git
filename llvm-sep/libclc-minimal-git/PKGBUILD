@@ -5,12 +5,15 @@
 pkgname=libclc-minimal-git
 pkgdesc='Library requirements of the OpenCL C programming language (git version)'
 url='https://libclc.llvm.org/'
-pkgver=19.0.0
+pkgver=19.0.0.r496211.g396cdabe47f3
 pkgrel=1
 commit=396cdabe47f3596464b289d0937c0066f50a0ac6
 arch=(x86_64)
 license=(MIT)
 makedepends=(clang-minimal-git llvm-minimal-git cmake ninja python spirv-llvm-translator-minimal-git llvm-libs make git)
+# https://aur.archlinux.org/packages/libclc-minimal-git#comment-967212
+# https://github.com/llvm/llvm-project/issues/88626
+makedepends+=(meson ninja)
 conflicts=(libclc)
 provides=(libclc)
 provides+=(libclc-minimal-git libclc-git)
@@ -37,9 +40,12 @@ export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 export CXXFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
   rm -rf "${srcdir}"/llvm-project/.git/
-
+  
+  # https://aur.archlinux.org/packages/libclc-minimal-git#comment-967212
+  # https://github.com/llvm/llvm-project/issues/88626
   local cmake_args=(
-      -G "Unix Makefiles"
+      -G Ninja
+      #-G "Unix Makefiles"
       -D CMAKE_BUILD_TYPE=Release
       -D CMAKE_INSTALL_PREFIX=/usr
       -D CMAKE_INSTALL_BINDIR=bin
@@ -52,11 +58,17 @@ export CXXFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
   cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/libclc "${cmake_args[@]}" -Wno-dev
 
-  make -j$(nproc) -C "${srcdir}"/build
+  # https://aur.archlinux.org/packages/libclc-minimal-git#comment-967212
+  # https://github.com/llvm/llvm-project/issues/88626
+  #make -j$(nproc) -C "${srcdir}"/build
+  ninja -j$(nproc) -C "${srcdir}"/build
 }
 
 package(){
-  make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install
+  # https://aur.archlinux.org/packages/libclc-minimal-git#comment-967212
+  # https://github.com/llvm/llvm-project/issues/88626
+  #make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install
+  DESTDIR="${pkgdir}" ninja -j$(nproc) -C "${srcdir}"/build install
 
   # install license
   install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"

@@ -4,7 +4,7 @@
 
 pkgname=spirv-tools-git
 pkgdesc='API and commands for processing SPIR-V modules (git version)'
-pkgver=2024.1
+pkgver=2024.1.r3944.gdadb301
 pkgrel=1
 commit=dadb3012d51702cccae71967f9f2acaec8f393d5
 arch=(x86_64)
