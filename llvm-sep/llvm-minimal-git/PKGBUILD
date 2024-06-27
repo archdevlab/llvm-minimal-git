@@ -73,6 +73,12 @@ pkgver(){
   echo "${_pkgver}"
 }
 
+prepare{
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/llvm/-/commit/31fedbbb507eb5be41cf1e6f405153b6bc370df7
+  # Remove CMake find module for zstd; breaks if out of sync with upstream zstd
+  rm -rf  "${srcdir}"/llvm-project/llvm/cmake/modules/Findzstd.cmake
+}
+
 build(){
 # https://aur.archlinux.org/cgit/aur.git/commit/?h=llvm-minimal-git&id=ae64860f523a57e2c6d0a9e65ed8af8c82d1ca73
 # build aborts with FORTIFY_SOURCE=3 , see https://github.com/llvm/llvm-project/issues/85509
