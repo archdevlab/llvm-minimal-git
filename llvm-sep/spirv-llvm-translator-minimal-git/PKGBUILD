@@ -14,7 +14,7 @@ pkgrel=1
 # https://github.com/KhronosGroup/SPIRV-LLVM-Translator/pull/2433
 # https://github.com/KhronosGroup/SPIRV-LLVM-Translator/pull/2433/commits
 # https://github.com/KhronosGroup/SPIRV-LLVM-Translator/pull/2433/commits/e0a1508be91faffe433038fd5e50cc87d85d02d6
-commit=e1f7ebee5ed8b9021236d1d5e2292bcb45df6988
+commit=277654e5b16a47acbd6bc14693995f92058ff514
 arch=(x86_64)
 license=(custom)
 depends=(llvm-libs-minimal-git spirv-tools-git)
