@@ -40,56 +40,56 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 
 - 1.5.5
 
-- commit : 4f7b471f1a66b6d06462cd4ba57628cc0cd087d7
+- commit : 2acb319af38d43be3ea76bfabf3998e5281d8d12
 
 ### SPIRV-Tools
 
 - 2024.1
 
-- commit : dadb3012d51702cccae71967f9f2acaec8f393d5
+- commit : ca004da9f9c7fa7ed536709823bd604fab3cd7da
 
 ### glslang
 
-- 14.1.0
+- 14.3.0
 
-- commit : 68df2230566b02c6495ffd8c200db523392fa797
+- commit : ea087ff90d03947307cfe52500b74551aa35d34d
 
 ### LLVM/LLD/COMPILRT-RT/CLANG/LIBCLC
 
 - 19.0.0
 
-- commit: 396cdabe47f3596464b289d0937c0066f50a0ac6
+- commit: 326ba38a991250a8587a399a260b0f7af2c9166a
 
 ### SPIRV-LLVM-Translator
 
 - 19.0.0
 
-- commit : e1f7ebee5ed8b9021236d1d5e2292bcb45df6988
+- commit : 277654e5b16a47acbd6bc14693995f92058ff514
 
 ### Directx-Headers
 
 - 1.613.1
 
-- commit : aafb798404373bec7875e6a36a8d9635642587c1
+- commit : 7fc7184d25f76f0797438d404733a76251396c83
 
 ### libdrm
 
-- 2.4.120
+- 2.4.122
 
-- commit : 362b5b0a886bdfbb92d2f78708ac7a67ee449b2d
+- commit : ad78bb591d02162d3b90890aa4d0a238b2a37cde
 
 
 ### libglvnd
 
 - 1.7.0
 
-- commit : 908086d22dc307d17d0eb35c522c35fd190718cc
+- commit : 606f6627cf481ee6dcb32387edc010c502cdf38b
 
 ### Mesa
 
-- 24.1.0_devel
+- 24.2.0_devel
 
-- commit : 042b8a65d33d94e24ef037d0b1550ad70b6b4517
+- commit : c2af4f61a7f1eeaa575e67173b6c72450739b893
 
 # Build
 
