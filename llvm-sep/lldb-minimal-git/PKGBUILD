@@ -4,7 +4,7 @@
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
 pkgname=lldb-minimal-git
-pkgdesc="Next generation, high-performance debugger"
+pkgdesc='Next generation, high-performance debugger (git version)'
 url='https://lld.llvm.org/'
 pkgver=19.0.0.r503053.g326ba38a9912
 pkgrel=1
