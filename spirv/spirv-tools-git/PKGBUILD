@@ -1,0 +1,67 @@
+#Maintainer: archdevlab <https://github.com/archdevlab>
+#Credits: Laurent Carlier <lordheavym@gmail.com>
+#Credits: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+
+pkgname=spirv-tools-git
+pkgdesc='API and commands for processing SPIR-V modules (git version)'
+pkgver=2024.3.r3982.gca004da
+pkgrel=1
+commit=ca004da9f9c7fa7ed536709823bd604fab3cd7da
+arch=(x86_64)
+url='https://github.com/KhronosGroup/SPIRV-Tools.git'
+license=(Apache-2.0)
+depends=(glibc gcc-libs sh)
+makedepends=(cmake python git ninja spirv-headers-git make)
+conflicts=(spirv-tools)
+provides=(spirv-tools spirv-tools-git)
+source=(git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit="${commit}")
+
+#pkgver(){
+#  cd "${srcdir}"/SPIRV-Tools
+#
+#  # cutting off 'foo-' prefix that presents in the git tag
+#  #git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *.rc* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+#  git describe --long --tags --abbrev=7 --exclude sdk-* --exclude *vulkan* | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' | sed 's/rc1.//g'
+#}
+
+prepare(){
+  rm -rf "${srcdir}"/build
+
+  cmake -B "${srcdir}"/build -S "${srcdir}"/SPIRV-Tools \
+    -G "Unix Makefiles" \
+    -D CMAKE_BUILD_TYPE=Release \
+    -D CMAKE_INSTALL_PREFIX=/usr \
+    -D CMAKE_INSTALL_BINDIR=bin \
+    -D CMAKE_INSTALL_LIBDIR=lib \
+    -D CMAKE_INSTALL_INCLUDEDIR=include \
+    -D CMAKE_INSTALL_SYSCONFDIR=/etc \
+    -D CMAKE_INSTALL_DATADIR=share \
+    -D SPIRV_WERROR=OFF \
+    -D BUILD_SHARED_LIBS=ON \
+    -D SPIRV_TOOLS_BUILD_STATIC=OFF \
+    -D SPIRV-Headers_SOURCE_DIR=/usr \
+    -Wno-dev
+
+  make -j$(nproc) -C "${srcdir}"/build
+}
+
+pkgver(){
+  local _ver1 _ver2
+  # read fails if only 1 var is used
+  IFS="," read -r _ver1 _ver2 < "${srcdir}"/build/build-version.inc || [ -n "_ver1" ]
+
+  cd "${srcdir}"/SPIRV-Tools
+  echo ${_ver1//v/}.r$(git rev-list --count HEAD).g$(git rev-parse --short=7 HEAD) | sed 's/"//g'
+}
+
+package_spirv-tools-git(){
+  make -j$(nproc) -C "${srcdir}"/build DESTDIR="$pkgdir" install
+
+  # install licence
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/SPIRV-Tools/LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/
+}
+
+sha256sums=(SKIP)
+
+# vim:set ts=8 sts=2 sw=2 et:

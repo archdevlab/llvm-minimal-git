@@ -1,0 +1,55 @@
+#Maintainer: archdevlab <https://github.com/archdevlab>
+#Credits: Felix Yan <felixonmars@archlinux.org>
+#Credits: Bruno Pagani <archange@archlinux.org>
+
+pkgname=spirv-headers-git
+pkgdesc='SPIR-V Headers (git version)'
+pkgver=1.5.5.r646.g2acb319
+pkgrel=1
+commit=2acb319af38d43be3ea76bfabf3998e5281d8d12
+arch=(x86_64)
+url='https://github.com/KhronosGroup/SPIRV-Headers.git'
+license=(MIT)
+makedepends=(cmake ninja git make)
+conflicts=(spirv-headers)
+provides=(spirv-headers spirv-headers-git)
+source=(git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit="$commit")
+
+pkgver(){
+  cd "${srcdir}"/SPIRV-Headers
+
+  #git describe --long --tags --abbrev=7 --exclude sdk-* | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+  #git describe --long --tags --abbrev=7 --exclude '*raytracing*' --exclude '*vulkan*' | sed 's/^sdk.//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  #git describe --long --tags --abbrev=7 --exclude '*raytracing*' | sed 's/^vulkan-sdk.//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  #git describe --long --tags --abbrev=7 | sed -r 's,^[^0-9]+,,;s,([0-9]*-g),r\1,;s,[-_],.,g' | sed 's/.0//g'
+  echo $(sed -n 27p CMakeLists.txt | cut -c 44- | sed 's/)//g').r$(git rev-list --count HEAD).g$(git rev-parse --short=7 HEAD)
+}
+
+build(){
+  rm -rf "${srcdir}"/build
+
+  cmake -B "${srcdir}"/build -S "${srcdir}"/SPIRV-Headers \
+    -G "Unix Makefiles" \
+    -D CMAKE_BUILD_TYPE=Release \
+    -D CMAKE_INSTALL_PREFIX=/usr \
+    -D CMAKE_INSTALL_BINDIR=bin \
+    -D CMAKE_INSTALL_LIBDIR=lib \
+    -D CMAKE_INSTALL_INCLUDEDIR=include \
+    -D CMAKE_INSTALL_SYSCONFDIR=/etc \
+    -D CMAKE_INSTALL_DATADIR=share \
+    -Wno-dev
+
+  make -j$(nproc) -C "${srcdir}"/build
+}
+
+package(){
+  make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install
+
+  # install licence
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/SPIRV-Headers/LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/
+}
+
+sha256sums=(SKIP)
+
+# vim:set ts=8 sts=2 sw=2 et:

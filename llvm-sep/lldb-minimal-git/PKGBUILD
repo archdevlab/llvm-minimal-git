@@ -1,0 +1,78 @@
+#Maintainer: archdevlab <https://github.com/archdevlab>
+#Credits: Evangelos Foutras <evangelos@foutrelis.com>
+#Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
+#Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
+
+pkgname=lldb-minimal-git
+pkgdesc="Next generation, high-performance debugger"
+url='https://lld.llvm.org/'
+pkgver=19.0.0.r503053.g326ba38a9912
+pkgrel=1
+commit=326ba38a991250a8587a399a260b0f7af2c9166a
+arch=(x86_64)
+license=('custom:Apache 2.0 with LLVM Exception')
+depends=(llvm-libs-minimal-git clang-minimal-git clang-libs-minimal-git gcc-libs zlib xz
+         libedit ncurses libxml2 python)
+makedepends=(llvm-minimal-git cmake ninja swig python-sphinx)
+conflicts=(lldb)
+provides=(lldb)
+provides+=(lldb-minimal-git lldb-git)
+source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
+
+pkgver(){
+  cd "${srcdir}"/llvm-project/
+
+  # This will almost match the output of `llvm-config --version` when the
+  # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
+  # dash being replaced with underscore because of Pacman requirements.
+  local _pkgver=$(awk -F 'MAJOR |MINOR |PATCH |)' \
+  'BEGIN { ORS="." ; i=0 } \
+  /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \
+  END { print "\n" }' \
+  cmake/Modules/LLVMVersion.cmake).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
+  echo "${_pkgver}"
+}
+
+build(){
+# https://aur.archlinux.org/cgit/aur.git/commit/?h=llvm-minimal-git&id=ae64860f523a57e2c6d0a9e65ed8af8c82d1ca73
+# build aborts with FORTIFY_SOURCE=3 , see https://github.com/llvm/llvm-project/issues/85509
+export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+
+  rm -rf "${srcdir}"/llvm-project/.git/
+
+  local cmake_args=(
+    -G "Unix Makefiles"
+    -D CMAKE_BUILD_TYPE=Release
+    -D CMAKE_INSTALL_PREFIX=/usr
+    -D CMAKE_SKIP_RPATH=ON
+    -D CLANG_LINK_CLANG_DYLIB=ON
+    -D LLVM_ENABLE_SPHINX=OFF
+    -D LLVM_MAIN_SRC_DIR="${srcdir}"/llvm-project/llvm
+    -D LLVM_LINK_LLVM_DYLIB=ON
+    -D LLVM_CONFIG=/usr/bin/llvm-config
+    -D LLVM_BUILD_DOCS=OFF
+  )
+
+  cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/lld "${cmake_args[@]}" -Wno-dev
+
+  make -j$(nproc) -C "${srcdir}"/build
+}
+
+package(){
+  make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install
+
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/llvm-project/lldb/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/lldb/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners
+
+  # Compile Python scripts
+  python3 -m compileall "$pkgdir"
+  python3 -O -m compileall "$pkgdir"
+  python3 -OO -m compileall "$pkgdir"
+}
+
+sha256sums=(SKIP)
+
+# vim:set ts=8 sts=2 sw=2 et:

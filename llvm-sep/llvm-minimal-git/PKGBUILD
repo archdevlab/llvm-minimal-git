@@ -1,0 +1,200 @@
+#Maintainer: archdevlab <https://github.com/archdevlab>
+#Credits: Evangelos Foutras <evangelos@foutrelis.com>
+#Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
+#Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
+
+pkgbase=llvm-minimal-git
+pkgname=(llvm-minimal-git llvm-libs-minimal-git)
+url='https://llvm.org/'
+pkgver=19.0.0.r503053.g326ba38a9912
+pkgrel=1
+_pkgver=19.0.0
+commit=326ba38a991250a8587a399a260b0f7af2c9166a
+arch=(x86_64)
+license=('custom:Apache 2.0 with LLVM Exception')
+makedepends=(cmake ninja zlib zstd libffi libedit ncurses
+             libxml2 python-setuptools python-psutil python-sphinx
+             python-myst-parser make git)
+options=(staticlibs !lto) # tools/llvm-shlib/typeids.test fails with LTO
+source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
+
+# Utilizing LLVM_DISTRIBUTION_COMPONENTS to avoid
+# installing static libraries; inspired by Gentoo
+_get_distribution_components(){
+local target
+local include
+
+make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
+    case $target in
+        llvm-libraries|distribution )
+            include=0
+            ;;
+        # shared libraries
+        LLVM|LLVMgold )
+            include=1
+            ;;
+        # libraries needed for clang-tblgen
+        LLVMDemangle|LLVMSupport|LLVMTableGen )
+            include=1
+            ;;
+        # used by lldb
+        LLVMDebuginfod )
+            include=1
+            ;;
+        # testing libraries
+        LLVMTestingAnnotations|LLVMTestingSupport )
+            include=1
+      	    ;;
+        # exclude static libraries
+        LLVM* )
+            include=0
+            ;;
+        # exclude llvm-exegesis (doesn't seem useful without libpfm)
+        llvm-exegesis )
+            include=0
+            ;;
+        # Anything not covered above is included
+        * )
+            include=1
+    esac
+    if [ $include -eq 1 ]; then
+        echo $target
+    fi
+done
+}
+
+pkgver(){
+  cd "${srcdir}"/llvm-project/
+
+  # This will almost match the output of `llvm-config --version` when the
+  # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
+  # dash being replaced with underscore because of Pacman requirements.
+  local _pkgver=$(awk -F 'MAJOR |MINOR |PATCH |)' \
+  'BEGIN { ORS="." ; i=0 } \
+  /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \
+  END { print "\n" }' \
+  cmake/Modules/LLVMVersion.cmake).r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
+  echo "${_pkgver}"
+}
+
+prepare(){
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/llvm/-/commit/31fedbbb507eb5be41cf1e6f405153b6bc370df7
+  # Remove CMake find module for zstd; breaks if out of sync with upstream zstd
+  rm -rf  "${srcdir}"/llvm-project/llvm/cmake/modules/Findzstd.cmake
+}
+
+build(){
+# https://aur.archlinux.org/cgit/aur.git/commit/?h=llvm-minimal-git&id=ae64860f523a57e2c6d0a9e65ed8af8c82d1ca73
+# build aborts with FORTIFY_SOURCE=3 , see https://github.com/llvm/llvm-project/issues/85509
+export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+
+  rm -rf "${srcdir}"/llvm-project/.git/
+
+  local cmake_args=(
+      -G "Unix Makefiles"
+      -D CMAKE_BUILD_TYPE=Release
+      -D CMAKE_INSTALL_PREFIX=/usr
+      -D LLVM_BINUTILS_INCDIR=/usr/include
+      -D FFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi)
+      -D LLVM_VERSION_SUFFIX=""
+      -D LLVM_APPEND_VC_REV=ON
+      -D LLVM_HOST_TRIPLE=$CHOST
+      -D LLVM_TARGETS_TO_BUILD="AMDGPU;X86"
+      -D LLVM_BUILD_LLVM_DYLIB=ON
+      -D LLVM_LINK_LLVM_DYLIB=ON
+      -D LLVM_DYLIB_COMPONENTS="all"
+      -D LLVM_INSTALL_UTILS=ON
+      -D LLVM_ENABLE_RTTI=ON
+      -D LLVM_ENABLE_FFI=ON
+      -D LLVM_USE_PERF=ON
+      -D LLVM_INCLUDE_BENCHMARKS=OFF
+      -D LLVM_INCLUDE_EXAMPLES=OFF
+      -D LLVM_BUILD_DOCS=OFF
+      -D LLVM_INCLUDE_DOCS=OFF
+      -D LLVM_ENABLE_OCAMLDOC=OFF
+      -D LLVM_ENABLE_SPHINX=OFF
+      -D LLVM_ENABLE_DOXYGEN=OFF
+      -D LLVM_ENABLE_BINDINGS=OFF
+      -D LLVM_LIT_ARGS="$LITFLAGS"" -sv --ignore-fail"
+      -D LLVM_ENABLE_DUMP=ON
+    )
+
+  cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/llvm "${cmake_args[@]}" -Wno-dev
+
+  pushd "${srcdir}"/build
+  local distribution_components=$(_get_distribution_components | paste -sd\;)
+  popd
+  test -n "$distribution_components"
+  cmake_args+=(-D LLVM_DISTRIBUTION_COMPONENTS="$distribution_components")
+
+  cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/llvm "${cmake_args[@]}" -Wno-dev
+  make -j$(nproc) -C "${srcdir}"/build
+}
+
+package_llvm-minimal-git(){
+  pkgdesc='Compiler infrastructure (git version)'
+  depends=(llvm-libs-minimal-git perl)
+  optdepends=('python: for using lit (LLVM Integrated Tester)'
+              'python-setuptools: for using lit')
+  conflicts=(llvm)
+  provides=(llvm)
+  provides+=(llvm-minimal-git llvm-git)
+
+  make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
+
+  # Include lit for running lit-based tests in other projects
+  pushd "${srcdir}"/llvm-project/llvm/utils/lit/
+  python3 setup.py install --root="${pkgdir}" -O1
+  popd
+
+  # This is when we want llvm-libs-minimal-git to conflict with llvm-libs
+  #  # The runtime libraries go into llvm-libs
+  # mkdir -p "${srcdir}"/llvm-libs/usr/lib
+  #  mv -f "${pkgdir}"/usr/lib/lib{LLVM,LTO,Remarks}*.so* "${srcdir}"/llvm-libs/usr/lib/
+  #  mv -f "${pkgdir}"/usr/lib/LLVMgold.so "${srcdir}"/llvm-libs/usr/lib/
+
+  # This is when we want to have llvm-libs and llvm-libs-minimal-git on the same system
+  # Remove files which conflict with repo llvm-libs
+  mkdir -p "${srcdir}"/llvm-libs/usr/lib
+  rm "${pkgdir}"/usr/lib/{LLVMgold,lib{LLVM,LTO}}.so
+  rm "${pkgdir}"/usr/lib/libRemarks.so
+  # The llvm runtime libraries go into llvm-libs-minimal-git
+  mv -f "${pkgdir}"/usr/lib/lib{LLVM-*.so,LLVM.so.*,LTO.so.*,Remarks.so.*} "${srcdir}"/llvm-libs/usr/lib/
+
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
+  install -m644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
+}
+
+package_llvm-libs-minimal-git(){
+  pkgdesc='LLVM runtime libraries (git version)'
+  #depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2)
+  #conflicts=(llvm-libs)
+  #provides=(llvm-libs)
+  # some applications expect llvmgold.so to be present and fail badly if it isn't.
+  # adding repo llvm-libs as depend is the easiest solution
+  depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2 llvm-libs)
+  provides+=(llvm-libs-minimal-git llvm-libs-git)
+
+  cp --preserve --recursive "${srcdir}"/llvm-libs/* "${pkgdir}"/
+
+  # This is when wee want llvm-libs-minimal-git to conflict with llvm-libs
+  #  # Symlink LLVMgold.so from /usr/lib/bfd-plugins
+  #  # https://bugs.archlinux.org/task/28479
+  #  install -d "${pkgdir}"/usr/lib/bfd-plugins
+  #  ln -s ../LLVMgold.so "${pkgdir}"/usr/lib/bfd-plugins/LLVMgold.so
+
+
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/llvm-project/llvm/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/llvm/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
+  install -m644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
+}
+
+sha256sums=(SKIP)
+
+# vim:set ts=8 sts=2 sw=2 et:
