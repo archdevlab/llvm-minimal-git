@@ -144,10 +144,9 @@ export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 package_lib32-llvm-git(){
   pkgdesc='Compiler infrastructure (32-bit) (git version)'
   depends=(lib32-llvm-libs-git llvm-git)
-  provides=(lib32-llvm)
-  provides+=(lib32-llvm-minimal-git lib32-llvm-git)
-  conflicts=(lib32-llvm)
-  replaces+=(lib32-llvm-minimal-git)
+  provides=(lib32-llvm lib32-llvm-minimal-git lib32-llvm-git)
+  conflicts=(lib32-llvm lib32-llvm-minimal-git)
+  replaces=(lib32-llvm-minimal-git)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 
@@ -190,8 +189,9 @@ package_lib32-llvm-libs-git(){
   # some applications expect llvmgold.so to be present and fail badly if it isn't.
   # adding lib32-llvm-libs as depend is the easiest solution
   depends=(lib32-libffi lib32-zlib lib32-zstd lib32-ncurses lib32-libxml2 lib32-gcc-libs lib32-llvm-libs)
-  provides+=(lib32-llvm-libs-minimal-git lib32-llvm-git)
-  replaces+=(lib32-llvm-libs-minimal-git)
+  provides=(lib32-llvm-libs-minimal-git lib32-llvm-libs-git)
+  conflicts=(lib32-llvm-libs-minimal-git)
+  replaces=(lib32-llvm-libs-minimal-git)
 
   cp --preserve --recursive "${srcdir}"/lib32-llvm-libs/* "${pkgdir}"/
 
