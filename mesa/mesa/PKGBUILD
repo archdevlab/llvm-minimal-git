@@ -28,8 +28,8 @@ arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT AND BSD-3-Clause AND SGI-B-2.0)
 makedepends=(
-  clang-minimal-git
-  clang-libs-minimal-git
+  clang-git
+  clang-libs-git
   expat
   gcc-libs
   glibc
@@ -46,11 +46,11 @@ makedepends=(
   libxrandr
   libxshmfence
   libxxf86vm
-  llvm-minimal-git
-  llvm-libs-minimal-git
+  llvm-git
+  llvm-libs-git
   lm_sensors
   rust
-  spirv-llvm-translator-minimal-git
+  spirv-llvm-translator-git
   spirv-tools-git
   systemd-libs
   vulkan-icd-loader
@@ -61,11 +61,11 @@ makedepends=(
 
   # shared between mesa and lib32-mesa
   cbindgen
-  clang-minimal-git
+  clang-git
   cmake
   elfutils
   glslang-git
-  libclc-minimal-git
+  libclc-git
   meson
   python-mako
   python-packaging
@@ -90,7 +90,7 @@ makedepends+=(
   python
   libarchive
   libconfig
-  compiler-rt-minimal-git
+  compiler-rt-git
   libxcb
   ncurses
   libxv
@@ -275,7 +275,7 @@ package_mesa-git(){
     libxfixes
     libxshmfence
     libxxf86vm
-    llvm-libs-minimal-git
+    llvm-libs-git
     lm_sensors
     wayland
     zlib
@@ -358,7 +358,7 @@ package_libva-mesa-driver-git(){
     libx11
     libxcb
     libxshmfence
-    llvm-libs-minimal-git
+    llvm-libs-git
     zlib
     zstd
   )
@@ -384,7 +384,7 @@ package_mesa-vdpau-git(){
     libx11
     libxcb
     libxshmfence
-    llvm-libs-minimal-git
+    llvm-libs-git
     zlib
     zstd
   )
@@ -404,19 +404,19 @@ package_mesa-vdpau-git(){
 package_opencl-clover-mesa-git(){
   pkgdesc="Open-source OpenCL drivers - Clover variant (git version)"
   depends=(
-    clang-minimal-git
-    clang-libs-minimal-git
+    clang-git
+    clang-libs-git
     expat
     gcc-libs
     glibc
     libdrm-git
     libelf
-    llvm-libs-minimal-git
-    spirv-llvm-translator-minimal-git
+    llvm-libs-git
+    spirv-llvm-translator-git
     spirv-tools-git
     zlib
     zstd
-    libclc-minimal-git
+    libclc-git
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=(
@@ -440,19 +440,19 @@ package_opencl-clover-mesa-git(){
 package_opencl-rusticl-mesa-git(){
   pkgdesc="Open-source OpenCL drivers - RustICL variant (git version)"
   depends=(
-    clang-minimal-git
-    clang-libs-minimal-git
+    clang-git
+    clang-libs-git
     expat
     gcc-libs
     glibc
     libdrm-git
     libelf
-    llvm-libs-minimal-git
-    spirv-llvm-translator-minimal-git
+    llvm-libs-git
+    spirv-llvm-translator-git
     spirv-tools-git
     zlib
     zstd
-    libclc-minimal-git
+    libclc-git
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=(
@@ -565,7 +565,7 @@ package_vulkan-radeon-git(){
     libx11
     libxcb
     libxshmfence
-    llvm-libs-minimal-git
+    llvm-libs-git
     systemd-libs
     vulkan-icd-loader
     wayland
@@ -595,7 +595,7 @@ package_vulkan-swrast-git(){
     libx11
     libxcb
     libxshmfence
-    llvm-libs-minimal-git
+    llvm-libs-git
     systemd-libs
     vulkan-icd-loader
     wayland
@@ -658,7 +658,7 @@ package_vulkan-imagination-git(){
     libx11
     libxcb
     libxshmfence
-    llvm-libs-minimal-git
+    llvm-libs-git
     systemd-libs
     vulkan-icd-loader
     wayland
@@ -683,15 +683,15 @@ package_vulkan-imagination-git(){
 package_intel_clc-git(){
   pkgdesc='Intel_clc tool used for building OpenCL C to SPIR-V (git version)'
   depends=(
-    libclc-minimal-git
+    libclc-git
     spirv-tools-git
     zlib
     libdrm-git
-    spirv-llvm-translator-minimal-git
-    clang-minimal-git
-    clang-libs-minimal-git
-    llvm-minimal-git
-    llvm-libs-minimal-git
+    spirv-llvm-translator-git
+    clang-git
+    clang-libs-git
+    llvm-git
+    llvm-libs-git
     expat
    )
 
