@@ -3,8 +3,8 @@
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
-pkgbase=lib32-clang-minimal-git
-pkgname=(lib32-clang-minimal-git lib32-clang-libs-minimal-git)
+pkgbase=lib32-clang-git
+pkgname=(lib32-clang-git lib32-clang-libs-git)
 url='https://clang.llvm.org/'
 pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
@@ -14,7 +14,7 @@ arch=(i686 x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja lib32-libffi lib32-zlib lib32-zstd python
              gcc-multilib lib32-libxml2 make git)
-makedepends+=(lib32-llvm-minimal-git)
+makedepends+=(lib32-llvm-git)
 options=(staticlibs !lto ) # https://github.com/llvm/llvm-project/issues/57740
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}"
         enable-fstack-protector-strong-by-default.patch)
@@ -120,12 +120,13 @@ export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 }
 
 
-package_lib32-clang-minimal-git(){
+package_lib32-clang-git(){
   pkgdesc='C language family frontend for LLVM (32-bit) (git version)'
-  depends=(lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git gcc-multilib)
+  depends=(lib32-llvm-libs-git lib32-clang-libs-git gcc-multilib)
   provides=(lib32-clang)
   provides+=(lib32-clang-minimal-git lib32-clang-git)
   conflicts=(lib32-clang)
+  replaces+=(lib32-clang-minimal-git)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 
@@ -143,14 +144,15 @@ package_lib32-clang-minimal-git(){
 }
 
 # https://bugs.archlinux.org/task/72588?project=1&string=clang
-package_lib32-clang-libs-minimal-git(){
+package_lib32-clang-libs-git(){
   pkgdesc='Clang runtime libraries (32-bit) (git version)'
-  depends=(lib32-llvm-libs-minimal-git)
+  depends=(lib32-llvm-libs-git)
   # the functionality offered by this package is part of the clang repo pacakge.
   # TODO: when/if this functionality is split off from repo clang, verify if changes are needed to this package
   provides=(lib32-clang-libs)
   provides+=(lib32-clang-libs-minimal-git lib32-clang-libs-git)
   conflicts=(lib32-clang-libs)
+  replaces+=(lib32-clang-libs-minimal-git)
 
   cp --preserve --recursive "${srcdir}"/lib32-clang-libs/* "${pkgdir}"/
 
