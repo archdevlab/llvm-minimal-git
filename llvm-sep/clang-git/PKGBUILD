@@ -127,11 +127,9 @@ package_clang-git(){
   optdepends=('openmp: OpenMP support in clang with -fopenmp'
               'python: for scan-view, scan-build, git-clang-format, clang-rename and python bindings'
               'llvm-git: referenced by some clang headers')
-  provides=(clang clang-analyzer clang-tools-extra)
-  provides+=(clang-minimal-git clang-git)
-  conflicts=(clang)
-  replaces=(clang-analyzer clang-tools-extra)
-  replaces+=(clang-minimal-git)
+  provides=(clang clang-analyzer clang-tools-extra clang-minimal-git clang-git)
+  conflicts=(clang clang-minimal-git)
+  replaces=(clang-analyzer clang-tools-extra clang-minimal-git)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 
@@ -177,10 +175,9 @@ package_clang-libs-git(){
   depends=(llvm-libs-git)
   # the functionality offered by this package is part of the clang repo pacakge.
   # TODO: when/if this functionality is split off from repo clang, verify if changes are needed to this package
-  provides=(clang-libs)
-  provides+=(clang-libs-minimal-git clang-libs-git)
-  conflicts=(clang-libs)
-  replaces+=(clang-libs-minimal-git)
+  provides=(clang-libs clang-libs-minimal-git clang-libs-git)
+  conflicts=(clang-libs clang-libs-minimal-git)
+  replaces=(clang-libs-minimal-git)
 
   cp --preserve --recursive "${srcdir}"/clang-libs/* "${pkgdir}"/
 
