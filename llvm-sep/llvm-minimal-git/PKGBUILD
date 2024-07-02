@@ -3,8 +3,8 @@
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
-pkgbase=llvm-minimal-git
-pkgname=(llvm-minimal-git llvm-libs-minimal-git)
+pkgbase=llvm-git
+pkgname=(llvm-git llvm-libs-git)
 url='https://llvm.org/'
 pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
@@ -132,14 +132,15 @@ export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
   make -j$(nproc) -C "${srcdir}"/build
 }
 
-package_llvm-minimal-git(){
+package_llvm-git(){
   pkgdesc='Compiler infrastructure (git version)'
-  depends=(llvm-libs-minimal-git perl)
+  depends=(llvm-libs-git perl)
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
   provides=(llvm)
   provides+=(llvm-minimal-git llvm-git)
   conflicts=(llvm)
+  replaces+=(llvm-minimal-git)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 
@@ -169,7 +170,7 @@ package_llvm-minimal-git(){
   install -m644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
 }
 
-package_llvm-libs-minimal-git(){
+package_llvm-libs-git(){
   pkgdesc='LLVM runtime libraries (git version)'
   #depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2)
   #conflicts=(llvm-libs)
@@ -178,6 +179,7 @@ package_llvm-libs-minimal-git(){
   # adding repo llvm-libs as depend is the easiest solution
   depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2 llvm-libs)
   provides+=(llvm-libs-minimal-git llvm-libs-git)
+  replaces+=(llvm-libs-minimal-git)
 
   cp --preserve --recursive "${srcdir}"/llvm-libs/* "${pkgdir}"/
 
