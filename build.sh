@@ -19,25 +19,25 @@ cd spirv/lib32-spirv-tools-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd glslang-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-sep/llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/llvm-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-sep/lld-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/lld-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-sep/compiler-rt-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/compiler-rt-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-sep/clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/clang-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-sep/lldb-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/lldb-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-sep/spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/spirv-llvm-translator-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-sep/libclc-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/libclc-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-sep/lib32-llvm-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/lib32-llvm-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-sep/lib32-clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/lib32-clang-git/ && makepkg -si --noconfirm && cd ${source}
 
-cd llvm-sep/lib32-spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+cd llvm-sep/lib32-spirv-llvm-translator-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd directx-headers-git/ && makepkg -si --noconfirm && cd ${source}
 
