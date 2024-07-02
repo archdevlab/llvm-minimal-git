@@ -27,8 +27,8 @@ arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT AND BSD-3-Clause AND SGI-B-2.0)
 makedepends=(
-  lib32-clang-minimal-git
-  lib32-clang-libs-minimal-git
+  lib32-clang-git
+  lib32-clang-libs-git
   lib32-expat
   lib32-gcc-libs
   lib32-glibc
@@ -45,11 +45,11 @@ makedepends=(
   lib32-libxrandr
   lib32-libxshmfence
   lib32-libxxf86vm
-  lib32-llvm-minimal-git
-  lib32-llvm-libs-minimal-git
+  lib32-llvm-git
+  lib32-llvm-libs-git
   lib32-lm_sensors
   lib32-rust-libs
-  lib32-spirv-llvm-translator-minimal-git
+  lib32-spirv-llvm-translator-git
   lib32-spirv-tools-git
   lib32-systemd
   lib32-vulkan-icd-loader
@@ -60,12 +60,12 @@ makedepends=(
 
   # shared between mesa and lib32-mesa
   cbindgen
-  clang-minimal-git
-  clang-libs-minimal-git
+  clang-git
+  clang-libs-git
   cmake
   elfutils
   glslang
-  libclc-minimal-git
+  libclc-git
   meson
   python-mako
   python-packaging
@@ -81,8 +81,8 @@ makedepends+=(
   python
   libarchive
   libconfig
-  compiler-rt-minimal-git
-  lib32-compiler-rt-minimal-git
+  compiler-rt-git
+  lib32-compiler-rt-git
   libxcb
   ncurses
   libxv
@@ -284,7 +284,7 @@ package_lib32-mesa-git(){
     lib32-libxfixes
     lib32-libxshmfence
     lib32-libxxf86vm
-    lib32-llvm-libs-minimal-git
+    lib32-llvm-libs-git
     lib32-lm_sensors
     lib32-wayland
     lib32-zlib
@@ -362,7 +362,7 @@ package_lib32-libva-mesa-driver-git(){
     lib32-libx11
     lib32-libxcb
     lib32-libxshmfence
-    lib32-llvm-libs-minimal-git
+    lib32-llvm-libs-git
     lib32-zlib
     lib32-zstd
     libva-mesa-driver-git
@@ -389,7 +389,7 @@ package_lib32-mesa-vdpau-git(){
     lib32-libx11
     lib32-libxcb
     lib32-libxshmfence
-    lib32-llvm-libs-minimal-git
+    lib32-llvm-libs-git
     lib32-zlib
     lib32-zstd
     mesa-vdpau-git
@@ -410,15 +410,15 @@ package_lib32-mesa-vdpau-git(){
 package_lib32-opencl-clover-mesa-git(){
   pkgdesc="Open-source OpenCL drivers - Clover variant (32-bit) (git version)"
   depends=(
-    lib32-clang-minimal-git
-    lib32-clang-libs-minimal-git
+    lib32-clang-git
+    lib32-clang-libs-git
     lib32-expat
     lib32-gcc-libs
     lib32-glibc
     lib32-libdrm-git
     lib32-libelf
-    lib32-llvm-libs-minimal-git
-    lib32-spirv-llvm-translator-minimal-git
+    lib32-llvm-libs-git
+    lib32-spirv-llvm-translator-git
     lib32-spirv-tools-git
     lib32-zlib
     lib32-zstd
@@ -446,15 +446,15 @@ package_lib32-opencl-clover-mesa-git(){
 package_lib32-opencl-rusticl-mesa-git(){
   pkgdesc="Open-source OpenCL drivers - RustICL variant (32-bit) (git version)"
   depends=(
-    lib32-clang-minimal-git
-    lib32-clang-libs-minimal-git
+    lib32-clang-git
+    lib32-clang-libs-git
     lib32-expat
     lib32-gcc-libs
     lib32-glibc
     lib32-libdrm-git
     lib32-libelf
-    lib32-llvm-libs-minimal-git
-    lib32-spirv-llvm-translator-minimal-git
+    lib32-llvm-libs-git
+    lib32-spirv-llvm-translator-git
     lib32-spirv-tools-git
     lib32-zlib
     lib32-zstd
@@ -573,7 +573,7 @@ package_lib32-vulkan-radeon-git(){
     lib32-libx11
     lib32-libxcb
     lib32-libxshmfence
-    lib32-llvm-libs-minimal-git
+    lib32-llvm-libs-git
     lib32-systemd
     lib32-vulkan-icd-loader
     lib32-wayland
@@ -604,7 +604,7 @@ package_lib32-vulkan-swrast-git(){
     lib32-libx11
     lib32-libxcb
     lib32-libxshmfence
-    lib32-llvm-libs-minimal-git
+    lib32-llvm-libs-git
     lib32-systemd
     lib32-vulkan-icd-loader
     lib32-wayland
@@ -669,7 +669,7 @@ package_lib32-vulkan-imagination-git(){
     lib32-libx11
     lib32-libxcb
     lib32-libxshmfence
-    lib32-llvm-libs-minimal-git
+    lib32-llvm-libs-git
     lib32-systemd
     lib32-vulkan-icd-loader
     lib32-wayland
