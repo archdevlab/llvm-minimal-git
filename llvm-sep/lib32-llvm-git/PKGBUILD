@@ -184,8 +184,8 @@ package_lib32-llvm-git(){
 package_lib32-llvm-libs-git(){
   pkgdesc='LLVM runtime libraries (32-bit) (git version)'
   #depends=(lib32-libffi lib32-zlib lib32-zstd lib32-ncurses lib32-libxml2 lib32-gcc-libs)
-  #conflicts=(lib32-llvm-libs)
   #provides=(lib32-llvm-libs)
+  #conflicts=(lib32-llvm-libs)
   # some applications expect llvmgold.so to be present and fail badly if it isn't.
   # adding lib32-llvm-libs as depend is the easiest solution
   depends=(lib32-libffi lib32-zlib lib32-zstd lib32-ncurses lib32-libxml2 lib32-gcc-libs lib32-llvm-libs)
