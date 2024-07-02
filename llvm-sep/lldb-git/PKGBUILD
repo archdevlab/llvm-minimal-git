@@ -14,10 +14,9 @@ license=('custom:Apache 2.0 with LLVM Exception')
 depends=(llvm-libs-git clang-git clang-libs-git gcc-libs zlib xz
          libedit ncurses libxml2 python)
 makedepends=(llvm-git cmake ninja swig python-sphinx)
-provides=(lldb)
-provides+=(lldb-minimal-git lldb-git)
-conflicts=(lldb)
-replaces+=(lldb-minimal-git)
+provides=(lldb lldb-minimal-git lldb-git)
+conflicts=(lldb lldb-minimal-git)
+replaces=(lldb-minimal-git)
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
 pkgver(){
