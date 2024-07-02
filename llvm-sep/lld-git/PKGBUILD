@@ -13,10 +13,9 @@ arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 depends=(llvm-libs-git gcc-libs zlib zstd)
 makedepends=(llvm-git cmake ninja python-sphinx libunwind)
-provides=(lld)
-provides+=(lld-minimal-git lld-git)
-conflicts=(lld)
-replaces+=(lld-minimal-git)
+provides=(lld lld-minimal-git lld-git)
+conflicts=(lld lld-minimal-git)
+replaces=(lld-minimal-git)
 options=(staticlibs !lto) # https://github.com/llvm/llvm-project/issues/57740
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
