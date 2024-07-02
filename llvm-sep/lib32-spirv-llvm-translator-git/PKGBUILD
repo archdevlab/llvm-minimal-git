@@ -15,10 +15,9 @@ arch=(i686 x86_64)
 license=(custom)
 depends=(lib32-llvm-libs-git lib32-spirv-tools-git)
 makedepends=(git cmake llvm-git lib32-llvm-git spirv-headers-git)
-provides=(lib32-spirv-llvm-translator)
-provides+=(lib32-spirv-llvm-translator-minimal-git lib32-spirv-llvm-translator-git)
-conflicts=(lib32-spirv-llvm-translator)
-replaces+=(lib32-spirv-llvm-translator-git)
+provides=(lib32-spirv-llvm-translator lib32-spirv-llvm-translator-minimal-git lib32-spirv-llvm-translator-git)
+conflicts=(lib32-spirv-llvm-translator lib32-spirv-llvm-translator-minimal-git)
+replaces=(lib32-spirv-llvm-translator-git)
 source=(git+https://github.com/KhronosGroup/SPIRV-LLVM-Translator.git#commit="${commit}")
 
 pkgver(){
