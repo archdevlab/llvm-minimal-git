@@ -123,10 +123,9 @@ export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 package_lib32-clang-git(){
   pkgdesc='C language family frontend for LLVM (32-bit) (git version)'
   depends=(lib32-llvm-libs-git lib32-clang-libs-git gcc-multilib)
-  provides=(lib32-clang)
-  provides+=(lib32-clang-minimal-git lib32-clang-git)
-  conflicts=(lib32-clang)
-  replaces+=(lib32-clang-minimal-git)
+  provides=(lib32-clang lib32-clang-minimal-git lib32-clang-git)
+  conflicts=(lib32-clang lib32-clang-minimal-git)
+  replaces=(lib32-clang-minimal-git)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 
@@ -149,10 +148,9 @@ package_lib32-clang-libs-git(){
   depends=(lib32-llvm-libs-git)
   # the functionality offered by this package is part of the clang repo pacakge.
   # TODO: when/if this functionality is split off from repo clang, verify if changes are needed to this package
-  provides=(lib32-clang-libs)
-  provides+=(lib32-clang-libs-minimal-git lib32-clang-libs-git)
-  conflicts=(lib32-clang-libs)
-  replaces+=(lib32-clang-libs-minimal-git)
+  provides=(lib32-clang-libs lib32-clang-libs-minimal-git lib32-clang-libs-git)
+  conflicts=(lib32-clang-libs lib32-clang-libs-minimal-git)
+  replaces=(lib32-clang-libs-minimal-git)
 
   cp --preserve --recursive "${srcdir}"/lib32-clang-libs/* "${pkgdir}"/
 
