@@ -10,7 +10,7 @@ pkgrel=1
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
 license=(MIT)
-makedepends=(clang-git llvm-git cmake ninja python spirv-llvm-translator-git llvm-libs make git)
+makedepends=(clang-git llvm-git cmake ninja python spirv-llvm-translator-git make git)
 # https://aur.archlinux.org/packages/libclc-minimal-git#comment-967212
 # https://github.com/llvm/llvm-project/issues/88626
 makedepends+=(meson ninja)
