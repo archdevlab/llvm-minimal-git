@@ -3,7 +3,7 @@
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
-pkgname=lld-minimal-git
+pkgname=lld-git
 pkgdesc='Linker from the LLVM project (git version)'
 url='https://lld.llvm.org/'
 pkgver=19.0.0.r503537.g6b707a8cc143
@@ -11,11 +11,12 @@ pkgrel=1
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
-depends=(llvm-libs-minimal-git gcc-libs zlib zstd)
-makedepends=(llvm-minimal-git cmake ninja python-sphinx libunwind)
+depends=(llvm-libs-git gcc-libs zlib zstd)
+makedepends=(llvm-git cmake ninja python-sphinx libunwind)
 provides=(lld)
 provides+=(lld-minimal-git lld-git)
 conflicts=(lld)
+replaces+=(lld-minimal-git)
 options=(staticlibs !lto) # https://github.com/llvm/llvm-project/issues/57740
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
