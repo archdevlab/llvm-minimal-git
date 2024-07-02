@@ -2,7 +2,7 @@
 #Credits: Laurent Carlier <lordheavym@gmail.com>
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
-pkgname=libclc-minimal-git
+pkgname=libclc-git
 pkgdesc='Library requirements of the OpenCL C programming language (git version)'
 url='https://libclc.llvm.org/'
 pkgver=19.0.0.r503537.g6b707a8cc143
@@ -10,13 +10,14 @@ pkgrel=1
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
 license=(MIT)
-makedepends=(clang-minimal-git llvm-minimal-git cmake ninja python spirv-llvm-translator-minimal-git llvm-libs make git)
+makedepends=(clang-git llvm-git cmake ninja python spirv-llvm-translator-git llvm-libs make git)
 # https://aur.archlinux.org/packages/libclc-minimal-git#comment-967212
 # https://github.com/llvm/llvm-project/issues/88626
 makedepends+=(meson ninja)
 provides=(libclc)
 provides+=(libclc-minimal-git libclc-git)
 conflicts=(libclc)
+replaces+=(libclc-minimal-git)
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
 pkgver(){
