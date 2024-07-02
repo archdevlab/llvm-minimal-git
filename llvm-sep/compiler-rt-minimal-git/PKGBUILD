@@ -12,7 +12,7 @@ commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 depends=(gcc-libs)
-makedepends=(llvm-minimal-git cmake ninja python make git)
+makedepends=(llvm-git cmake ninja python make git)
 # Build 32-bit compiler-rt libraries on x86_64 (FS#41911)
 makedepends_x86_64=(lib32-gcc-libs)
 provides=(compiler-rt)
