@@ -137,10 +137,9 @@ package_llvm-git(){
   depends=(llvm-libs-git perl)
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
-  provides=(llvm)
-  provides+=(llvm-minimal-git llvm-git)
-  conflicts=(llvm)
-  replaces+=(llvm-minimal-git)
+  provides=(llvm llvm-minimal-git llvm-git)
+  conflicts=(llvm llvm-minimal-git)
+  replaces=(llvm-minimal-git)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 
@@ -173,13 +172,14 @@ package_llvm-git(){
 package_llvm-libs-git(){
   pkgdesc='LLVM runtime libraries (git version)'
   #depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2)
-  #conflicts=(llvm-libs)
   #provides=(llvm-libs)
+  #conflicts=(llvm-libs)
   # some applications expect llvmgold.so to be present and fail badly if it isn't.
   # adding repo llvm-libs as depend is the easiest solution
   depends=(gcc-libs zlib zstd libffi libedit ncurses libxml2 llvm-libs)
-  provides+=(llvm-libs-minimal-git llvm-libs-git)
-  replaces+=(llvm-libs-minimal-git)
+  provides=(llvm-libs-minimal-git llvm-libs-git)
+  conflicts=(llvm-libs-minimal-git)
+  replaces=(llvm-libs-minimal-git)
 
   cp --preserve --recursive "${srcdir}"/llvm-libs/* "${pkgdir}"/
 
