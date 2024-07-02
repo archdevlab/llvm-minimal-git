@@ -16,10 +16,9 @@ license=(custom)
 depends=(llvm-libs-git spirv-tools-git)
 makedepends=(git cmake llvm-git spirv-headers-git)
 checkdepends=(python python-setuptools clang-git)
-provides=(spirv-llvm-translator)
-provides+=(spirv-llvm-translator-minimal-git spirv-llvm-translator-git)
-conflicts=(spirv-llvm-translator)
-replaces+=(spirv-llvm-translator-minimal-git)
+provides=(spirv-llvm-translator spirv-llvm-translator-minimal-git spirv-llvm-translator-git)
+conflicts=(spirv-llvm-translator spirv-llvm-translator-minimal-git)
+replaces=(spirv-llvm-translator-minimal-git)
 source=(git+https://github.com/KhronosGroup/SPIRV-LLVM-Translator.git#commit="${commit}")
 
 pkgver(){
