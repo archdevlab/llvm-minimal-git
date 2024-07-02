@@ -14,9 +14,9 @@ license=(custom:BSD-like)
 # libglvnd needs mesa for indirect rendering
 depends=(libxext mesa opengl-driver)
 makedepends=(libxext libx11 xorgproto python meson git)
-conflicts=(libglvnd)
 provides=(libglvnd libgl libegl libgles)
 provides+=(libEGL.so libGL.so libGLESv2.so libGLX.so libGLdispatch.so libOpenGL.so)
+conflicts=(libglvnd)
 source=(git+https://gitlab.freedesktop.org/glvnd/libglvnd.git#commit="${commit}"
         LICENSE)
 

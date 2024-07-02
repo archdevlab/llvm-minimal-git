@@ -7,7 +7,7 @@
 pkgbase=lib32-llvm-minimal-git
 pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=19.0.0.r503053.g326ba38a9912
+pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
 _pkgver=19.0.0
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
@@ -144,9 +144,9 @@ export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 package_lib32-llvm-minimal-git(){
   pkgdesc='Compiler infrastructure (32-bit) (git version)'
   depends=(lib32-llvm-libs-minimal-git llvm-minimal-git)
-  conflicts=(lib32-llvm)
   provides=(lib32-llvm)
   provides+=(lib32-llvm-minimal-git lib32-llvm-git)
+  conflicts=(lib32-llvm)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 

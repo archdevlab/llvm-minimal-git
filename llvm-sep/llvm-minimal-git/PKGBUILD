@@ -6,7 +6,7 @@
 pkgbase=llvm-minimal-git
 pkgname=(llvm-minimal-git llvm-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=19.0.0.r503053.g326ba38a9912
+pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
 _pkgver=19.0.0
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
@@ -137,9 +137,9 @@ package_llvm-minimal-git(){
   depends=(llvm-libs-minimal-git perl)
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
-  conflicts=(llvm)
   provides=(llvm)
   provides+=(llvm-minimal-git llvm-git)
+  conflicts=(llvm)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 

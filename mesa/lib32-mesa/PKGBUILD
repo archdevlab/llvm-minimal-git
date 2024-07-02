@@ -20,7 +20,7 @@ pkgname=(
   lib32-vulkan-virtio-git
   lib32-vulkan-imagination-git
 )
-pkgver=24.2.0_devel.191465.c2af4f61a7f
+pkgver=24.2.0_devel.191472.6326cc4a5e4
 pkgrel=1
 commit=6326cc4a5e4e9638d2b0cdc0f847caeb42588c48
 arch=(x86_64)
@@ -97,7 +97,8 @@ options=(
 
   !debug !lto
 )
-source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit="${commit}")
+source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit="${commit}"
+        fix-LLVMOpaqueModule.patch)
 
 # Rust crates for NVK, used as Meson subprojects
 declare -A _crates=(
@@ -686,6 +687,7 @@ package_lib32-vulkan-imagination-git(){
 }
 
 sha256sums=(SKIP
+            SKIP
             39278fbbf5fb4f646ce651690877f89d1c5811a3d4acb27700c1cb3cdb78fd3b
             3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b
             5267fca4496028628a95160fc423a33e8b2e6af8a5302579e322e4b520293cae

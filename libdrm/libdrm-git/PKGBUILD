@@ -14,9 +14,9 @@ license=(custom)
 depends=(libpciaccess)
 makedepends=(python-docutils meson git)
 checkdepends=(cairo)
-replaces=(libdrm-new libdrm-nouveau)
-conflicts=(libdrm)
 provides=(libdrm libdrm-git)
+conflicts=(libdrm)
+replaces=(libdrm-new libdrm-nouveau)
 source=(git+https://gitlab.freedesktop.org/mesa/drm.git#commit="${commit}"
         COPYING)
 

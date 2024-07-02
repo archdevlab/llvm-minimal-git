@@ -6,7 +6,7 @@
 pkgname=compiler-rt-minimal-git
 pkgdesc='Compiler runtime libraries for clang (git version)'
 url='https://compiler-rt.llvm.org/'
-pkgver=19.0.0.r503053.g326ba38a9912
+pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
@@ -15,9 +15,9 @@ depends=(gcc-libs)
 makedepends=(llvm-minimal-git cmake ninja python make git)
 # Build 32-bit compiler-rt libraries on x86_64 (FS#41911)
 makedepends_x86_64=(lib32-gcc-libs)
-conflicts=(compiler-rt)
 provides=(compiler-rt)
 provides+=(compiler-rt-minimal-git compiler-rt-git)
+conflicts=(compiler-rt)
 options=(staticlibs)
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 

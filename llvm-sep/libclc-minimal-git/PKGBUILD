@@ -5,7 +5,7 @@
 pkgname=libclc-minimal-git
 pkgdesc='Library requirements of the OpenCL C programming language (git version)'
 url='https://libclc.llvm.org/'
-pkgver=19.0.0.r503053.g326ba38a9912
+pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
@@ -14,9 +14,9 @@ makedepends=(clang-minimal-git llvm-minimal-git cmake ninja python spirv-llvm-tr
 # https://aur.archlinux.org/packages/libclc-minimal-git#comment-967212
 # https://github.com/llvm/llvm-project/issues/88626
 makedepends+=(meson ninja)
-conflicts=(libclc)
 provides=(libclc)
 provides+=(libclc-minimal-git libclc-git)
+conflicts=(libclc)
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
 pkgver(){
@@ -40,7 +40,7 @@ export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
   rm -rf "${srcdir}"/llvm-project/.git/
-  
+
   # https://aur.archlinux.org/packages/libclc-minimal-git#comment-967212
   # https://github.com/llvm/llvm-project/issues/88626
   local cmake_args=(

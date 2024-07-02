@@ -11,8 +11,8 @@ arch=(x86_64)
 url='https://github.com/microsoft/DirectX-Headers'
 license=(MIT)
 makedepends=(meson git)
-conflicts=(directx-headers)
 provides=(directx-headers directx-headers-git)
+conflicts=(directx-headers)
 options=(!lto) # LTO breaks mesa...
 source=(git+https://github.com/microsoft/DirectX-Headers.git#commit="${commit}")
 

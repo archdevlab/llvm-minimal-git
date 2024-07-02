@@ -6,7 +6,7 @@
 pkgbase=lib32-clang-minimal-git
 pkgname=(lib32-clang-minimal-git lib32-clang-libs-minimal-git)
 url='https://clang.llvm.org/'
-pkgver=19.0.0.r503053.g326ba38a9912
+pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
 _pkgver=19.0.0
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
@@ -64,8 +64,9 @@ pkgver(){
 }
 
 prepare(){
-  cd "${srcdir}"/llvm-project/clang/
+  pushd "${srcdir}"/llvm-project/clang/
   patch -Np2 -i "${srcdir}"/enable-fstack-protector-strong-by-default.patch
+  popd
 }
 
 build(){
@@ -122,9 +123,9 @@ export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 package_lib32-clang-minimal-git(){
   pkgdesc='C language family frontend for LLVM (32-bit) (git version)'
   depends=(lib32-llvm-libs-minimal-git lib32-clang-libs-minimal-git gcc-multilib)
-  conflicts=(lib32-clang)
   provides=(lib32-clang)
   provides+=(lib32-clang-minimal-git lib32-clang-git)
+  conflicts=(lib32-clang)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 
@@ -147,9 +148,9 @@ package_lib32-clang-libs-minimal-git(){
   depends=(lib32-llvm-libs-minimal-git)
   # the functionality offered by this package is part of the clang repo pacakge.
   # TODO: when/if this functionality is split off from repo clang, verify if changes are needed to this package
-  conflicts=(lib32-clang-libs)
   provides=(lib32-clang-libs)
   provides+=(lib32-clang-libs-minimal-git lib32-clang-libs-git)
+  conflicts=(lib32-clang-libs)
 
   cp --preserve --recursive "${srcdir}"/lib32-clang-libs/* "${pkgdir}"/
 

@@ -14,8 +14,8 @@ license=(custom)
 depends=(lib32-libpciaccess libdrm)
 makedepends=(meson git)
 checkdepends=(lib32-cairo)
-conflicts=(lib32-libdrm)
 provides=(lib32-libdrm lib32-libdrm-git)
+conflicts=(lib32-libdrm)
 source=(git+https://gitlab.freedesktop.org/mesa/drm.git#commit=$"${commit}"
         COPYING)
 

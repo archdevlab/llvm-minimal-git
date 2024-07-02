@@ -11,8 +11,8 @@ arch=(x86_64)
 url='https://github.com/KhronosGroup/SPIRV-Headers.git'
 license=(MIT)
 makedepends=(cmake ninja git make)
-conflicts=(spirv-headers)
 provides=(spirv-headers spirv-headers-git)
+conflicts=(spirv-headers)
 source=(git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit="$commit")
 
 pkgver(){

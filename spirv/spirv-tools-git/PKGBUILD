@@ -12,8 +12,8 @@ url='https://github.com/KhronosGroup/SPIRV-Tools.git'
 license=(Apache-2.0)
 depends=(glibc gcc-libs sh)
 makedepends=(cmake python git ninja spirv-headers-git make)
-conflicts=(spirv-tools)
 provides=(spirv-tools spirv-tools-git)
+conflicts=(spirv-tools)
 source=(git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit="${commit}")
 
 #pkgver(){

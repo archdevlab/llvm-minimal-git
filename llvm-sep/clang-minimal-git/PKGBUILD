@@ -6,7 +6,7 @@
 pkgbase=clang-minimal-git
 pkgname=(clang-minimal-git clang-libs-minimal-git)
 url='https://clang.llvm.org/'
-pkgver=19.0.0.r503053.g326ba38a9912
+pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
 _pkgver=19.0.0
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
@@ -34,7 +34,7 @@ make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
         clang|clangd|clang-* )
             include=1
             ;;
-        clang*|findAllSymbols|scan-build-py )
+        clang*|findAllSymbols )
             include=0
             ;;
         # Anything not covered above is included
@@ -68,8 +68,9 @@ prepare(){
   2to3 -wn --no-diffs \
     "${srcdir}"/llvm-project/clang/tools/extra/clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
 
-  cd "${srcdir}"/llvm-project/clang/
+  pushd "${srcdir}"/llvm-project/clang/
   patch -Np2 -i "${srcdir}"/enable-fstack-protector-strong-by-default.patch
+  popd
 }
 
 build(){
@@ -126,9 +127,9 @@ package_clang-minimal-git(){
   optdepends=('openmp: OpenMP support in clang with -fopenmp'
               'python: for scan-view, scan-build, git-clang-format, clang-rename and python bindings'
               'llvm-minimal-git: referenced by some clang headers')
-  conflicts=(clang)
   provides=(clang clang-analyzer clang-tools-extra)
   provides+=(clang-minimal-git clang-git)
+  conflicts=(clang)
   replaces=(clang-analyzer clang-tools-extra)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
@@ -175,9 +176,9 @@ package_clang-libs-minimal-git(){
   depends=(llvm-libs-minimal-git)
   # the functionality offered by this package is part of the clang repo pacakge.
   # TODO: when/if this functionality is split off from repo clang, verify if changes are needed to this package
-  conflicts=(clang-libs)
   provides=(clang-libs)
   provides+=(clang-libs-minimal-git clang-libs-git)
+  conflicts=(clang-libs)
 
   cp --preserve --recursive "${srcdir}"/clang-libs/* "${pkgdir}"/
 

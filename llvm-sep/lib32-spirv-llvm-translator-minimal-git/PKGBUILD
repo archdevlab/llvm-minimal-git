@@ -7,7 +7,7 @@
 pkgname=lib32-spirv-llvm-translator-minimal-git
 pkgdesc='Tool and a library for bi-directional translation between SPIR-V and LLVM IR (32-bit) (git version)'
 url='https://github.com/KhronosGroup/SPIRV-LLVM-Translator'
-pkgver=19.0.0.r2080.g277654e
+pkgver=19.0.0.r2083.gf7c340c
 _pkgver=19.0.0
 pkgrel=1
 # https://github.com/KhronosGroup/SPIRV-LLVM-Translator/issues/2432
@@ -19,9 +19,9 @@ arch=(i686 x86_64)
 license=(custom)
 depends=(lib32-llvm-libs-minimal-git lib32-spirv-tools-git)
 makedepends=(git cmake llvm-minimal-git lib32-llvm-minimal-git spirv-headers-git)
-conflicts=(lib32-spirv-llvm-translator)
 provides=(lib32-spirv-llvm-translator)
 provides+=(lib32-spirv-llvm-translator-minimal-git lib32-spirv-llvm-translator-git)
+conflicts=(lib32-spirv-llvm-translator)
 source=(git+https://github.com/KhronosGroup/SPIRV-LLVM-Translator.git#commit="${commit}")
 
 pkgver(){
