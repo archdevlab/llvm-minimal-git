@@ -14,10 +14,9 @@ makedepends=(clang-git llvm-git cmake ninja python spirv-llvm-translator-git mak
 # https://aur.archlinux.org/packages/libclc-minimal-git#comment-967212
 # https://github.com/llvm/llvm-project/issues/88626
 makedepends+=(meson ninja)
-provides=(libclc)
-provides+=(libclc-minimal-git libclc-git)
-conflicts=(libclc)
-replaces+=(libclc-minimal-git)
+provides=(libclc libclc-minimal-git libclc-git)
+conflicts=(libclc libclc-minimal-git)
+replaces=(libclc-minimal-git)
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
 pkgver(){
