@@ -4,8 +4,8 @@
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
-pkgbase=lib32-llvm-minimal-git
-pkgname=(lib32-llvm-minimal-git lib32-llvm-libs-minimal-git)
+pkgbase=lib32-llvm-git
+pkgname=(lib32-llvm-git lib32-llvm-libs-git)
 url='https://llvm.org/'
 pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
@@ -141,12 +141,13 @@ export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
     make -j$(nproc) -C "${srcdir}"/build
 }
 
-package_lib32-llvm-minimal-git(){
+package_lib32-llvm-git(){
   pkgdesc='Compiler infrastructure (32-bit) (git version)'
-  depends=(lib32-llvm-libs-minimal-git llvm-minimal-git)
+  depends=(lib32-llvm-libs-git llvm-git)
   provides=(lib32-llvm)
   provides+=(lib32-llvm-minimal-git lib32-llvm-git)
   conflicts=(lib32-llvm)
+  replaces+=(lib32-llvm-minimal-git)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 
@@ -181,7 +182,7 @@ package_lib32-llvm-minimal-git(){
   install -m644 "${srcdir}"/llvm-project/llvm/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
 }
 
-package_lib32-llvm-libs-minimal-git(){
+package_lib32-llvm-libs-git(){
   pkgdesc='LLVM runtime libraries (32-bit) (git version)'
   #depends=(lib32-libffi lib32-zlib lib32-zstd lib32-ncurses lib32-libxml2 lib32-gcc-libs)
   #conflicts=(lib32-llvm-libs)
@@ -190,6 +191,7 @@ package_lib32-llvm-libs-minimal-git(){
   # adding lib32-llvm-libs as depend is the easiest solution
   depends=(lib32-libffi lib32-zlib lib32-zstd lib32-ncurses lib32-libxml2 lib32-gcc-libs lib32-llvm-libs)
   provides+=(lib32-llvm-libs-minimal-git lib32-llvm-git)
+  replaces+=(lib32-llvm-libs-minimal-git)
 
   cp --preserve --recursive "${srcdir}"/lib32-llvm-libs/* "${pkgdir}"/
 
