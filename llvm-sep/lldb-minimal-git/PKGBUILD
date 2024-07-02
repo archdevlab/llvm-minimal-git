@@ -3,7 +3,7 @@
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
-pkgname=lldb-minimal-git
+pkgname=lldb-git
 pkgdesc='Next generation, high-performance debugger (git version)'
 url='https://lld.llvm.org/'
 pkgver=19.0.0.r503537.g6b707a8cc143
@@ -11,12 +11,13 @@ pkgrel=1
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
-depends=(llvm-libs-minimal-git clang-minimal-git clang-libs-minimal-git gcc-libs zlib xz
+depends=(llvm-libs-git clang-git clang-libs-git gcc-libs zlib xz
          libedit ncurses libxml2 python)
-makedepends=(llvm-minimal-git cmake ninja swig python-sphinx)
+makedepends=(llvm-git cmake ninja swig python-sphinx)
 provides=(lldb)
 provides+=(lldb-minimal-git lldb-git)
 conflicts=(lldb)
+replaces+=(lldb-minimal-git)
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
 pkgver(){
