@@ -3,8 +3,8 @@
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
-pkgbase=clang-minimal-git
-pkgname=(clang-minimal-git clang-libs-minimal-git)
+pkgbase=clang-git
+pkgname=(clang-git clang-libs-git)
 url='https://clang.llvm.org/'
 pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
@@ -12,7 +12,7 @@ _pkgver=19.0.0
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
-makedepends=(llvm-minimal-git cmake ninja python-sphinx python-recommonmark make git)
+makedepends=(llvm-git cmake ninja python-sphinx python-recommonmark make git)
 options=(staticlibs !lto) # https://github.com/llvm/llvm-project/issues/57740
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}"
         enable-fstack-protector-strong-by-default.patch)
@@ -121,16 +121,17 @@ _python_optimize(){
   python -OO -m compileall "$@"
 }
 
-package_clang-minimal-git(){
+package_clang-git(){
   pkgdesc='C language family frontend for LLVM (git version)'
-  depends=(llvm-libs-minimal-git clang-libs-minimal-git gcc compiler-rt-minimal-git)
+  depends=(llvm-libs-git clang-libs-git gcc compiler-rt-git)
   optdepends=('openmp: OpenMP support in clang with -fopenmp'
               'python: for scan-view, scan-build, git-clang-format, clang-rename and python bindings'
-              'llvm-minimal-git: referenced by some clang headers')
+              'llvm-git: referenced by some clang headers')
   provides=(clang clang-analyzer clang-tools-extra)
   provides+=(clang-minimal-git clang-git)
   conflicts=(clang)
   replaces=(clang-analyzer clang-tools-extra)
+  replaces+=(clang-minimal-git)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 
@@ -171,14 +172,15 @@ package_clang-minimal-git(){
 }
 
 # https://bugs.archlinux.org/task/72588?project=1&string=clang
-package_clang-libs-minimal-git(){
+package_clang-libs-git(){
   pkgdesc='Clang runtime libraries (git version)'
-  depends=(llvm-libs-minimal-git)
+  depends=(llvm-libs-git)
   # the functionality offered by this package is part of the clang repo pacakge.
   # TODO: when/if this functionality is split off from repo clang, verify if changes are needed to this package
   provides=(clang-libs)
   provides+=(clang-libs-minimal-git clang-libs-git)
   conflicts=(clang-libs)
+  replaces+=(clang-libs-minimal-git)
 
   cp --preserve --recursive "${srcdir}"/clang-libs/* "${pkgdir}"/
 
