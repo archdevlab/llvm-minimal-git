@@ -5,25 +5,25 @@
 
 pkgname=libglvnd-git
 pkgdesc='The GL Vendor-Neutral Dispatch library (git version)'
-pkgver=1.7.0.r877.g908086d
+pkgver=1.7.0.r879.g606f662
 pkgrel=1
-commit=908086d22dc307d17d0eb35c522c35fd190718cc
+commit=606f6627cf481ee6dcb32387edc010c502cdf38b
 arch=(x86_64)
 url='https://gitlab.freedesktop.org/glvnd/libglvnd'
 license=(custom:BSD-like)
 # libglvnd needs mesa for indirect rendering
 depends=(libxext mesa opengl-driver)
 makedepends=(libxext libx11 xorgproto python meson git)
-conflicts=(libglvnd)
 provides=(libglvnd libgl libegl libgles)
 provides+=(libEGL.so libGL.so libGLESv2.so libGLX.so libGLdispatch.so libOpenGL.so)
+conflicts=(libglvnd)
 source=(git+https://gitlab.freedesktop.org/glvnd/libglvnd.git#commit="${commit}"
         LICENSE)
 
 pkgver(){
   cd "${srcdir}"/libglvnd
   #git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
-  echo $(sed -n 27p meson.build | cut -c 13- | "s/'//g" | sed 's/,//g').r$(git rev-list --count HEAD).g$(git rev-parse --short=7 HEAD)
+  echo $(sed -n 27p meson.build | cut -c 13- | sed "s/'//g" | sed 's/,//g').r$(git rev-list --count HEAD).g$(git rev-parse --short=7 HEAD)
 }
 
 build() {

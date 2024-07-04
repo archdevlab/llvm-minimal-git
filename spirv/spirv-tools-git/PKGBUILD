@@ -4,16 +4,16 @@
 
 pkgname=spirv-tools-git
 pkgdesc='API and commands for processing SPIR-V modules (git version)'
-pkgver=2024.1.r3944.gdadb301
+pkgver=2024.3.r3982.gca004da
 pkgrel=1
-commit=dadb3012d51702cccae71967f9f2acaec8f393d5
+commit=ca004da9f9c7fa7ed536709823bd604fab3cd7da
 arch=(x86_64)
 url='https://github.com/KhronosGroup/SPIRV-Tools.git'
 license=(Apache-2.0)
 depends=(glibc gcc-libs sh)
 makedepends=(cmake python git ninja spirv-headers-git make)
-conflicts=(spirv-tools)
 provides=(spirv-tools spirv-tools-git)
+conflicts=(spirv-tools)
 source=(git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit="${commit}")
 
 #pkgver(){

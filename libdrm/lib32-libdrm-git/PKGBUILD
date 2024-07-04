@@ -5,17 +5,17 @@
 
 pkgname=lib32-libdrm-git
 pkgdesc='Userspace interface to kernel DRM services (32-bit) (git version)'
-pkgver=2.4.120.r7117.g362b5b0
+pkgver=2.4.122.r7132.gad78bb5
 pkgrel=1
-commit=362b5b0a886bdfbb92d2f78708ac7a67ee449b2d
+commit=ad78bb591d02162d3b90890aa4d0a238b2a37cde
 arch=(i686 x86_64)
 url='http://dri.freedesktop.org/'
 license=(custom)
 depends=(lib32-libpciaccess libdrm)
 makedepends=(meson git)
 checkdepends=(lib32-cairo)
-conflicts=(lib32-libdrm)
 provides=(lib32-libdrm lib32-libdrm-git)
+conflicts=(lib32-libdrm)
 source=(git+https://gitlab.freedesktop.org/mesa/drm.git#commit=$"${commit}"
         COPYING)
 

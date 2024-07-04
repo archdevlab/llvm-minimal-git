@@ -4,15 +4,15 @@
 
 pkgname=spirv-headers-git
 pkgdesc='SPIR-V Headers (git version)'
-pkgver=1.5.5.r638.g4f7b471
+pkgver=1.5.5.r646.g2acb319
 pkgrel=1
-commit=4f7b471f1a66b6d06462cd4ba57628cc0cd087d7
+commit=2acb319af38d43be3ea76bfabf3998e5281d8d12
 arch=(x86_64)
 url='https://github.com/KhronosGroup/SPIRV-Headers.git'
 license=(MIT)
 makedepends=(cmake ninja git make)
-conflicts=(spirv-headers)
 provides=(spirv-headers spirv-headers-git)
+conflicts=(spirv-headers)
 source=(git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit="$commit")
 
 pkgver(){

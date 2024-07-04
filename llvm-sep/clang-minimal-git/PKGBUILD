@@ -6,15 +6,16 @@
 pkgbase=clang-minimal-git
 pkgname=(clang-minimal-git clang-libs-minimal-git)
 url='https://clang.llvm.org/'
-pkgver=19.0.0.r496211.g396cdabe47f3
+pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
 _pkgver=19.0.0
-commit=396cdabe47f3596464b289d0937c0066f50a0ac6
+commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(llvm-minimal-git cmake ninja python-sphinx python-recommonmark make git)
 options=(staticlibs !lto) # https://github.com/llvm/llvm-project/issues/57740
-source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
+source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}"
+        enable-fstack-protector-strong-by-default.patch)
 
 # Utilizing LLVM_DISTRIBUTION_COMPONENTS to avoid
 # installing static libraries; inspired by Gentoo
@@ -66,13 +67,17 @@ prepare(){
   # Attempt to convert script to Python 3
   2to3 -wn --no-diffs \
     "${srcdir}"/llvm-project/clang/tools/extra/clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
+
+  pushd "${srcdir}"/llvm-project/clang/
+  patch -Np2 -i "${srcdir}"/enable-fstack-protector-strong-by-default.patch
+  popd
 }
 
 build(){
 # https://aur.archlinux.org/cgit/aur.git/commit/?h=llvm-minimal-git&id=ae64860f523a57e2c6d0a9e65ed8af8c82d1ca73
 # build aborts with FORTIFY_SOURCE=3 , see https://github.com/llvm/llvm-project/issues/85509
 export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
-export CXXFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
   rm -rf "${srcdir}"/llvm-project/.git/
 
@@ -122,9 +127,9 @@ package_clang-minimal-git(){
   optdepends=('openmp: OpenMP support in clang with -fopenmp'
               'python: for scan-view, scan-build, git-clang-format, clang-rename and python bindings'
               'llvm-minimal-git: referenced by some clang headers')
-  conflicts=(clang)
   provides=(clang clang-analyzer clang-tools-extra)
   provides+=(clang-minimal-git clang-git)
+  conflicts=(clang)
   replaces=(clang-analyzer clang-tools-extra)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
@@ -171,9 +176,9 @@ package_clang-libs-minimal-git(){
   depends=(llvm-libs-minimal-git)
   # the functionality offered by this package is part of the clang repo pacakge.
   # TODO: when/if this functionality is split off from repo clang, verify if changes are needed to this package
-  conflicts=(clang-libs)
   provides=(clang-libs)
   provides+=(clang-libs-minimal-git clang-libs-git)
+  conflicts=(clang-libs)
 
   cp --preserve --recursive "${srcdir}"/clang-libs/* "${pkgdir}"/
 
@@ -183,6 +188,7 @@ package_clang-libs-minimal-git(){
   install -m644 "${srcdir}"/llvm-project/clang/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners.rst
 }
 
-sha256sums=(SKIP)
+sha256sums=(SKIP
+            ef319e65f927718e1d3b1a23c480d686b1d292e2a0bf27229540964f9734117a)
 
 # vim:set ts=8 sts=2 sw=2 et:

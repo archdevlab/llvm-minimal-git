@@ -27,6 +27,8 @@ cd llvm-sep/compiler-rt-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd llvm-sep/clang-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
+cd llvm-sep/lldb-minimal-git/ && makepkg -si --noconfirm && cd ${source}
+
 cd llvm-sep/spirv-llvm-translator-minimal-git/ && makepkg -si --noconfirm && cd ${source}
 
 cd llvm-sep/libclc-minimal-git/ && makepkg -si --noconfirm && cd ${source}
@@ -55,8 +57,8 @@ cd mesa/lib32-mesa/ && makepkg -si --noconfirm && cd ${source}
 
 mkdir package
 
-cp -v */*.pkg.tar.zst package/
-cp -v */*/*.pkg.tar.zst package/
+mv -v */*.pkg.tar.zst package/
+mv -v */*/*.pkg.tar.zst package/
 
 # clean
 

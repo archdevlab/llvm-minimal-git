@@ -1,107 +1,126 @@
 #Maintainer: archdevlab <https://github.com/archdevlab>
 #Credits: Laurent Carlier <lordheavym@gmail.com>
 #Credits: Felix Yan <felixonmars@archlinux.org>
+#Credits: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 #Credits: Jan de Groot <jgc@archlinux.org>
 #Credits: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=mesa-git
 pkgname=(
-   vulkan-mesa-layers-git
-   opencl-clover-mesa-git
-   opencl-rusticl-mesa-git
-   vulkan-intel-git
-   vulkan-radeon-git
-   vulkan-swrast-git
-   vulkan-virtio-git
-   libva-mesa-driver-git
-   mesa-vdpau-git
-   vulkan-imagination-git
-   vulkan-nouveau-git
-   intel_clc-git
-   mesa-git
+  mesa-git
+  libva-mesa-driver-git
+  mesa-vdpau-git
+  opencl-clover-mesa-git
+  opencl-rusticl-mesa-git
+  vulkan-intel-git
+  vulkan-mesa-layers-git
+  vulkan-nouveau-git
+  vulkan-radeon-git
+  vulkan-swrast-git
+  vulkan-virtio-git
+  vulkan-imagination-git
+  intel_clc-git
 )
-pkgver=24.1.0_devel.188112.042b8a65d33
+pkgver=24.2.0_devel.191472.6326cc4a5e4
 pkgrel=1
-commit=042b8a65d33d94e24ef037d0b1550ad70b6b4517
+commit=6326cc4a5e4e9638d2b0cdc0f847caeb42588c48
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT AND BSD-3-Clause AND SGI-B-2.0)
 makedepends=(
-   clang-minimal-git
-   clang-libs-minimal-git
-   expat
-   libdrm-git
-   libelf
-   libglvnd-git
-   libunwind
-   libva
-   libvdpau
-   libx11
-   libxdamage
-   libxml2
-   libxrandr
-   libxshmfence
-   libxxf86vm
-   llvm-minimal-git
-   llvm-libs-minimal-git
-   lm_sensors
-   rust
-   spirv-llvm-translator-minimal-git
-   spirv-tools-git
-   systemd
-   vulkan-icd-loader
-   wayland
-   xcb-util-keysyms
-   zstd
-   # shared between mesa and lib32-mesa
-   clang-minimal-git
-   cmake
-   elfutils
-   glslang-git
-   libclc-minimal-git
-   meson
-   python-mako
-   python-ply
-   rust-bindgen
-   wayland-protocols
-   xorgproto
-   # valgrind deps
-   valgrind
-   # d3d12 deps
-   directx-headers-git
-   # gallium-omx deps
-   libomxil-bellagio
+  clang-minimal-git
+  clang-libs-minimal-git
+  expat
+  gcc-libs
+  glibc
+  libdrm-git
+  libelf
+  libglvnd-git
+  libva
+  libvdpau
+  libx11
+  libxcb
+  libxext
+  libxfixes
+  libxml2
+  libxrandr
+  libxshmfence
+  libxxf86vm
+  llvm-minimal-git
+  llvm-libs-minimal-git
+  lm_sensors
+  rust
+  spirv-llvm-translator-minimal-git
+  spirv-tools-git
+  systemd-libs
+  vulkan-icd-loader
+  wayland
+  xcb-util-keysyms
+  zlib
+  zstd
+
+  # shared between mesa and lib32-mesa
+  cbindgen
+  clang-minimal-git
+  cmake
+  elfutils
+  glslang-git
+  libclc-minimal-git
+  meson
+  python-mako
+  python-packaging
+  python-ply
+  rust-bindgen
+  wayland-protocols
+  xorgproto
+
+  # valgrind deps
+  valgrind
+
+  # d3d12 deps
+  directx-headers-git
+
+  # gallium-omx deps
+  libomxil-bellagio
 )
 makedepends+=(
-   ninja
-   bison
-   flex
-   python
-   libarchive
-   libconfig
-   compiler-rt-minimal-git
-   libxcb
-   ncurses
-   libxv
-   llvm-libs-minimal-git
-   cbindgen  #rust
+  ninja
+  bison
+  flex
+  python
+  libarchive
+  libconfig
+  compiler-rt-minimal-git
+  libxcb
+  ncurses
+  libxv
 )
-options=(!debug !lto)
-source=(git+https://anongit.freedesktop.org/git/mesa/mesa.git#commit="${commit}")
+options=(
+  # GCC 14 LTO causes segfault in LLVM under si_llvm_optimize_module
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/11140
+  #
+  # In general, upstream considers LTO to be broken until explicit notice.
+
+  !debug !lto
+)
+source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit="${commit}"
+        fix-LLVMOpaqueModule.patch)
 
 # Rust crates for NVK, used as Meson subprojects
 declare -A _crates=(
+   paste          1.0.14
    proc-macro2    1.0.70
    quote          1.0.33
    syn            2.0.39
    unicode-ident  1.0.12
-   paste          1.0.14
 )
 
 for _crate in "${!_crates[@]}"; do
-  source+=($_crate-${_crates[$_crate]}.tar.gz::https://crates.io/api/v1/crates/$_crate/${_crates[$_crate]}/download)
+  _ver="${_crates[$_crate]}"
+  source+=(
+    "$_crate-$_ver.tar.gz::https://crates.io/api/v1/crates/$_crate/$_ver/download"
+  )
 done
-
 
 pkgver(){
   cd "${srcdir}"/mesa
@@ -189,8 +208,9 @@ build(){
     -D llvm=enabled
     -D shared-llvm=enabled
     -D draw-use-llvm=true
+    -D amd-use-llvm=true
     -D valgrind=enabled
-    -D libunwind=enabled
+    -D libunwind=disabled
     -D lmsensors=enabled
     -D build-tests=false
     -D enable-glcpp-tests=false
@@ -227,45 +247,154 @@ build(){
 
   # fake installation to be seperated into packages
   # outside of fakeroot but mesa doesn't need to chown/mod
-  DESTDIR="${srcdir}"/fakeinstall meson install -C "${srcdir}"/build
+  # DESTDIR="${srcdir}"/fakeinstall meson install -C "${srcdir}"/build
 }
 
-_install(){
-  local src f dir
-  for src; do
-    f="${src#fakeinstall/}"
-    dir="${pkgdir}/${f%/*}"
-    install -m755 -d "${dir}"
-    mv -v "${src}" "${dir}/"
+_pick() {
+  local p="$1" f d; shift
+  for f; do
+    d="$srcdir/$p/${f#$pkgdir/}"
+    mkdir -p "$(dirname "$d")"
+    mv -v "$f" "$d"
+    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
   done
 }
 
-_libdir=usr/lib
-
-package_vulkan-mesa-layers-git(){
-  pkgdesc="Mesa's Vulkan layers (git version)"
+package_mesa-git(){
+  pkgdesc='Open-source OpenGL drivers (git version)'
   depends=(
-     libdrm-git
-     libxcb
-     wayland
-     python
+    expat
+    gcc-libs
+    glibc
+    libdrm-git
+    libelf
+    libglvnd-git
+    libx11
+    libxcb
+    libxext
+    libxfixes
+    libxshmfence
+    libxxf86vm
+    llvm-libs-minimal-git
+    lm_sensors
+    wayland
+    zlib
+    zstd
+    libomxil-bellagio
   )
+  optdepends=('opengl-man-pages: for the OpenGL API man pages')
   provides=(
-     vulkan-mesa-layers
+    mesa-libgl
+    opengl-driver
+    mesa
   )
   conflicts=(
-     vulkan-mesa-layer
-     vulkan-mesa-layers
+     mesa-libgl
+     mesa
   )
-  replaces=(
-     vulkan-mesa-layer
+  replaces=(mesa-libgl)
+
+  meson install -C "${srcdir}"/build --destdir "${pkgdir}"
+
+  (
+    local libdir=usr/lib icddir=usr/share/vulkan/icd.d
+
+    cd "$pkgdir"
+
+    _pick libva $libdir/dri/*_drv_video.so
+
+    _pick vdpau $libdir/vdpau
+
+    _pick clover $libdir/gallium-pipe
+    _pick clover $libdir/libMesaOpenCL*
+    _pick clover etc/OpenCL/vendors/mesa.icd
+
+    _pick clrust $libdir/libRusticlOpenCL*
+    _pick clrust etc/OpenCL/vendors/rusticl.icd
+
+    _pick vkintel $icddir/intel_*.json
+    _pick vkintel $libdir/libvulkan_intel*.so
+
+    _pick vklayer $libdir/libVkLayer_*.so
+    _pick vklayer usr/bin/mesa-overlay-control.py
+    _pick vklayer usr/share/vulkan/{ex,im}plicit_layer.d
+
+    _pick vknvidia $icddir/nouveau_*.json
+    _pick vknvidia $libdir/libvulkan_nouveau*.so
+
+    _pick vkradeon $icddir/radeon_icd*.json
+    _pick vkradeon $libdir/libvulkan_radeon.so
+    _pick vkradeon usr/share/drirc.d/00-radv-defaults.conf
+
+    _pick vkswrast $icddir/lvp_icd*.json
+    _pick vkswrast $libdir/libvulkan_lvp.so
+
+    _pick vkvirtio $icddir/virtio_icd*.json
+    _pick vkvirtio $libdir/libvulkan_virtio.so
+
+    _pick vkimagination $icddir/powervr_mesa_icd*.json
+    _pick vkimagination $libdir/libvulkan_powervr_mesa.so
+    # imagination-srv
+    # Services backend for Imagination Technologies vulkan driver
+    _pick vkimagination $libdir/libpowervr_rogue.so
+
+    _pick intelclc usr/bin/intel_clc
+
+    # indirect rendering
+    ln -sr $libdir/libGLX_{mesa,indirect}.so.0
   )
 
-  _install fakeinstall/usr/share/vulkan/explicit_layer.d
-  _install fakeinstall/usr/share/vulkan/implicit_layer.d
-  _install fakeinstall/"${_libdir}"/libVkLayer_*.so
-  _install fakeinstall/usr/bin/mesa-overlay-control.py
+  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+}
 
+package_libva-mesa-driver-git(){
+  pkgdesc='Open-source VA-API drivers (git version)'
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm-git
+    libelf
+    libx11
+    libxcb
+    libxshmfence
+    llvm-libs-minimal-git
+    zlib
+    zstd
+  )
+  provides=(
+    libva-driver
+    libva-mesa-driver
+  )
+  conflicts=(libva-mesa-driver)
+
+  mv "${srcdir}"/libva/* "${pkgdir}"
+
+  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+}
+
+package_mesa-vdpau-git(){
+  pkgdesc='Open-source VDPAU drivers (git version)'
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm-git
+    libelf
+    libx11
+    libxcb
+    libxshmfence
+    llvm-libs-minimal-git
+    zlib
+    zstd
+  )
+  provides=(
+    vdpau-driver
+    mesa-vdpau
+  )
+  conflicts=(mesa-vdpau)
+
+  mv "${srcdir}"/vdpau/* "${pkgdir}"
 
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
@@ -275,32 +404,35 @@ package_vulkan-mesa-layers-git(){
 package_opencl-clover-mesa-git(){
   pkgdesc="Open-source OpenCL drivers - Clover variant (git version)"
   depends=(
-     clang-minimal-git
-     clang-libs-minimal-git
-     expat
-     libdrm-git
-     libelf
-     spirv-llvm-translator-minimal-git
-     zstd
-     libclc-git
+    clang-minimal-git
+    clang-libs-minimal-git
+    expat
+    gcc-libs
+    glibc
+    libdrm-git
+    libelf
+    llvm-libs-minimal-git
+    spirv-llvm-translator-minimal-git
+    spirv-tools-git
+    zlib
+    zstd
+    libclc-minimal-git
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=(
-     opencl-driver
-     opencl-clover-mesa
+    opencl-driver
+    opencl-clover-mesa
   )
   conflicts=(
-     opencl-mesa
-     opencl-mesa-git
+    opencl-mesa
+    opencl-mesa-git
   )
   replaces=(
-     "opencl-mesa<=23.1.4-1"
-     opencl-mesa-git
+    "opencl-mesa<=23.1.4-1"
+    opencl-mesa-git
   )
 
-  _install fakeinstall/etc/OpenCL/vendors/mesa.icd
-  _install fakeinstall/"${_libdir}"/libMesaOpenCL*
-  _install fakeinstall/"${_libdir}"/gallium-pipe
+  mv "${srcdir}"/clover/* "${pkgdir}"
 
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
@@ -308,32 +440,35 @@ package_opencl-clover-mesa-git(){
 package_opencl-rusticl-mesa-git(){
   pkgdesc="Open-source OpenCL drivers - RustICL variant (git version)"
   depends=(
-     clang-minimal-git
-     clang-libs-minimal-git
-     expat
-     libdrm-git
-     libelf
-     lm_sensors
-     spirv-llvm-translator-minimal-git
-     zstd
-     libclc-minimal-git
+    clang-minimal-git
+    clang-libs-minimal-git
+    expat
+    gcc-libs
+    glibc
+    libdrm-git
+    libelf
+    llvm-libs-minimal-git
+    spirv-llvm-translator-minimal-git
+    spirv-tools-git
+    zlib
+    zstd
+    libclc-minimal-git
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=(
-     opencl-driver
-     opencl-rusticl-mesa
+    opencl-driver
+    opencl-rusticl-mesa
   )
   conflicts=(
-     opencl-mesa
-     opencl-mesa-git
+    opencl-mesa
+    opencl-mesa-git
   )
   replaces=(
-     "opencl-mesa<=23.1.4-1"
-     opencl-mesa-git
+    "opencl-mesa<=23.1.4-1"
+    opencl-mesa-git
   )
 
-  _install fakeinstall/etc/OpenCL/vendors/rusticl.icd
-  _install fakeinstall/"${_libdir}"/libRusticlOpenCL*
+  mv "${srcdir}"/clrust/* "${pkgdir}"
 
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
@@ -341,192 +476,51 @@ package_opencl-rusticl-mesa-git(){
 package_vulkan-intel-git(){
   pkgdesc="Open-source Vulkan driver for Intel GPUs (git version)"
   depends=(
-     libdrm-git
-     libx11
-     libxshmfence
-     systemd
-     wayland
-     xcb-util-keysyms
-     zstd
+    expat
+    gcc-libs
+    glibc
+    libdrm-git
+    libx11
+    libxcb
+    libxshmfence
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
   provides=(
-     vulkan-driver
-     vulkan-intel
+    vulkan-driver
+    vulkan-intel
   )
   conflicts=(
-     vulkan-intel
-     vulkan-intel-hasvk-git
+    vulkan-intel
+    vulkan-intel-hasvk-git
   )
-  replaces=(
-     vulkan-intel-hasvk-git
-  )
+  replaces=(vulkan-intel-hasvk-git)
 
-  _install fakeinstall/usr/share/vulkan/icd.d/intel_*.json
-  _install fakeinstall/"${_libdir}"/libvulkan_intel*.so
+  mv "${srcdir}"/vkintel/* "${pkgdir}"
 
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
 
-package_vulkan-radeon-git(){
-  pkgdesc="Open-source Vulkan driver for AMD GPUs (git version)"
+package_vulkan-mesa-layers-git(){
+  pkgdesc="Mesa's Vulkan layers (git version)"
   depends=(
-     libdrm-git
-     libelf
-     libx11
-     libxshmfence
-     llvm-libs-minimal-git
-     systemd
-     wayland
-     xcb-util-keysyms
-     zstd
+    gcc-libs
+    glibc
+    libdrm-git
+    libxcb
+    wayland
+    python
   )
-  optdepends=('vulkan-mesa-layers: additional vulkan layers')
-  provides=(
-     vulkan-driver
-     vulkan-radeon
-  )
-  conflicts=(
-     vulkan-radeon
-  )
+  provides=(vulkan-mesa-layers)
+  conflicts=(vulkan-mesa-layers)
+  replaces=(vulkan-mesa-layer)
 
-  _install fakeinstall/usr/share/drirc.d/00-radv-defaults.conf
-  _install fakeinstall/usr/share/vulkan/icd.d/radeon_icd*.json
-  _install fakeinstall/"${_libdir}"/libvulkan_radeon.so
-
-  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-}
-
-package_vulkan-swrast-git(){
-  pkgdesc='Open-source Vulkan driver for CPUs (Software Rasterizer) (git version)'
-  depends=(
-     libdrm-git
-     libunwind
-     libx11
-     libxshmfence
-     llvm-libs-minimal-git
-     systemd
-     wayland
-     xcb-util-keysyms
-     zstd
-  )
-  optdepends=('vulkan-mesa-layers: additional vulkan layers')
-  provides=(
-     vulkan-driver
-     vulkan-swrast
-  )
-  conflicts=(
-     vulkan-mesa
-     vulkan-swrast
-  )
-  replaces=(
-     vulkan-mesa
-  )
-
-  _install fakeinstall/usr/share/vulkan/icd.d/lvp_icd*.json
-  _install fakeinstall/"${_libdir}"/libvulkan_lvp.so
-
-  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-}
-
-package_vulkan-virtio-git(){
-  pkgdesc='Open-source Vulkan driver for Virtio-GPU (Venus) (git version)'
-  depends=(
-     libdrm-git
-     libx11
-     libxshmfence
-     systemd
-     wayland
-     xcb-util-keysyms
-     zstd
-  )
-  optdepends=('vulkan-mesa-layers: additional vulkan layers')
-  provides=(
-     vulkan-driver
-     vulkan-virtio
-  )
-  conflicts=(
-     vulkan-virtio
-  )
-
-  _install fakeinstall/usr/share/vulkan/icd.d/virtio_icd*.json
-  _install fakeinstall/"${_libdir}"/libvulkan_virtio.so
-
-  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-}
-
-package_libva-mesa-driver-git(){
-  pkgdesc='Open-source VA-API drivers (git version)'
-  depends=(
-     expat
-     libdrm-git
-     libelf
-     libx11
-     libxshmfence
-     llvm-libs-minimal-git
-     zstd
-  )
-  provides=(
-     libva-driver
-     libva-mesa-driver
-  )
-  conflicts=(
-     libva-mesa-driver
-  )
-
-  _install fakeinstall/"${_libdir}"/dri/*_drv_video.so
-
-  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-}
-
-package_mesa-vdpau-git(){
-  pkgdesc='Open-source VDPAU drivers (git version)'
-  depends=(
-     expat
-     libdrm-git
-     libelf
-     libx11
-     libxshmfence
-     llvm-libs-minimal-git
-     zstd
-  )
-  provides=(
-     vdpau-driver
-     mesa-vdpau
-  )
-  conflicts=(
-     mesa-vdpau
-  )
-  _install fakeinstall/"${_libdir}"/vdpau
-
-  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-}
-
-package_vulkan-imagination-git(){
-  pkgdesc='Imagination Rogue PowerVR Vulkan driver (git version)'
-  depends=(
-     libdrm-git
-     libelf
-     libx11
-     libunwind
-     libxshmfence
-     systemd
-     llvm-libs-minimal-git
-     wayland
-     xcb-util-keysyms
-     zstd
-  )
-  optdepends=('vulkan-mesa-layers: additional vulkan layers')
-  provides=(
-     vulkan-driver
-  )
-
-  _install fakeinstall/usr/share/vulkan/icd.d/powervr_mesa_icd*.json
-  _install fakeinstall/"${_libdir}"/libvulkan_powervr_mesa.so
-
-  # imagination-srv
-  # Services backend for Imagination Technologies vulkan driver
-  _install fakeinstall/"${_libdir}"/libpowervr_rogue.so
+  mv "${srcdir}"/vklayer/* "${pkgdir}"
 
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
@@ -534,24 +528,148 @@ package_vulkan-imagination-git(){
 package_vulkan-nouveau-git(){
   pkgdesc="Open-source Vulkan driver for Nvidia GPUs (git version)"
   depends=(
-     libdrm-git
-     libelf
-     libx11
-     libunwind
-     libxshmfence
-     systemd
-     llvm-libs-minimal-git
-     wayland
-     xcb-util-keysyms
-     zstd
+    expat
+    gcc-libs
+    glibc
+    libdrm-git
+    libx11
+    libxcb
+    libxshmfence
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
   provides=(
-     vulkan-driver
+    vulkan-driver
+    vulkan-nouveau
   )
+  conflicts=(vulkan-nouveau)
 
-  _install fakeinstall/usr/share/vulkan/icd.d/nouveau_icd*.json
-  _install fakeinstall/"${_libdir}"/libvulkan_nouveau.so
+  mv "${srcdir}"/vknvidia/* "${pkgdir}"
+
+  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+}
+
+package_vulkan-radeon-git(){
+  pkgdesc="Open-source Vulkan driver for AMD GPUs (git version)"
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm-git
+    libelf
+    libx11
+    libxcb
+    libxshmfence
+    llvm-libs-minimal-git
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
+  )
+  optdepends=('vulkan-mesa-layers: additional vulkan layers')
+  provides=(
+    vulkan-driver
+    vulkan-radeon
+  )
+  conflicts=(vulkan-radeon)
+
+  mv "${srcdir}"/vkradeon/* "${pkgdir}"
+
+  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+}
+
+package_vulkan-swrast-git(){
+  pkgdesc='Open-source Vulkan driver for CPUs (Software Rasterizer) (git version)'
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm-git
+    libx11
+    libxcb
+    libxshmfence
+    llvm-libs-minimal-git
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
+  )
+  optdepends=('vulkan-mesa-layers: additional vulkan layers')
+  provides=(
+    vulkan-driver
+    vulkan-swrast
+  )
+  conflicts=(
+    vulkan-mesa
+    vulkan-swrast
+  )
+  replaces=(vulkan-mesa)
+
+  mv "${srcdir}"/vkswrast/* "${pkgdir}"
+
+  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+}
+
+package_vulkan-virtio-git(){
+  pkgdesc='Open-source Vulkan driver for Virtio-GPU (Venus) (git version)'
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm-git
+    libx11
+    libxcb
+    libxshmfence
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
+  )
+  optdepends=('vulkan-mesa-layers: additional vulkan layers')
+  provides=(
+    vulkan-driver
+    vulkan-virtio
+  )
+  conflicts=(vulkan-virtio)
+
+  mv "${srcdir}"/vkvirtio/* "${pkgdir}"
+
+  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+}
+
+package_vulkan-imagination-git(){
+  pkgdesc='Imagination Rogue PowerVR Vulkan driver (git version)'
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm-git
+    libx11
+    libxcb
+    libxshmfence
+    llvm-libs-minimal-git
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
+  )
+  optdepends=('vulkan-mesa-layers: additional vulkan layers')
+  provides=(vulkan-driver)
+
+  mv "${srcdir}"/vkimagination/* "${pkgdir}"
 
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
@@ -565,85 +683,25 @@ package_vulkan-nouveau-git(){
 package_intel_clc-git(){
   pkgdesc='Intel_clc tool used for building OpenCL C to SPIR-V (git version)'
   depends=(
-     libclc-minimal-git
-     spirv-tools-git
-     zlib
-     libdrm-git
-     spirv-llvm-translator-minimal-git
-     clang-minimal-git
-     clang-libs-minimal-git
-     llvm-minimal-git
-     llvm-libs-minimal-git
-     expat
+    libclc-minimal-git
+    spirv-tools-git
+    zlib
+    libdrm-git
+    spirv-llvm-translator-minimal-git
+    clang-minimal-git
+    clang-libs-minimal-git
+    llvm-minimal-git
+    llvm-libs-minimal-git
+    expat
    )
 
-  _install fakeinstall/usr/bin/intel_clc
-
-  install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-}
-
-package_mesa-git(){
-  pkgdesc='Open-source OpenGL drivers (git version)'
-  depends=(
-     libdrm-git
-     libelf
-     libglvnd-git
-     libunwind
-     libxdamage
-     libxshmfence
-     libxxf86vm
-     llvm-libs-minimal-git
-     lm_sensors
-     vulkan-icd-loader
-     wayland
-     zstd
-     libomxil-bellagio
-  )
-  optdepends=(
-     'opengl-man-pages: for the OpenGL API man pages'
-  )
-  provides=(
-     mesa-libgl
-     opengl-driver
-     mesa
-  )
-  conflicts=(
-     mesa-libgl
-     mesa
-  )
-  replaces=(
-     mesa-libgl
-  )
-
-  _install fakeinstall/usr/share/drirc.d/00-mesa-defaults.conf
-  _install fakeinstall/usr/share/glvnd/egl_vendor.d/50_mesa.json
-
-  # ati-dri, nouveau-dri, intel-dri, svga-dri, swrast, swr
-  _install fakeinstall/"${_libdir}"/dri/*_dri.so
-
-  _install fakeinstall/"${_libdir}"/bellagio
-  _install fakeinstall/"${_libdir}"/d3d
-  _install fakeinstall/"${_libdir}"/lib{gbm,glapi}.so*
-  _install fakeinstall/"${_libdir}"/libOSMesa.so*
-  _install fakeinstall/"${_libdir}"/libxatracker.so*
-
-  _install fakeinstall/usr/include
-  _install fakeinstall/"${_libdir}"/pkgconfig
-
-  # libglvnd support
-  _install fakeinstall/"${_libdir}"/libGLX_mesa.so*
-  _install fakeinstall/"${_libdir}"/libEGL_mesa.so*
-
-  # indirect rendering
-  ln -sr "${pkgdir}"/"${_libdir}"/libGLX_{mesa,indirect}.so.0
-
-  # make sure there are no files left to install
-  find fakeinstall -depth -print0 | xargs -0 rmdir
+  mv "${srcdir}"/intelclc/* "${pkgdir}"
 
   install -Dm644 "${srcdir}"/mesa/docs/license.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
 
 sha256sums=(SKIP
+            SKIP
             39278fbbf5fb4f646ce651690877f89d1c5811a3d4acb27700c1cb3cdb78fd3b
             3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b
             5267fca4496028628a95160fc423a33e8b2e6af8a5302579e322e4b520293cae

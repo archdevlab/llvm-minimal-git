@@ -6,16 +6,16 @@
 pkgname=lld-minimal-git
 pkgdesc='Linker from the LLVM project (git version)'
 url='https://lld.llvm.org/'
-pkgver=19.0.0.r496211.g396cdabe47f3
+pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
-commit=396cdabe47f3596464b289d0937c0066f50a0ac6
+commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 depends=(llvm-libs-minimal-git gcc-libs zlib zstd)
 makedepends=(llvm-minimal-git cmake ninja python-sphinx libunwind)
-conflicts=(lld)
 provides=(lld)
 provides+=(lld-minimal-git lld-git)
+conflicts=(lld)
 options=(staticlibs !lto) # https://github.com/llvm/llvm-project/issues/57740
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
@@ -37,7 +37,7 @@ build(){
 # https://aur.archlinux.org/cgit/aur.git/commit/?h=llvm-minimal-git&id=ae64860f523a57e2c6d0a9e65ed8af8c82d1ca73
 # build aborts with FORTIFY_SOURCE=3 , see https://github.com/llvm/llvm-project/issues/85509
 export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
-export CXXFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
   rm -rf "${srcdir}"/llvm-project/.git/
 

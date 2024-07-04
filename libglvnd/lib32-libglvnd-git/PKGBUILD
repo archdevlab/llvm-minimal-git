@@ -5,18 +5,18 @@
 
 pkgname=lib32-libglvnd-git
 pkgdesc='The GL Vendor-Neutral Dispatch library (32-bit) (git version)'
-pkgver=1.7.0.r877.g908086d
+pkgver=1.7.0.r879.g606f662
 pkgrel=1
-commit=908086d22dc307d17d0eb35c522c35fd190718cc
+commit=606f6627cf481ee6dcb32387edc010c502cdf38b
 arch=(i686 x86_64)
 url='https://gitlab.freedesktop.org/glvnd/libglvnd'
 license=(custom:BSD-like)
 # lib32-libglvnd needs lib32-mesa for indirect rendering
 depends=(lib32-libxext libglvnd lib32-mesa lib32-opengl-driver)
 makedepends=(lib32-libx11 lib32-libxext xorgproto python meson git)
-conflicts=(lib32-libglvnd)
 provides=(lib32-libglvnd lib32-libgl lib32-libegl lib32-libgles)
 provides+=(libEGL.so libGL.so libGLESv2.so libGLX.so libGLdispatch.so libOpenGL.so)
+conflicts=(lib32-libglvnd)
 source=(git+https://gitlab.freedesktop.org/glvnd/libglvnd.git#commit="${commit}"
         LICENSE)
 

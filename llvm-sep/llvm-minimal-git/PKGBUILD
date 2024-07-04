@@ -6,15 +6,15 @@
 pkgbase=llvm-minimal-git
 pkgname=(llvm-minimal-git llvm-libs-minimal-git)
 url='https://llvm.org/'
-pkgver=19.0.0.r496211.g396cdabe47f3
+pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
 _pkgver=19.0.0
-commit=396cdabe47f3596464b289d0937c0066f50a0ac6
+commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=(cmake ninja zlib zstd libffi libedit ncurses
              libxml2 python-setuptools python-psutil python-sphinx
-             python-recommonmark make git)
+             python-myst-parser make git)
 options=(staticlibs !lto) # tools/llvm-shlib/typeids.test fails with LTO
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
@@ -35,6 +35,10 @@ make help | grep -Po 'install-\K.*(?=-stripped)' | while read -r target; do
             ;;
         # libraries needed for clang-tblgen
         LLVMDemangle|LLVMSupport|LLVMTableGen )
+            include=1
+            ;;
+        # used by lldb
+        LLVMDebuginfod )
             include=1
             ;;
         # testing libraries
@@ -73,11 +77,17 @@ pkgver(){
   echo "${_pkgver}"
 }
 
+prepare(){
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/llvm/-/commit/31fedbbb507eb5be41cf1e6f405153b6bc370df7
+  # Remove CMake find module for zstd; breaks if out of sync with upstream zstd
+  rm -rf  "${srcdir}"/llvm-project/llvm/cmake/modules/Findzstd.cmake
+}
+
 build(){
 # https://aur.archlinux.org/cgit/aur.git/commit/?h=llvm-minimal-git&id=ae64860f523a57e2c6d0a9e65ed8af8c82d1ca73
 # build aborts with FORTIFY_SOURCE=3 , see https://github.com/llvm/llvm-project/issues/85509
 export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
-export CXXFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
   rm -rf "${srcdir}"/llvm-project/.git/
 
@@ -127,9 +137,9 @@ package_llvm-minimal-git(){
   depends=(llvm-libs-minimal-git perl)
   optdepends=('python: for using lit (LLVM Integrated Tester)'
               'python-setuptools: for using lit')
-  conflicts=(llvm)
   provides=(llvm)
   provides+=(llvm-minimal-git llvm-git)
+  conflicts=(llvm)
 
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install-distribution
 

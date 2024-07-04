@@ -3,22 +3,20 @@
 #Credits: Jan "heftig" Steffens <jan.steffens@gmail.com>
 #Credits: Lone_Wolf <lone_wolf@klaas-de-kat.nl>
 
-pkgname=compiler-rt-minimal-git
-pkgdesc='Compiler runtime libraries for clang (git version)'
-url='https://compiler-rt.llvm.org/'
+pkgname=lldb-minimal-git
+pkgdesc='Next generation, high-performance debugger (git version)'
+url='https://lld.llvm.org/'
 pkgver=19.0.0.r503537.g6b707a8cc143
 pkgrel=1
 commit=6b707a8cc143f094b02393f4faf89025c64520bb
 arch=(x86_64)
 license=('custom:Apache 2.0 with LLVM Exception')
-depends=(gcc-libs)
-makedepends=(llvm-minimal-git cmake ninja python make git)
-# Build 32-bit compiler-rt libraries on x86_64 (FS#41911)
-makedepends_x86_64=(lib32-gcc-libs)
-provides=(compiler-rt)
-provides+=(compiler-rt-minimal-git compiler-rt-git)
-conflicts=(compiler-rt)
-options=(staticlibs)
+depends=(llvm-libs-minimal-git clang-minimal-git clang-libs-minimal-git gcc-libs zlib xz
+         libedit ncurses libxml2 python)
+makedepends=(llvm-minimal-git cmake ninja swig python-sphinx)
+provides=(lldb)
+provides+=(lldb-minimal-git lldb-git)
+conflicts=(lldb)
 source=(git+https://github.com/llvm/llvm-project.git#commit="${commit}")
 
 pkgver(){
@@ -44,32 +42,45 @@ export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
   rm -rf "${srcdir}"/llvm-project/.git/
 
   local cmake_args=(
-      -G "Unix Makefiles"
-      -D CMAKE_BUILD_TYPE=Release
-      -D CMAKE_INSTALL_PREFIX=/usr
-      -D CMAKE_INSTALL_BINDIR=bin
-      -D CMAKE_INSTALL_LIBDIR=lib
-      -D CMAKE_INSTALL_INCLUDEDIR=include
-      -D CMAKE_INSTALL_SYSCONFDIR=/etc
-      -D CMAKE_INSTALL_DATADIR=share
-      -D CMAKE_SKIP_RPATH=ON
-      -D COMPILER_RT_INSTALL_PATH=/usr/lib/clang/19
-      -D LLVM_CONFIG=/usr/bin/llvm-config
-    )
+    -G "Unix Makefiles"
+    -D CMAKE_BUILD_TYPE=Release
+    -D CMAKE_INSTALL_PREFIX=/usr
+    -D CMAKE_SKIP_RPATH=ON
+    -D CLANG_LINK_CLANG_DYLIB=ON
+    -D LLVM_LINK_LLVM_DYLIB=ON
+    -D LLVM_INCLUDE_TESTS=OFF
+    -D LLVM_BUILD_DOCS=OFF
+    -D LLVM_MAIN_SRC_DIR="${srcdir}"/llvm-project/llvm
+    -D SPHINX_WARNINGS_AS_ERRORS=OFF
+    -D LLVM_CONFIG=/usr/bin/llvm-config
+  )
 
-  cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/compiler-rt "${cmake_args[@]}" -Wno-dev
+  cmake -B "${srcdir}"/build -S "${srcdir}"/llvm-project/lldb "${cmake_args[@]}" -Wno-dev
 
   make -j$(nproc) -C "${srcdir}"/build
+}
+
+_python_optimize(){
+  python -m compileall "$@"
+  python -O -m compileall "$@"
+  python -OO -m compileall "$@"
 }
 
 package(){
   make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install
 
+  # Compile Python scripts
+  _py=$([[ "$(python -V)" =~ Python[[:space:]]*([0-9]+.[0-9]+) ]] && echo ${BASH_REMATCH[1]})
+  local site_packages="/usr/lib/python$_py/site-packages"
+  install -d "${pkgdir}"/"${site_packages}"
+  _python_optimize "${srcdir}"/build "${pkgdir}"/"${site_packages}"
+  # optimize other python files
+  _python_optimize "${pkgdir}"/usr/share
+
   # install license
   install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
-  install -m644 "${srcdir}"/llvm-project/compiler-rt/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  install -m644 "${srcdir}"/llvm-project/compiler-rt/CREDITS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CREDITS
-  install -m644 "${srcdir}"/llvm-project/compiler-rt/CODE_OWNERS.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/CODE_OWNERS
+  install -m644 "${srcdir}"/llvm-project/lldb/LICENSE.TXT "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  install -m644 "${srcdir}"/llvm-project/lldb/CodeOwners.rst "${pkgdir}"/usr/share/licenses/"${pkgname}"/CodeOwners
 }
 
 sha256sums=(SKIP)
