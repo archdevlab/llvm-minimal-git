@@ -21,9 +21,9 @@ pkgname=(
   vulkan-imagination-git
   intel_clc-git
 )
-pkgver=24.2.0_devel.191472.6326cc4a5e4
+pkgver=24.2.0_devel.191598.f9efedb1a1a
 pkgrel=1
-commit=6326cc4a5e4e9638d2b0cdc0f847caeb42588c48
+commit=f9efedb1a1acbaa70c603d5ef57a83180a8f5782
 arch=(x86_64)
 url='https://mesa3d.org/'
 license=(MIT AND BSD-3-Clause AND SGI-B-2.0)
@@ -103,8 +103,7 @@ options=(
 
   !debug !lto
 )
-source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit="${commit}"
-        fix-LLVMOpaqueModule.patch)
+source=(git+https://gitlab.freedesktop.org/mesa/mesa.git#commit="${commit}")
 
 # Rust crates for NVK, used as Meson subprojects
 declare -A _crates=(
@@ -216,6 +215,7 @@ build(){
     -D enable-glcpp-tests=false
     -D build-aco-tests=false
     -D install-intel-gpu-tests=false
+    -D html-docs=disabled
     -D selinux=false
     -D osmesa=true
     -D tools=[]
@@ -701,7 +701,6 @@ package_intel_clc-git(){
 }
 
 sha256sums=(SKIP
-            SKIP
             39278fbbf5fb4f646ce651690877f89d1c5811a3d4acb27700c1cb3cdb78fd3b
             3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b
             5267fca4496028628a95160fc423a33e8b2e6af8a5302579e322e4b520293cae
