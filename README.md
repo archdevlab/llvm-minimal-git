@@ -2,9 +2,9 @@
 
 ![image](https://user-images.githubusercontent.com/68618182/213734198-0cf50021-1f02-4c80-9a48-6f20ad42ce04.png)
 
-# llvm-minimal-git
+# llvm-mesa
 
-LLVM toolchain packages for Archlinux. (git version) (No docs, no unittest, no test) (Less build time) Also included in this repo spirv-headers, spirv-tools, glslang, directx-headers, libdrm, libglvnd and mesa
+LLVM toolchain and mesa packages for Archlinux. (git version) (No docs, no unittest, no test) (Less build time) Also included in this repo spirv-headers, spirv-tools, glslang, directx-headers, libdrm and libglvnd
 
 ### SPIRV-Headers and SPIRV-Tools
 
@@ -29,10 +29,6 @@ This repo contain libglvnd-git and lib32-libglvnd-git packages. Why so? Because 
 ### Mesa
 
 Why Mesa's packages are not in a separate repo? Because mesa and llvm are closely tied together, everytime llvm changes/updates, mesa needs to be rebuilt. Another reason is that, everytimes glslang version change, archlinux recompile mesa against glslang new version, so it feel more natural to have this package in this repo. If you want to just compile Mesa's packages and not interested about LLVM, SPIRV and glslang package you can go ahead, no problem.
-
-#### 20/01/2023
-
-mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal fortmat? Maybe.
 
 # Version
 
@@ -94,18 +90,8 @@ mesa-git and lib32-mesa-git are not in minimal format yet. Will I do a minimal f
 # Build
 
     git clone https://github.com/archdevlab/llvm-minimal-git.git
-    cd llvm-git
+    cd llvm-mesa
     ./build.sh
-
-### After succeful build
-
-After a succeful build of the toolchain you'll need to recompile mesa package, because mesa and llvm are closely tied together. Everytime llvm changes/updates, mesa needs to be rebuilt.
-
-    cd mesa/all/mesa-git
-    makepkg -si
-
-    cd mesa/all/lib32-mesa-git
-    makepkg -si
 
 # Prebuild package
 
@@ -113,7 +99,7 @@ Prebuild package are available at https://repo.archdevlab.org/x86_64/llvm-minima
 
 You can add this repo to your pacman.conf
 
-    [llvm-minimal-git]
+    [llvm-mesa]
     SigLevel = Optional TrustAll
     Server = https://repo.archdevlab.org/$arch/$repo
 
