@@ -95,7 +95,7 @@ Why Mesa's packages are not in a separate repo? Because mesa and llvm are closel
 
 # Prebuild package
 
-Prebuild package are available at https://repo.archdevlab.org/x86_64/llvm-minimal-git
+Prebuild package are available at https://repo.archdevlab.org/x86_64/llvm-mesa
 
 You can add this repo to your pacman.conf
 
